@@ -1,6 +1,6 @@
 {%- comment -%}
-  CASA JUNNO - Editorial Header
-  Refatorado: Unificação CSS, suporte nativo a Web Components e navegação Journal/Society/Concierge.
+  CASA JUNNO - Header Editorial
+  Busca simplificada no desktop: campo fixo e sem painel expansível.
 {%- endcomment -%}
 
 {{ 'header.css' | asset_url | stylesheet_tag }}
@@ -37,13 +37,11 @@
     --cj-panel-text: {{ section.settings.casa_juno_panel_text_color | default: '#2f211c' }};
     --cj-panel-muted: {{ section.settings.casa_juno_panel_muted_color | default: '#6d625c' }};
     --cj-panel-accent: {{ section.settings.casa_juno_panel_accent_color | default: '#9a4f42' }};
+    --cj-panel-accent-rgb: {{ section.settings.casa_juno_panel_accent_color | default: '#9a4f42' | color_to_rgb | remove: 'rgb(' | remove: ')' }};
     --cj-backdrop-opacity: {{ section.settings.casa_juno_panel_backdrop_opacity | default: 50 | divided_by: 100.0 }};
     --cj-panel-top: 98px;
   }
 
-  /* ==========================================================================
-     CORE LAYOUT & EDITORIAL TYPOGRAPHY
-     ========================================================================== */
   .cj-header-desktop-shell {
     width: 100%;
     background: var(--cj-header-bg);
@@ -83,7 +81,6 @@
     display: block;
   }
 
-  /* --- ALINHAMENTO DOS ÍCONES --- */
   .cj-header-desktop-shell__left,
   .cj-header-desktop-shell__right {
     display: flex;
@@ -104,8 +101,8 @@
     align-items: center;
   }
 
-  /* --- ÍCONES E BOTÕES --- */
-  .cj-header-search-btn {
+  .cj-header-search-btn,
+  .cj-header-action {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -115,14 +112,6 @@
     cursor: pointer;
     padding: 0;
     font-family: inherit;
-    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  
-  .cj-header-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--cj-header-text);
     text-decoration: none;
     transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -133,7 +122,6 @@
     transform: translateY(-1px);
   }
 
-  /* --- MENU DE NAVEGAÇÃO PRINCIPAL --- */
   .cj-header-desktop-shell__row--nav {
     display: flex;
     align-items: center;
@@ -144,12 +132,12 @@
 
   .cj-header-nav-link {
     position: relative;
-    color: rgba(47, 33, 28, 0.85); /* Preto ligeiramente suavizado */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Contraste sans-serif moderno */
+    color: rgba(47, 33, 28, 0.85);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 12px;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.16em; /* Tracking amplo (luxo) */
+    letter-spacing: 0.16em;
     text-decoration: none;
     padding-bottom: 4px;
     transition: color 0.4s ease;
@@ -161,8 +149,8 @@
   .cj-header-nav-link::after {
     content: '';
     position: absolute;
-    bottom: 0; 
-    left: 50%; 
+    bottom: 0;
+    left: 50%;
     right: 50%;
     height: 1px;
     background: var(--cj-header-text);
@@ -177,18 +165,16 @@
 
   .cj-header-nav-link:hover::after,
   .cj-header-nav-link.is-active::after {
-    left: 0; 
+    left: 0;
     right: 0;
   }
 
-  /* ==========================================================================
-     PAINÉIS DESLIZANTES & BACKDROP (BUTTERY SMOOTH)
-     ========================================================================== */
-     
   .cj-header-backdrop {
     position: fixed;
     top: var(--cj-panel-top);
-    left: 0; right: 0; bottom: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(20, 10, 5, var(--cj-backdrop-opacity));
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -203,122 +189,181 @@
     visibility: visible;
   }
 
-  .cj-search-panel,
-  .cj-men-panel {
-    position: fixed;
-    top: var(--cj-panel-top);
-    left: 0; right: 0;
-    background: var(--cj-panel-bg);
-    z-index: 88;
-    opacity: 0;
-    visibility: hidden;
-    clip-path: inset(0 0 100% 0);
-    /* Curva cubic-bezier amanteigada (easeOutExpo) */
-    transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, visibility 0.8s;
-    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.06);
-    border-bottom: 1px solid rgba(0,0,0,0.03);
-  }
-
-  [data-panel-open="true"] {
-    opacity: 1;
-    visibility: visible;
-    clip-path: inset(0 0 0 0);
-  }
-
-  /* --- REFINAMENTO INTERNO DOS PAINÉIS --- */
-  .cj-panel-close {
-    position: absolute;
-    top: 24px;
-    right: 48px;
-    background: transparent;
-    border: none;
-    font-size: 32px;
-    font-weight: 300;
-    color: var(--cj-panel-muted);
-    cursor: pointer;
-    transition: color 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .cj-panel-close:hover {
-    color: var(--cj-header-text);
-    transform: rotate(90deg);
-  }
-
-  .cj-search-panel__input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    background: transparent;
-    padding: 24px 0 16px;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(24px, 3vw, 36px);
-    color: var(--cj-panel-text);
-    outline: none;
-    transition: border-color 0.4s ease;
-  }
-
-  .cj-search-panel__input::placeholder {
-    color: var(--cj-panel-muted);
-    opacity: 0.6;
-  }
-
-  .cj-search-panel__input:focus {
-    border-bottom-color: var(--cj-panel-accent);
-  }
-
-  .cj-men-panel__nav a {
+  .search-container {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    text-decoration: none;
-    color: var(--cj-panel-text);
-    padding: 20px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    transition: color 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 34px;
+    min-height: 52px;
+    overflow: hidden;
+    transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .cj-men-panel__nav a span {
+  .search-container[data-search-open="true"] {
+    width: clamp(220px, 24vw, 340px);
+  }
+
+  .search-trigger {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: #111111;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .search-trigger:hover {
+    opacity: 0.65;
+  }
+
+  .search-container[data-search-open="true"] .search-trigger {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .search-form-wrap {
+    width: 0;
+    max-width: none;
+    padding: 0;
+    position: relative;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateX(-8px);
+    transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .search-container[data-search-open="true"] .search-form-wrap {
+    width: 100%;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+
+ .search-form-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  padding: 0 48px 0 18px;
+  min-height: 52px;
+
+  background: #ffffff;
+  border: 1px solid rgba(47, 33, 28, 0.14);
+  border-radius: 12px;
+
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+
+  transition:
+    border-color .28s ease,
+    background-color .28s ease;
+
+  margin: 0;
+}
+
+.search-form-field:hover {
+  border-color: rgba(var(--cj-panel-accent-rgb), 0.28);
+}
+
+.search-form-field:focus-within {
+  border-color: var(--cj-panel-accent);
+  box-shadow: none;
+}
+
+
+  .search-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 10px 0;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--cj-header-text);
+    outline: none;
+    line-height: 1.3;
+    caret-color: var(--cj-panel-accent);
+    appearance: none;
+    border-radius: 0;
+  }
+
+  .search-input::placeholder {
     color: var(--cj-panel-muted);
-    transition: transform 0.4s ease;
+    opacity: 0.8;
+    font-style: normal;
   }
 
-  .cj-men-panel__nav a:hover {
-    color: var(--cj-panel-accent);
-    transform: translateX(8px);
+  .search-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .cj-men-panel__nav a:hover span {
-    transform: translateX(4px);
+  .search-submit-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cj-header-text);
+    z-index: 2;
+  }
+
+  .search-empty-btn {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cj-panel-muted);
+    z-index: 2;
+  }
+
+  .search-btn:hover {
+    opacity: 0.5;
+  }
+
+  .search-suggestions {
+    display: none !important;
+  }
+
+  .cj-header-search-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   @media (max-width: 1023px) {
     .cj-header-desktop-shell { display: none; }
-    .m-header__mobile {
-      min-height: 56px;
-      padding-top: 6px;
-      padding-bottom: 6px;
-    }
-    .cj-mobile-nav {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      padding: 6px 0;
-      border-top: 1px solid rgba(0,0,0,0.05);
-    }
-    .cj-mobile-nav .cj-header-nav-link {
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      padding-bottom: 3px;
-    }
   }
 {% endstyle %}
 
 <cj-header data-section-id="{{ section.id }}">
   <m-header class="m-header m:block" data-sticky="{{ section.settings.header_sticky }}">
     {% render 'header__topbar', header: section %}
-    
+
     <div class="m-header__wrapper">
-      {% comment %} --- HEADER MOBILE --- {% endcomment %}
       <header class="m-header__mobile container-fluid m:flex m:items-center">
         <span class="m-menu-button m:flex m:flex-1 m:w-3/12">
           <div class="m-hamburger-box"><div class="m-hamburger-box__inner"></div></div>
@@ -334,7 +379,6 @@
           {% render 'cart' %}
         </div>
 
-        {% comment %} Navegação Rápida Mobile Editorial {% endcomment %}
         <nav class="cj-mobile-nav w-full">
           <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
           <a class="cj-header-nav-link" href="/collections/all">Shop</a>
@@ -342,20 +386,37 @@
         </nav>
       </header>
 
-      {% comment %} --- HEADER DESKTOP --- {% endcomment %}
       <header class="m-header__desktop">
         <div class="cj-header-desktop-shell">
           <div class="cj-header-desktop-shell__row cj-header-desktop-shell__row--main">
-            
-            {% comment %} Esquerda: Busca Editorial {% endcomment %}
             <div class="cj-header-desktop-shell__left">
-              <button class="cj-header-search-btn" type="button" data-action="toggle-search" aria-label="Abrir Busca">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="10.8" cy="10.8" r="6.8"/><path d="M16.1 16.1 21 21"/></svg>
-                <span class="ml-2 text-sm font-serif">Buscar</span>
-              </button>
+              <div class="js-search-container search-container" data-block-id="utilities" data-block-type="header-utilities">
+                <button class="js-search-trigger search-trigger" type="button" aria-label="Abrir busca" aria-expanded="false">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M20 20L16.65 16.65"></path>
+                  </svg>
+                </button>
+
+                <div class="search-form-wrap" aria-hidden="true">
+                  <form class="js-search-form search-form" action="{{ routes.search_url }}" method="get" role="search">
+                    <div class="search-form-field form-group">
+                      <input class="js-search-input form-control search-input input_class" autocomplete="off" type="search" name="q" placeholder="Buscar" aria-label="Buscar">
+                      <input type="hidden" name="type" value="product">
+                      <button type="submit" class="js-search-input-submit search-btn search-submit-btn" value="Buscar" aria-label="Buscar">
+                        <svg class="icon-inline" style="width: 16px; height: 16px;">
+                          <use xlink:href="#search"></use>
+                        </svg>
+                      </button>
+                      <button type="button" class="js-empty-search search-btn search-empty-btn" aria-label="Limpar busca" style="display: none;">
+                        <svg class="icon-inline"><use xlink:href="#times"></use></svg>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
 
-            {% comment %} Centro: Logo / Identidade Visual {% endcomment %}
             <div class="cj-header-desktop-shell__center">
               <a href="{{ routes.root_url }}" class="cj-header-logo">
                 {% if section.settings.logo != blank %}
@@ -366,16 +427,16 @@
               </a>
             </div>
 
-            {% comment %} Direita: Conta & Favs {% endcomment %}
             <div class="cj-header-desktop-shell__right">
               <a class="cj-header-action" href="{{ routes.account_url }}" aria-label="Minha Conta">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                  <path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/>
+                </svg>
               </a>
               {% render 'cart' %}
             </div>
           </div>
 
-          {% comment %} Menu de Navegação Revista Digital {% endcomment %}
           <nav class="cj-header-desktop-shell__row cj-header-desktop-shell__row--nav" aria-label="Menu Principal">
             <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
             <button class="cj-header-nav-link" type="button" data-action="toggle-men">Shop</button>
@@ -387,20 +448,8 @@
       </header>
     </div>
 
-    {% comment %} --- PAINÉIS FLUTUANTES (SEARCH & SHOP) --- {% endcomment %}
     <div class="cj-header-backdrop" data-element="backdrop" hidden></div>
 
-    {% comment %} Painel de Busca {% endcomment %}
-    <section class="cj-search-panel" data-element="search-panel" role="dialog" aria-modal="true" aria-label="Busca Editorial">
-      <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
-      <div class="cj-search-panel__inner p-12">
-        <form action="{{ routes.search_url }}" method="get" class="cj-search-panel__form">
-          <input class="cj-search-panel__input" type="search" name="q" placeholder="Digite para buscar peças, tecidos ou artigos do Journal..." autocomplete="off">
-        </form>
-      </div>
-    </section>
-
-    {% comment %} Painel de Coleções (Shop) {% endcomment %}
     <section class="cj-men-panel" data-element="men-panel" role="dialog" aria-modal="true" aria-label="Categorias Masculinas">
       <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
       <div class="cj-men-panel__inner p-12 grid grid-cols-2 gap-8">
@@ -419,17 +468,39 @@
     customElements.define('cj-header', class CJHeader extends HTMLElement {
       connectedCallback() {
         this.backdrop = this.querySelector('[data-element="backdrop"]');
-        this.searchPanel = this.querySelector('[data-element="search-panel"]');
+        this.searchContainer = this.querySelector('.js-search-container');
+        this.searchTrigger = this.querySelector('.js-search-trigger');
+        this.searchFormWrap = this.querySelector('.search-form-wrap');
+        this.searchInput = this.querySelector('.js-search-input');
+        this.searchSubmitBtn = this.querySelector('.js-search-input-submit');
+        this.emptyBtn = this.querySelector('.js-empty-search');
         this.menPanel = this.querySelector('[data-element="men-panel"]');
 
         this.addEventListener('click', (e) => {
-          const target = e.target.closest('[data-action]');
-          if (!target) return;
+          const searchTrigger = e.target.closest('.js-search-trigger');
+          if (searchTrigger) {
+            this.toggleSearch();
+            return;
+          }
 
-          const action = target.dataset.action;
-          if (action === 'toggle-search') this.togglePanel(this.searchPanel);
-          if (action === 'toggle-men') this.togglePanel(this.menPanel);
-          if (action === 'close-panels') this.closeAll();
+          const target = e.target.closest('[data-action]');
+          if (target) {
+            const action = target.dataset.action;
+            if (action === 'toggle-men') this.togglePanel(this.menPanel);
+            if (action === 'close-panels') this.closeAll();
+          }
+        });
+
+        this.searchContainer?.setAttribute('data-search-open', 'false');
+        this.searchFormWrap?.setAttribute('aria-hidden', 'true');
+        this.searchTrigger?.setAttribute('aria-expanded', 'false');
+        if (this.searchInput) this.searchInput.disabled = true;
+        if (this.searchSubmitBtn) this.searchSubmitBtn.disabled = true;
+
+        document.addEventListener('click', (e) => {
+          if (this.searchContainer && !this.searchContainer.contains(e.target)) {
+            this.closeSearch();
+          }
         });
 
         if (this.backdrop) {
@@ -439,12 +510,59 @@
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') this.closeAll();
         });
+
+        if (this.searchInput && this.emptyBtn) {
+          this.searchInput.addEventListener('input', () => {
+            this.emptyBtn.style.display = this.searchInput.value.trim() ? 'flex' : 'none';
+          });
+
+          this.emptyBtn.addEventListener('click', () => {
+            this.searchInput.value = '';
+            this.searchInput.focus();
+            this.emptyBtn.style.display = 'none';
+          });
+        }
+      }
+
+      toggleSearch() {
+        const isOpen = this.searchContainer?.getAttribute('data-search-open') === 'true';
+        if (isOpen) {
+          this.closeSearch();
+        } else {
+          this.openSearch();
+        }
+      }
+
+      openSearch() {
+        if (!this.searchContainer) return;
+        this.searchContainer.setAttribute('data-search-open', 'true');
+        this.searchFormWrap?.setAttribute('aria-hidden', 'false');
+        this.searchTrigger?.setAttribute('aria-expanded', 'true');
+
+        if (this.searchInput) {
+          this.searchInput.disabled = false;
+          setTimeout(() => this.searchInput.focus(), 120);
+        }
+        if (this.searchSubmitBtn) this.searchSubmitBtn.disabled = false;
+      }
+
+      closeSearch() {
+        this.searchContainer?.setAttribute('data-search-open', 'false');
+        this.searchFormWrap?.setAttribute('aria-hidden', 'true');
+        this.searchTrigger?.setAttribute('aria-expanded', 'false');
+
+        if (this.searchInput) {
+          this.searchInput.disabled = true;
+          this.searchInput.blur();
+        }
+        if (this.searchSubmitBtn) this.searchSubmitBtn.disabled = true;
+        if (this.emptyBtn) this.emptyBtn.style.display = 'none';
       }
 
       togglePanel(panelToOpen) {
+        if (!panelToOpen) return;
         const isOpen = panelToOpen.getAttribute('data-panel-open') === 'true';
         this.closeAll();
-
         if (!isOpen) {
           panelToOpen.setAttribute('data-panel-open', 'true');
           this.backdrop.removeAttribute('hidden');
@@ -453,7 +571,8 @@
       }
 
       closeAll() {
-        [this.searchPanel, this.menPanel].forEach(p => p?.removeAttribute('data-panel-open'));
+        this.closeSearch();
+        this.menPanel?.removeAttribute('data-panel-open');
         if (this.backdrop) this.backdrop.setAttribute('hidden', 'true');
         document.body.style.overflow = '';
       }

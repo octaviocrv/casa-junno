@@ -1,12 +1,4 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
+
 {
   "sections": {
     "videobanner_nqFzpT": {
@@ -16,6 +8,7 @@
         "video_url": "https://cdn.shopify.com/videos/c/o/v/729aee66588d439e99e38d0f43890867.mp4",
         "video_position": "center center",
         "background_color": "#f4eee6",
+        "line_color": "#5c4635",
         "video_height_desktop": 78,
         "video_height_tablet": 60,
         "video_height_mobile": 63,
@@ -30,7 +23,7 @@
         "overlay_bottom_opacity": 22,
         "video_zoom_strength": 20,
         "animation_distance_desktop": 160,
-        "animation_distance_tablet": 115,
+        "animation_distance_tablet": 155,
         "animation_distance_mobile": 165,
         "card_move_desktop": 260,
         "card_move_tablet": 135,
@@ -68,7 +61,7 @@
         "card_link_size": 12,
         "card_links_gap": 21,
         "card_links_gap_mobile": 20,
-        "card_shadow_opacity": 0,
+        "card_shadow_opacity": 10,
         "editorial_kicker": "CASA JUNNO",
         "editorial_title": "Elegância não se explica.",
         "editorial_text": "Ela se revela no tecido, no caimento e no silêncio de uma peça bem-feita.\nEssenciais masculinos criados para um guarda-roupa atemporal.",
@@ -82,7 +75,6 @@
         "editorial_max_width": 650,
         "editorial_kicker_size": 11,
         "editorial_kicker_spacing": 22,
-        "editorial_kicker_margin": 14,
         "editorial_title_size_desktop": 46,
         "editorial_title_size_mobile": 34,
         "editorial_title_margin": 18,

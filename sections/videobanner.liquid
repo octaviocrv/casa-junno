@@ -21,8 +21,9 @@
       </div>
     {% endif %}
 
-   <div class="cj-video-player__overlay"></div>
-</div>
+    <div class="cj-video-player__overlay"></div>
+    <div class="cj-video-player__frame" aria-hidden="true"></div>
+  </div>
 
 {% if section.settings.show_card %}
       <div class="cj-video-player__card">
@@ -102,7 +103,7 @@
 
   --cj-video-frame-x: clamp(14px, 2vw, 34px);
   --cj-video-frame-y: clamp(8px, 1vw, 16px);
-  --cj-line-color: rgba(96, 48, 34, 0.35);
+  --cj-line-color: {{ section.settings.line_color }};
 }
 #cj-video-player-{{ section.id }} .cj-video-player__wrapper {
   position: absolute;
@@ -114,51 +115,25 @@
   height: auto;
   overflow: hidden;
   background: {{ section.settings.background_color }};
-  box-shadow: inset 0 0 0 1px var(--cj-line-color);
-  transition: box-shadow 0.12s linear;
+  transition: none;
 }
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before,
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
-  content: "";
+
+/*
+  Moldura editorial (estilo MR PORTER / Loro Piana).
+  Uma linha fina de 1px em volta do vídeo. Antes isso estava quebrado:
+  os pseudo-elementos ::before/::after estavam declarados duas vezes,
+  então as linhas horizontais nunca apareciam. Agora a moldura completa
+  é feita com um único box-shadow inset, que não conflita e acompanha
+  o vídeo mesmo durante o zoom no scroll.
+*/
+#cj-video-player-{{ section.id }} .cj-video-player__frame {
   position: absolute;
-  left: 6px;
-  right: 6px;
-  height: 1px;
-  background: var(--cj-line-color);
+  inset: 6px;
   z-index: 5;
   pointer-events: none;
-}
-
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before {
-  top: 6px;
-}
-
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
-  bottom: 6px;
-}
-#cj-video-player-{{ section.id }} .cj-video-player__side-line-left,
-#cj-video-player-{{ section.id }} .cj-video-player__side-line-right {
-  display: none;
-}
-
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before,
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: {{ section.settings.line_color }};
-  z-index: 4;
-  pointer-events: none;
-}
-
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before {
-  left: 6px;
-}
-
-#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
-  right: 6px;
+  box-shadow: inset 0 0 0 1px var(--cj-line-color);
+  opacity: var(--cj-frame-progress, 1);
+  transition: opacity 0.18s linear;
 }
 
   #cj-video-player-{{ section.id }} .cj-video-player__video {
@@ -219,20 +194,25 @@
     transition: none;
     will-change: transform;
     backface-visibility: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.35);
   }
 
   #cj-video-player-{{ section.id }} .cj-video-player__card-kicker {
     font-size: {{ section.settings.card_kicker_size }}px;
     letter-spacing: {{ section.settings.card_kicker_spacing | divided_by: 100.0 }}em;
     text-transform: uppercase;
+    font-weight: 400;
     color: {{ section.settings.card_accent_color }};
     margin-bottom: {{ section.settings.card_kicker_margin }}px;
   }
 
   #cj-video-player-{{ section.id }} .cj-video-player__card-title {
     font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
     font-size: {{ section.settings.card_title_size_desktop }}px;
-    line-height: 1.1;
+    line-height: 1.14;
+    letter-spacing: 0.01em;
+    color: {{ section.settings.card_text_color }};
     margin-bottom: {{ section.settings.card_title_margin }}px;
   }
 
@@ -253,18 +233,18 @@
 
   #cj-video-player-{{ section.id }} .cj-video-player__card-links a {
     font-size: {{ section.settings.card_link_size }}px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: {{ section.settings.card_text_color }};
     text-decoration: none;
-    border-bottom: 1px solid rgba(42, 24, 16, 0.45);
-    padding-bottom: 5px;
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    border-bottom: 1px solid {{ section.settings.card_accent_color }};
+    padding-bottom: 6px;
+    transition: border-color 0.4s ease, color 0.4s ease;
   }
 
   #cj-video-player-{{ section.id }} .cj-video-player__card-links a:hover {
-    opacity: 0.72;
-    transform: translateY(-1px);
+    color: {{ section.settings.card_accent_color }};
+    border-color: transparent;
   }
 
   .cj-video-player-editorial-{{ section.id }} {
@@ -288,6 +268,7 @@
     font-size: {{ section.settings.editorial_kicker_size }}px;
     letter-spacing: {{ section.settings.editorial_kicker_spacing | divided_by: 100.0 }}em;
     text-transform: uppercase;
+    font-weight: 400;
     color: {{ section.settings.editorial_accent_color }};
     margin-bottom: {{ section.settings.editorial_kicker_margin }}px;
   }
@@ -296,7 +277,8 @@
     margin: 0 0 {{ section.settings.editorial_title_margin }}px;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: {{ section.settings.editorial_title_size_desktop }}px;
-    line-height: 1.08;
+    line-height: 1.1;
+    letter-spacing: 0.005em;
     font-weight: 400;
     color: {{ section.settings.editorial_title_color }};
   }
@@ -355,6 +337,21 @@
 
     .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__text {
       font-size: {{ section.settings.editorial_text_size_mobile }}px;
+    }
+  }
+
+  /*
+    Acessibilidade: se a pessoa ativou "reduzir movimento" no sistema,
+    desligamos o zoom e as transições. Uma marca premium respeita isso.
+    O vídeo continua rodando de fundo normalmente.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    #cj-video-player-{{ section.id }} .cj-video-player__video {
+      transform: none !important;
+      transition: none !important;
+    }
+    #cj-video-player-{{ section.id }} .cj-video-player__card {
+      transform: translateX(-50%) !important;
     }
   }
 </style>
@@ -431,15 +428,12 @@
         const rawProgress = clamp(-rect.top / distance, 0, 1);
         const progress = easeOut(rawProgress);
 
-   const zoomStrength = {{ section.settings.video_zoom_strength }} / 100;
-const zoom = 1 + progress * zoomStrength;
-
-const frameProgress = 1 - progress * 0.92;
-
-section.style.setProperty('--cj-video-zoom', zoom.toFixed(4));
-section.style.setProperty('--cj-frame-progress', frameProgress.toFixed(4));
+        const zoomStrength = {{ section.settings.video_zoom_strength }} / 100;
+        const zoom = 1 + progress * zoomStrength;
+        const frameProgress = 1 - progress * 0.92;
 
         section.style.setProperty('--cj-video-zoom', zoom.toFixed(4));
+        section.style.setProperty('--cj-frame-progress', frameProgress.toFixed(4));
 
         /*
           Força o zoom direto no vídeo também.
@@ -552,6 +546,12 @@ section.style.setProperty('--cj-frame-progress', frameProgress.toFixed(4));
       "id": "background_color",
       "label": "Cor de fundo",
       "default": "#f4eee6"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Cor da moldura do vídeo",
+      "default": "#603022"
     },
     {
       "type": "range",
