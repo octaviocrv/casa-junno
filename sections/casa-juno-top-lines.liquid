@@ -1,0 +1,351 @@
+<section
+  id="cj-top-lines-{{ section.id }}"
+  class="cj-top-lines"
+>
+  <div class="cj-top-lines__bar">
+    <button class="cj-top-lines__arrow cj-top-lines__arrow--prev" type="button" aria-label="Previous">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+
+    <div class="cj-top-lines__text-wrap">
+      <div class="cj-top-lines__text is-active" data-cj-message>
+        {{ section.settings.top_text_1 }}
+      </div>
+    </div>
+
+    <button class="cj-top-lines__arrow cj-top-lines__arrow--next" type="button" aria-label="Next">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+  </div>
+
+  <div class="cj-top-lines__progress">
+    <div class="cj-top-lines__progress-fill" id="cj-progress-fill-{{ section.id }}"></div>
+  </div>
+</section>
+
+<style>
+  #cj-top-lines-{{ section.id }} {
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    width: 100%;
+    position: relative;
+    z-index: 20;
+    
+    /* Typographic Elegance */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__bar {
+    height: {{ section.settings.bar_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: {{ section.settings.font_size }}px;
+    letter-spacing: 0.04em;
+    overflow: hidden;
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__text-wrap {
+    width: 100%;
+    max-width: 720px;
+    padding: 0 56px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__text {
+    text-align: center;
+    line-height: 1.2;
+    opacity: 1;
+    transform: translateY(0);
+    /* Curva elástica para transição editorial fluida */
+    transition: opacity 0.58s cubic-bezier(0.25, 1, 0.3, 1), transform 0.58s cubic-bezier(0.25, 1, 0.3, 1);
+    white-space: nowrap;
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__text.is-changing {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: {{ section.settings.arrow_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0 24px;
+    height: 100%;
+    z-index: 2;
+    transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.25, 1, 0.3, 1);
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__arrow svg {
+    width: {{ section.settings.arrow_size }}px;
+    height: {{ section.settings.arrow_size }}px;
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__arrow--prev {
+    left: 0;
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__arrow--next {
+    right: 0;
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__arrow:hover {
+    opacity: 0.45;
+  }
+  
+  #cj-top-lines-{{ section.id }} .cj-top-lines__arrow--prev:hover {
+    transform: translateY(-50%) translateX(-4px);
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__arrow--next:hover {
+    transform: translateY(-50%) translateX(4px);
+  }
+
+  /* Barra de Progresso Minimalista */
+  #cj-top-lines-{{ section.id }} .cj-top-lines__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  #cj-top-lines-{{ section.id }} .cj-top-lines__progress-fill {
+    height: 100%;
+    width: 0%;
+    background: {{ section.settings.line_color }};
+    transform-origin: left;
+  }
+
+  @media screen and (max-width: 749px) {
+    #cj-top-lines-{{ section.id }} .cj-top-lines__bar {
+      height: {{ section.settings.mobile_bar_height }}px;
+      font-size: {{ section.settings.mobile_font_size }}px;
+    }
+
+    #cj-top-lines-{{ section.id }} .cj-top-lines__text-wrap {
+      padding: 0 44px;
+      max-width: 100%;
+    }
+
+    #cj-top-lines-{{ section.id }} .cj-top-lines__text {
+      white-space: normal;
+    }
+
+    #cj-top-lines-{{ section.id }} .cj-top-lines__arrow svg {
+      width: {{ section.settings.mobile_arrow_size }}px;
+      height: {{ section.settings.mobile_arrow_size }}px;
+    }
+    
+    #cj-top-lines-{{ section.id }} .cj-top-lines__arrow {
+      padding: 0 16px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    function initCasaJunoTopLines() {
+      const section = document.querySelector('#cj-top-lines-{{ section.id }}');
+      if (!section) return;
+
+      const textEl = section.querySelector('[data-cj-message]');
+      const prevBtn = section.querySelector('.cj-top-lines__arrow--prev');
+      const nextBtn = section.querySelector('.cj-top-lines__arrow--next');
+      const progressFill = section.querySelector('#cj-progress-fill-{{ section.id }}');
+
+      if (!textEl || !prevBtn || !nextBtn) return;
+
+      const messages = [
+        {{ section.settings.top_text_1 | json }},
+        {{ section.settings.top_text_2 | json }},
+        {{ section.settings.top_text_3 | json }}
+      ].filter(function (item) {
+        return item && item.trim() !== '';
+      });
+
+      if (messages.length === 0) return;
+
+      let currentIndex = 0;
+      const intervalTime = 6000; 
+
+      if (section.dataset.cjTopLinesReady === 'true') return;
+      section.dataset.cjTopLinesReady = 'true';
+      
+      function startProgress() {
+        if (!progressFill) return;
+        progressFill.style.transition = 'none';
+        progressFill.style.width = '0%';
+        void progressFill.offsetWidth;
+        progressFill.style.transition = `width ${intervalTime}ms linear`;
+        progressFill.style.width = '100%';
+      }
+
+      function changeText(index) {
+        if (messages.length <= 1) return;
+        currentIndex = (index + messages.length) % messages.length;
+        textEl.classList.add('is-changing');
+        
+        setTimeout(function () {
+          textEl.textContent = messages[currentIndex];
+          textEl.classList.remove('is-changing');
+        }, 250);
+        
+        startProgress();
+      }
+
+      let autoTimer = setInterval(function () {
+        changeText(currentIndex + 1);
+      }, intervalTime);
+
+      function restartAutoTimer() {
+        clearInterval(autoTimer);
+        startProgress();
+        autoTimer = setInterval(function () {
+          changeText(currentIndex + 1);
+        }, intervalTime);
+      }
+
+      nextBtn.addEventListener('click', function () {
+        changeText(currentIndex + 1);
+        restartAutoTimer();
+      });
+
+      prevBtn.addEventListener('click', function () {
+        changeText(currentIndex - 1);
+        restartAutoTimer();
+      });
+
+      textEl.textContent = messages[0];
+      startProgress();
+    }
+
+    initCasaJunoTopLines();
+
+    document.addEventListener('shopify:section:load', initCasaJunoTopLines);
+    document.addEventListener('shopify:section:select', initCasaJunoTopLines);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Casa Juno top lines",
+  "settings": [
+    {
+      "type": "text",
+      "id": "top_text_1",
+      "label": "Texto 1",
+      "default": "Book a Private Appointment in Store"
+    },
+    {
+      "type": "text",
+      "id": "top_text_2",
+      "label": "Texto 2",
+      "default": "Free Shipping on Selected Orders"
+    },
+    {
+      "type": "text",
+      "id": "top_text_3",
+      "label": "Texto 3",
+      "default": "Timeless Essentials for the Modern Wardrobe"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Cor do fundo",
+      "default": "#F4EEE6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Cor do texto",
+      "default": "#2A1810"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Cor das setas",
+      "default": "#2A1810"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Cor do indicador de tempo",
+      "default": "#9A4F45"
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Altura da faixa desktop",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "mobile_bar_height",
+      "label": "Altura da faixa mobile",
+      "min": 20,
+      "max": 70,
+      "step": 1,
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Tamanho do texto desktop",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "label": "Tamanho do texto mobile",
+      "min": 9,
+      "max": 16,
+      "step": 1,
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "label": "Tamanho das setas desktop",
+      "min": 14,
+      "max": 34,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "mobile_arrow_size",
+      "label": "Tamanho das setas mobile",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Casa Juno top lines"
+    }
+  ]
+}
+{% endschema %}

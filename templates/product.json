@@ -1,0 +1,235 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "container": "container",
+        "text_alignment": "center",
+        "hide_current": false,
+        "hide_on_mb": false,
+        "animations": "inherit"
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_saving": false,
+            "sale_badge_type": "percentage"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "size_title": "Size"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_quantity_selector": true,
+            "show_atc_button": true,
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "addons": {
+          "type": "addons",
+          "settings": {
+            "show_atcp": true,
+            "show_ask_a_question": true,
+            "show_social": true
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "variant_picker",
+        "buy_buttons",
+        "addons"
+      ],
+      "disabled": true,
+      "settings": {
+        "container": "container",
+        "layout": "layout-6",
+        "show_atwl": true,
+        "enable_history_state": true,
+        "enable_variant_group_images": false,
+        "show_featured_media": true,
+        "show_zoom_button": true,
+        "enable_video_autoplay": false,
+        "show_nav_media_mobile": false,
+        "show_pagination_mobile": true,
+        "use_sticky_atc": true,
+        "use_sticky_atc_on_mobile": true,
+        "enable_dynamic_checkout": false,
+        "sticky_atc_wishtlist": false,
+        "sticky_atc_compare": false
+      }
+    },
+    "product-details-tabs": {
+      "type": "product-details-tabs",
+      "blocks": {
+        "description": {
+          "type": "description",
+          "settings": {
+            "header": "Product description"
+          }
+        },
+        "tab": {
+          "type": "tab",
+          "settings": {
+            "header": "Shipping & Return",
+            "content": "<p>Shipping cost is based on weight. Just add products to your cart and use the Shipping Calculator to see the shipping price.</p><p>We want you to be 100% satisfied with your purchase. Items can be returned or exchanged within 30 days of delivery.</p>",
+            "content_page": ""
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "tab"
+      ],
+      "disabled": true,
+      "settings": {
+        "container": "container",
+        "bg_color": "",
+        "default_open": true,
+        "animations": "inherit"
+      }
+    },
+    "cj_product_loropiana_zYCF36": {
+      "type": "cj-product-loropiana",
+      "blocks": {
+        "detail_image_nhfXwX": {
+          "type": "detail_image",
+          "settings": {
+            "image": "shopify://shop_images/IMG_0624.jpg",
+            "caption": ""
+          }
+        },
+        "detail_image_Rt8ky3": {
+          "type": "detail_image",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "detail_image_x6Frzj": {
+          "type": "detail_image",
+          "settings": {
+            "caption": ""
+          }
+        }
+      },
+      "block_order": [
+        "detail_image_nhfXwX",
+        "detail_image_Rt8ky3",
+        "detail_image_x6Frzj"
+      ],
+      "name": "Casa Juno PDP Loro",
+      "settings": {
+        "show_breadcrumb": true,
+        "show_vendor": false,
+        "show_buy_now": true,
+        "enable_mobile_sticky": true,
+        "show_services": true,
+        "show_editorial_gallery": true,
+        "show_story_block": true,
+        "gallery_limit": 7,
+        "main_image_size": 112,
+        "main_image_size_mobile": 86,
+        "media_stage_height_desktop": 760,
+        "media_stage_height_mobile": 460,
+        "detail_media_title": "Detalhes da peça",
+        "media_extra_caption_1": "",
+        "media_extra_caption_2": "",
+        "media_extra_caption_3": "",
+        "media_extra_caption_4": "",
+        "collection_label": "Casa Juno",
+        "material_text": "Algodão premium",
+        "color_label": "Cor",
+        "size_label": "Tamanho",
+        "media_badge": "Nova coleção",
+        "tax_note": "Frete calculado no checkout. Troca facilitada em até 30 dias.",
+        "add_to_cart_text": "Adicionar ao carrinho",
+        "buy_now_text": "Comprar agora",
+        "after_button_note": "Atendimento Casa Juno disponível para ajudar com tamanho, troca e entrega.",
+        "short_description": "Elegância silenciosa em uma peça masculina de caimento refinado, criada para acompanhar dias de trabalho, encontros e momentos de presença.",
+        "service_1_text": "Entrega grátis para pedidos selecionados",
+        "service_2_text": "Embalagem premium Casa Juno",
+        "service_3_text": "Compra segura e troca facilitada",
+        "about_text": "<p>Peça essencial da Casa Juno com construção limpa, acabamento premium e presença discreta. Ideal para quem busca elegância sem exagero.</p>",
+        "details_text": "<ul><li>Caimento masculino regular.</li><li>Toque macio e respirável.</li><li>Acabamento refinado nas costuras.</li><li>Design versátil para uso casual ou elegante.</li></ul>",
+        "care_text": "<p>Lavar à mão ou em ciclo delicado. Não utilizar alvejante. Secar à sombra. Passar em temperatura baixa quando necessário.</p>",
+        "returns_text": "<p>Você pode solicitar troca ou devolução conforme nossa política vigente. O produto deve estar sem sinais de uso, com etiqueta e embalagem original.</p>",
+        "payment_text": "<p>Pagamento seguro por cartão, Pix ou métodos disponíveis no checkout. Todas as transações são processadas em ambiente protegido.</p>",
+        "security_text": "<p>Nosso suporte acompanha sua compra do pedido à entrega. Seus dados são tratados com segurança e privacidade.</p>",
+        "shipping_text": "<p>Após a confirmação do pagamento, o pedido é preparado e enviado com rastreamento. O prazo final aparece no checkout conforme seu endereço.</p>",
+        "editorial_title": "Uma leitura completa da peça",
+        "editorial_copy": "Veja textura, caimento, acabamento e detalhes em uma sequência editorial pensada para transmitir o padrão Casa Juno.",
+        "story_kicker": "Elegância não se explica",
+        "story_title": "Criada para presença, não para excesso.",
+        "story_copy": "A Casa Juno trabalha com uma estética de luxo discreto: tecidos agradáveis, proporções limpas e detalhes que aparecem quando vistos de perto.",
+        "story_point_1": "Caimento pensado para valorizar a silhueta masculina.",
+        "story_point_2": "Textura e acabamento com aparência premium.",
+        "story_point_3": "Visual limpo para combinar com diferentes peças.",
+        "story_point_4": "Experiência de compra elegante do produto ao recebimento.",
+        "page_background": "#f9f4f4",
+        "card_background": "#efe4d8",
+        "image_background": "#f5f1ed",
+        "image_fit": "contain",
+        "text_color": "#2f211c",
+        "muted_color": "#6d625c",
+        "accent_color": "#9a4f42",
+        "border_color": "#d8c7b8",
+        "button_background": "#2f211c",
+        "button_text_color": "#ffffff",
+        "max_width": 1770,
+        "desktop_gap": 74,
+        "card_radius": 0,
+        "padding_top_desktop": 42,
+        "padding_bottom_desktop": 80,
+        "padding_top_mobile": 20,
+        "padding_bottom_mobile": 82
+      }
+    },
+    "product_recommendations_JPgkGy": {
+      "type": "product-recommendations",
+      "name": "Product recommendations",
+      "settings": {
+        "container": "container",
+        "heading": "You Might Also Like",
+        "heading_size": "h3",
+        "text_align": "left",
+        "limit": 8,
+        "columns": 4,
+        "column_gap": 30,
+        "enable_slider": true,
+        "use_scroll_mobile": true,
+        "animations": "inherit"
+      }
+    }
+  },
+  "order": [
+    "breadcrumb",
+    "main",
+    "product-details-tabs",
+    "cj_product_loropiana_zYCF36",
+    "product_recommendations_JPgkGy"
+  ]
+}

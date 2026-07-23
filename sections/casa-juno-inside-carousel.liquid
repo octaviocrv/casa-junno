@@ -1,0 +1,551 @@
+{% comment %}
+  Section: Casa Juno Inside Carousel
+{% endcomment %}
+
+<section
+  id="CasaJunoInside-{{ section.id }}"
+  class="cj-inside-section"
+  style="
+    --cj-bg: {{ section.settings.background_color }};
+    --cj-text: {{ section.settings.text_color }};
+    --cj-muted: {{ section.settings.muted_color }};
+    --cj-accent: {{ section.settings.accent_color }};
+    --cj-max-width: {{ section.settings.max_width }}px;
+    --cj-padding-top: {{ section.settings.padding_top }}px;
+    --cj-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="cj-inside-wrap">
+    <div class="cj-inside-header">
+      <h2>{{ section.settings.heading }}</h2>
+
+      {% if section.blocks.size > 1 %}
+        <div class="cj-inside-controls">
+          <button class="cj-inside-arrow cj-inside-prev" type="button" aria-label="Anterior">
+            ‹
+          </button>
+
+          <span class="cj-inside-count">
+            <span class="cj-current">1</span>/<span>{{ section.blocks.size }}</span>
+          </span>
+
+          <button class="cj-inside-arrow cj-inside-next" type="button" aria-label="Próximo">
+            ›
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="cj-inside-slider">
+      <div class="cj-inside-track">
+        {% for block in section.blocks %}
+          <article class="cj-inside-card" {{ block.shopify_attributes }}>
+            {% if block.settings.link != blank %}
+              <a href="{{ block.settings.link }}" class="cj-inside-card-link">
+            {% else %}
+              <div class="cj-inside-card-link">
+            {% endif %}
+
+              <div class="cj-inside-image-box">
+                {% if block.settings.image != blank %}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'cj-inside-image',
+                      alt: block.settings.title
+                  }}
+                {% else %}
+                  <div class="cj-inside-placeholder">
+                    {{ 'image' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="cj-inside-content">
+                {% if block.settings.title != blank %}
+                  <h3>{{ block.settings.title }}</h3>
+                {% endif %}
+
+                {% if block.settings.description != blank %}
+                  <p>{{ block.settings.description }}</p>
+                {% endif %}
+              </div>
+
+            {% if block.settings.link != blank %}
+              </a>
+            {% else %}
+              </div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #CasaJunoInside-{{ section.id }} {
+    background: var(--cj-bg);
+    color: var(--cj-text);
+    padding-top: var(--cj-padding-top);
+    padding-bottom: var(--cj-padding-bottom);
+    overflow: hidden;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-wrap {
+    max-width: var(--cj-max-width);
+    margin: 0 auto;
+    padding: 0 42px;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 34px;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-header h2 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--cj-text);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-controls {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--cj-text);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-arrow {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--cj-text);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 6px 8px;
+    transition:
+      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.35s ease,
+      color 0.35s ease;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-arrow:hover {
+    color: var(--cj-accent);
+    transform: translateY(-1px);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-arrow:disabled {
+    opacity: 0.28;
+    cursor: default;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-count {
+    font-size: 15px;
+    color: var(--cj-muted);
+    min-width: 38px;
+    text-align: center;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-slider {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-track {
+    display: flex;
+    gap: 28px;
+    will-change: transform;
+    transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-card {
+    flex: 0 0 calc((100% - 84px) / 4);
+    min-width: 0;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-image-box {
+    width: 100%;
+    aspect-ratio: 0.74 / 1;
+    overflow: hidden;
+    background: #f7f3ee;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition:
+      transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.8s ease;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-card:hover .cj-inside-image {
+    transform: scale(1.035);
+    filter: brightness(0.97);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f4eee8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-placeholder svg {
+    width: 45%;
+    opacity: 0.35;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-content {
+    padding-top: 22px;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-content h3 {
+    margin: 0 0 12px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.28;
+    color: var(--cj-text);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-content p {
+    margin: 0;
+    color: var(--cj-muted);
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: 95%;
+  }
+
+  @media screen and (max-width: 989px) {
+    #CasaJunoInside-{{ section.id }} .cj-inside-wrap {
+      padding: 0 24px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-card {
+      flex: 0 0 calc((100% - 28px) / 2);
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-header h2 {
+      font-size: 25px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #CasaJunoInside-{{ section.id }} {
+      padding-top: calc(var(--cj-padding-top) * 0.72);
+      padding-bottom: calc(var(--cj-padding-bottom) * 0.72);
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-wrap {
+      padding: 0 18px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-header {
+      margin-bottom: 24px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-header h2 {
+      font-size: 23px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-controls {
+      gap: 10px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-arrow {
+      font-size: 25px;
+      padding: 4px 5px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-track {
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-card {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-image-box {
+      aspect-ratio: 0.78 / 1;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-content {
+      padding-top: 16px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-content h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-content p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.querySelector('#CasaJunoInside-{{ section.id }}');
+    if (!root) return;
+
+    const track = root.querySelector('.cj-inside-track');
+    const prev = root.querySelector('.cj-inside-prev');
+    const next = root.querySelector('.cj-inside-next');
+    const current = root.querySelector('.cj-current');
+    const cards = Array.from(root.querySelectorAll('.cj-inside-card'));
+
+    if (!track || !cards.length) return;
+
+    let index = 0;
+
+    function getCardsPerView() {
+      if (window.innerWidth <= 749) return 1;
+      if (window.innerWidth <= 989) return 2;
+      return 4;
+    }
+
+    function maxIndex() {
+      return Math.max(0, cards.length - getCardsPerView());
+    }
+
+    function getGap() {
+      const styles = window.getComputedStyle(track);
+      return parseFloat(styles.columnGap || styles.gap || 0) || 0;
+    }
+
+    function update() {
+      const perView = getCardsPerView();
+      const max = maxIndex();
+
+      if (index > max) index = max;
+      if (index < 0) index = 0;
+
+      if (window.innerWidth <= 749) {
+        const cardWidth = cards[0].getBoundingClientRect().width;
+        const move = index * (cardWidth + getGap());
+
+        track.scrollTo({
+          left: move,
+          behavior: 'smooth'
+        });
+      } else {
+        const cardWidth = cards[0].getBoundingClientRect().width;
+        const move = index * (cardWidth + getGap());
+        track.style.transform = `translate3d(${-move}px, 0, 0)`;
+      }
+
+      if (current) current.textContent = index + 1;
+
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index >= max;
+    }
+
+    if (prev) {
+      prev.addEventListener('click', () => {
+        index -= 1;
+        update();
+      });
+    }
+
+    if (next) {
+      next.addEventListener('click', () => {
+        index += 1;
+        update();
+      });
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        track.style.transform = '';
+        update();
+      }, 150);
+    });
+
+    if (window.innerWidth <= 749) {
+      track.addEventListener('scroll', () => {
+        const cardWidth = cards[0].getBoundingClientRect().width + getGap();
+        const newIndex = Math.round(track.scrollLeft / cardWidth);
+
+        if (newIndex !== index) {
+          index = Math.max(0, Math.min(newIndex, maxIndex()));
+          if (current) current.textContent = index + 1;
+          if (prev) prev.disabled = index === 0;
+          if (next) next.disabled = index >= maxIndex();
+        }
+      }, { passive: true });
+    }
+
+    update();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Casa Juno inside carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Inside Casa Juno"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Cor de fundo",
+      "default": "#F4EEE8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Cor do texto principal",
+      "default": "#2A1810"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Cor do texto secundário",
+      "default": "#6F6258"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Cor vinho/marrom dos detalhes",
+      "default": "#9A4F45"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Largura máxima",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "default": 1480
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espaçamento topo",
+      "min": 40,
+      "max": 180,
+      "step": 4,
+      "default": 96
+    },
+    {
+  "type": "range",
+  "id": "padding_bottom",
+  "label": "Espaçamento baixo",
+  "min": 40,
+  "max": 180,
+  "step": 4,
+  "default": 112
+}
+  ],
+  "blocks": [
+    {
+      "type": "article",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagem"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Casa Juno atelier"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descrição",
+          "default": "Uma seleção pensada para quem valoriza tecido, caimento e presença discreta."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Casa Juno inside carousel",
+      "blocks": [
+        {
+          "type": "article",
+          "settings": {
+            "title": "O toque do tecido",
+            "description": "Texturas nobres, acabamento limpo e uma construção feita para durar além da estação."
+          }
+        },
+        {
+          "type": "article",
+          "settings": {
+            "title": "A arte do caimento",
+            "description": "Peças essenciais com proporções equilibradas para uma elegância natural."
+          }
+        },
+        {
+          "type": "article",
+          "settings": {
+            "title": "Detalhes de atelier",
+            "description": "Cada costura, etiqueta e acabamento reforça a linguagem silenciosa da Casa Juno."
+          }
+        },
+        {
+          "type": "article",
+          "settings": {
+            "title": "Presente Casa Juno",
+            "description": "Uma experiência sofisticada desde a escolha da peça até o primeiro uso."
+          }
+        },
+        {
+          "type": "article",
+          "settings": {
+            "title": "Guarda-roupa atemporal",
+            "description": "Essenciais masculinos para quem prefere qualidade visível apenas de perto."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

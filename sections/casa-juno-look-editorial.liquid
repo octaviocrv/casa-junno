@@ -1,0 +1,873 @@
+{% comment %}
+  Section: Casa Juno Look Editorial
+  Layout inspirado em Loro Piana:
+  1) Bloco editorial com imagem pequena à esquerda + imagem grande do look à direita
+  2) Bloco abaixo com imagem central + texto/link
+{% endcomment %}
+
+<section
+  id="CasaJunoLook-{{ section.id }}"
+  class="cj-look-section"
+  style="
+    --cj-bg: {{ section.settings.bg_color }};
+    --cj-text: {{ section.settings.text_color }};
+    --cj-muted: {{ section.settings.muted_color }};
+    --cj-accent: {{ section.settings.accent_color }};
+    --cj-card-bg: {{ section.settings.card_bg }};
+    --cj-max-width: {{ section.settings.max_width }}px;
+    --cj-padding-top: {{ section.settings.padding_top }}px;
+    --cj-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="cj-look-wrapper">
+
+    {% if section.settings.show_top_block %}
+      <div class="cj-look-top cj-animate">
+        <div class="cj-look-top-left">
+          {% if section.settings.small_image != blank %}
+            <a
+              class="cj-look-small-image-wrap"
+              {% if section.settings.small_image_link != blank %}
+                href="{{ section.settings.small_image_link }}"
+              {% endif %}
+            >
+              <img
+                src="{{ section.settings.small_image | image_url: width: 900 }}"
+                alt="{{ section.settings.small_image.alt | escape }}"
+                loading="lazy"
+                class="cj-look-small-image"
+              >
+            </a>
+          {% else %}
+            <div class="cj-look-placeholder">
+              Imagem pequena
+            </div>
+          {% endif %}
+
+          <div class="cj-look-copy">
+            {% if section.settings.top_title != blank %}
+              <h2>{{ section.settings.top_title }}</h2>
+            {% endif %}
+
+            {% if section.settings.top_description != blank %}
+              <div class="cj-look-description">
+                {{ section.settings.top_description }}
+              </div>
+            {% endif %}
+
+            <div class="cj-look-links">
+              {% if section.settings.top_link_1_text != blank %}
+                <a
+                  {% if section.settings.top_link_1_url != blank %}
+                    href="{{ section.settings.top_link_1_url }}"
+                  {% endif %}
+                >
+                  {{ section.settings.top_link_1_text }}
+                </a>
+              {% endif %}
+
+              {% if section.settings.top_link_2_text != blank %}
+                <a
+                  {% if section.settings.top_link_2_url != blank %}
+                    href="{{ section.settings.top_link_2_url }}"
+                  {% endif %}
+                >
+                  {{ section.settings.top_link_2_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="cj-look-top-right">
+          {% if section.settings.big_image != blank %}
+            <a
+              class="cj-look-big-image-wrap"
+              {% if section.settings.big_image_link != blank %}
+                href="{{ section.settings.big_image_link }}"
+              {% endif %}
+            >
+              <img
+                src="{{ section.settings.big_image | image_url: width: 1400 }}"
+                alt="{{ section.settings.big_image.alt | escape }}"
+                loading="lazy"
+                class="cj-look-big-image"
+              >
+            </a>
+          {% else %}
+            <div class="cj-look-placeholder cj-look-placeholder-big">
+              Imagem grande
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_bottom_block %}
+      <div class="cj-look-bottom cj-animate">
+        {% if section.settings.bottom_heading != blank %}
+          <h2 class="cj-look-bottom-heading">
+            {{ section.settings.bottom_heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.bottom_text != blank %}
+          <div class="cj-look-bottom-text">
+            {{ section.settings.bottom_text }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.bottom_image != blank %}
+          <a
+            class="cj-look-bottom-image-wrap"
+            {% if section.settings.bottom_image_link != blank %}
+              href="{{ section.settings.bottom_image_link }}"
+            {% endif %}
+          >
+            <img
+              src="{{ section.settings.bottom_image | image_url: width: 1300 }}"
+              alt="{{ section.settings.bottom_image.alt | escape }}"
+              loading="lazy"
+              class="cj-look-bottom-image"
+            >
+
+            {% if section.settings.bottom_badge_text != blank %}
+              <span class="cj-look-image-badge">
+                {{ section.settings.bottom_badge_text }}
+              </span>
+            {% endif %}
+          </a>
+        {% else %}
+          <div class="cj-look-placeholder cj-look-placeholder-bottom">
+            Imagem central
+          </div>
+        {% endif %}
+
+        {% if section.settings.bottom_link_text != blank %}
+          <a
+            class="cj-look-bottom-link"
+            {% if section.settings.bottom_link_url != blank %}
+              href="{{ section.settings.bottom_link_url }}"
+            {% endif %}
+          >
+            {{ section.settings.bottom_link_text }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #CasaJunoLook-{{ section.id }} {
+    background: var(--cj-bg);
+    color: var(--cj-text);
+    padding-top: var(--cj-padding-top);
+    padding-bottom: var(--cj-padding-bottom);
+    overflow: hidden;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-wrapper {
+    max-width: var(--cj-max-width);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-top {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    align-items: center;
+    gap: 80px;
+    min-height: 780px;
+    background: var(--cj-card-bg);
+    padding: 80px 80px;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-top-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-small-image-wrap {
+    display: block;
+    width: min(100%, 330px);
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-small-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 900ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-small-image-wrap:hover .cj-look-small-image {
+    transform: scale(1.035);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-copy {
+    margin-top: 48px;
+    text-align: center;
+    max-width: 360px;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-copy h2,
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-heading {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    color: var(--cj-text);
+    letter-spacing: -0.02em;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-copy h2 {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-description {
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--cj-muted);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-links {
+    margin-top: 38px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-links a,
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-link {
+    color: var(--cj-accent);
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 1;
+    font-family: Georgia, 'Times New Roman', serif;
+    transition: opacity 280ms ease, transform 280ms ease;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-links a:hover,
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-link:hover {
+    opacity: .72;
+    transform: translateY(-1px);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-top-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-big-image-wrap {
+    display: block;
+    width: min(100%, 560px);
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-big-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 1000ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-big-image-wrap:hover .cj-look-big-image {
+    transform: scale(1.025);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom {
+    margin-top: {{ section.settings.bottom_margin_top }}px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-heading {
+    font-size: 26px;
+    line-height: 1.25;
+    max-width: 620px;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-text {
+    margin-top: 22px;
+    max-width: 620px;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--cj-muted);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-image-wrap {
+    margin-top: 52px;
+    width: min(100%, 560px);
+    position: relative;
+    display: block;
+    text-decoration: none;
+    overflow: visible;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 1100ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-image-wrap:hover .cj-look-bottom-image {
+    transform: scale(1.025);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-image-badge {
+    position: absolute;
+    left: 50%;
+    bottom: -22px;
+    transform: translateX(-50%);
+    background: #fff;
+    color: var(--cj-text);
+    padding: 14px 42px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 24px;
+    line-height: 1;
+    box-shadow: 0 14px 34px rgba(42, 24, 16, .08);
+    white-space: nowrap;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-bottom-link {
+    margin-top: 74px;
+    display: inline-block;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-placeholder {
+    width: 330px;
+    aspect-ratio: 3 / 4;
+    background: rgba(42, 24, 16, .05);
+    color: var(--cj-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-placeholder-big {
+    width: 560px;
+    aspect-ratio: 3 / 4;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-look-placeholder-bottom {
+    width: min(100%, 560px);
+    aspect-ratio: 3 / 4;
+    margin-top: 52px;
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-animate {
+    opacity: 0;
+    transform: translateY(42px);
+    transition:
+      opacity 1100ms cubic-bezier(.22, 1, .36, 1),
+      transform 1100ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  #CasaJunoLook-{{ section.id }} .cj-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+   @media screen and (max-width: 989px) {
+    #CasaJunoLook-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-wrapper {
+      max-width: 100%;
+      width: 100%;
+      padding: 0 16px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-top {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0;
+      min-height: 0;
+      height: auto;
+      padding: 34px 16px 42px;
+      box-sizing: border-box;
+      background: var(--cj-card-bg);
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-top-right,
+    #CasaJunoLook-{{ section.id }} .cj-look-top-left {
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-top-right {
+      order: 1;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-top-left {
+      order: 2;
+      margin-top: 32px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-big-image-wrap,
+    #CasaJunoLook-{{ section.id }} .cj-look-small-image-wrap {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      margin-left: auto;
+      margin-right: auto;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-big-image-wrap {
+      width: 100%;
+      max-width: 350px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-small-image-wrap {
+      width: 74%;
+      max-width: 260px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-big-image,
+    #CasaJunoLook-{{ section.id }} .cj-look-small-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-placeholder {
+      width: 74%;
+      max-width: 260px;
+      aspect-ratio: 3 / 4;
+      margin: 0 auto;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-placeholder-big {
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 3 / 4;
+      margin: 0 auto;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-copy {
+      width: 100%;
+      max-width: 320px;
+      margin: 30px auto 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-copy h2 {
+      font-size: 22px;
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-description {
+      margin-top: 14px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-links {
+      margin-top: 26px;
+      gap: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-links a,
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom-link {
+      font-size: 15px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom {
+      width: 100%;
+      max-width: 430px;
+      margin: {{ section.settings.bottom_margin_top_mobile }}px auto 0;
+      padding: 0 16px;
+      box-sizing: border-box;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom-heading {
+      font-size: 22px;
+      line-height: 1.25;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom-text {
+      margin-top: 16px;
+      max-width: 340px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom-image-wrap {
+      margin-top: 36px;
+      width: 100%;
+      max-width: 350px;
+      position: relative;
+      display: block;
+      text-decoration: none;
+      overflow: visible;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-placeholder-bottom {
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 3 / 4;
+      margin: 36px auto 0;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-image-badge {
+      font-size: 18px;
+      padding: 11px 28px;
+      bottom: -18px;
+      max-width: calc(100% - 32px);
+      white-space: nowrap;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom-link {
+      margin-top: 58px;
+      display: inline-block;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #CasaJunoLook-{{ section.id }} .cj-look-wrapper {
+      padding: 0 10px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-top {
+      max-width: 100%;
+      padding: 30px 14px 40px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-big-image-wrap,
+    #CasaJunoLook-{{ section.id }} .cj-look-placeholder-big {
+      max-width: 330px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-small-image-wrap,
+    #CasaJunoLook-{{ section.id }} .cj-look-placeholder {
+      width: 76%;
+      max-width: 245px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-copy {
+      max-width: 300px;
+      margin-top: 28px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom {
+      max-width: 100%;
+      padding: 0 10px;
+    }
+
+    #CasaJunoLook-{{ section.id }} .cj-look-bottom-image-wrap,
+    #CasaJunoLook-{{ section.id }} .cj-look-placeholder-bottom {
+      max-width: 330px;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const section = document.getElementById('CasaJunoLook-{{ section.id }}');
+    if (!section) return;
+
+    const items = section.querySelectorAll('.cj-animate');
+
+    if (!('IntersectionObserver' in window)) {
+      items.forEach((item) => item.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.18,
+      rootMargin: '0px 0px -8% 0px'
+    });
+
+    items.forEach((item) => observer.observe(item));
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Casa Juno Look Editorial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Bloco superior"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_block",
+      "label": "Mostrar bloco superior",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "small_image",
+      "label": "Imagem pequena esquerda"
+    },
+    {
+      "type": "url",
+      "id": "small_image_link",
+      "label": "Link da imagem pequena"
+    },
+    {
+      "type": "image_picker",
+      "id": "big_image",
+      "label": "Imagem grande direita"
+    },
+    {
+      "type": "url",
+      "id": "big_image_link",
+      "label": "Link da imagem grande"
+    },
+    {
+      "type": "text",
+      "id": "top_title",
+      "label": "Título do bloco superior",
+      "default": "Foundational layers"
+    },
+    {
+      "type": "richtext",
+      "id": "top_description",
+      "label": "Descrição do bloco superior",
+      "default": "<p>Designed for everyday ease, the Maison’s essentials combine comfort with classic patterns and a fluid drape.</p>"
+    },
+    {
+      "type": "text",
+      "id": "top_link_1_text",
+      "label": "Texto do link 1",
+      "default": "– Women –"
+    },
+    {
+      "type": "url",
+      "id": "top_link_1_url",
+      "label": "URL do link 1"
+    },
+    {
+      "type": "text",
+      "id": "top_link_2_text",
+      "label": "Texto do link 2",
+      "default": "– Men –"
+    },
+    {
+      "type": "url",
+      "id": "top_link_2_url",
+      "label": "URL do link 2"
+    },
+    {
+      "type": "header",
+      "content": "Bloco inferior"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_block",
+      "label": "Mostrar bloco inferior",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "bottom_heading",
+      "label": "Título do bloco inferior",
+      "default": "A versatile travel companion"
+    },
+    {
+      "type": "richtext",
+      "id": "bottom_text",
+      "label": "Texto do bloco inferior",
+      "default": "<p>Blending function and comfort with clean, modern lines, this piece is ideally suited for life <em>en route</em>.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_image",
+      "label": "Imagem central inferior"
+    },
+    {
+      "type": "url",
+      "id": "bottom_image_link",
+      "label": "Link da imagem central"
+    },
+    {
+      "type": "text",
+      "id": "bottom_badge_text",
+      "label": "Texto em cima da imagem",
+      "default": "Traveller"
+    },
+    {
+      "type": "text",
+      "id": "bottom_link_text",
+      "label": "Texto do link inferior",
+      "default": "– Discover More –"
+    },
+    {
+      "type": "url",
+      "id": "bottom_link_url",
+      "label": "URL do link inferior"
+    },
+    {
+      "type": "range",
+      "id": "bottom_margin_top",
+      "label": "Espaço antes do bloco inferior desktop",
+      "min": 0,
+      "max": 180,
+      "step": 10,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "bottom_margin_top_mobile",
+      "label": "Espaço antes do bloco inferior mobile",
+      "min": 0,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "header",
+      "content": "Cores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Cor do fundo da section",
+      "default": "#F4EEE6"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Cor do fundo do bloco superior",
+      "default": "#F8F5EF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Cor do texto principal",
+      "default": "#2A1810"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Cor do texto secundário",
+      "default": "#6F6258"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Cor vinho/marrom dos links",
+      "default": "#9A4F42"
+    },
+    {
+      "type": "header",
+      "content": "Espaçamento"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Largura máxima desktop",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1300
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding topo desktop",
+      "min": 0,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding baixo desktop",
+      "min": 0,
+      "max": 220,
+      "step": 5,
+      "unit": "px",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding topo mobile",
+      "min": 0,
+      "max": 140,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding baixo mobile",
+      "min": 0,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Casa Juno Look Editorial"
+    }
+  ]
+}
+{% endschema %}

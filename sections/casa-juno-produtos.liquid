@@ -1,0 +1,550 @@
+{%- comment -%}
+  CASA JUNNO - Product Grid Editorial
+  Refatorado: Web Components, IntersectionObserver para performance e CSS Otimizado.
+{%- endcomment -%}
+
+<cj-product-grid
+  id="casa-juno-produtos-{{ section.id }}"
+  class="cj-products-section"
+  data-effect="{{ section.settings.enable_scroll_effect }}"
+  data-move="{{ section.settings.scroll_card_move }}"
+  data-zoom="{{ section.settings.scroll_image_zoom }}"
+  style="
+    --cj-bg: {{ section.settings.background_color }};
+    --cj-card-bg: {{ section.settings.card_background }};
+    --cj-text: {{ section.settings.text_color }};
+    --cj-muted: {{ section.settings.muted_color }};
+    --cj-accent: {{ section.settings.accent_color }};
+    --cj-max-width: {{ section.settings.max_width }}px;
+    --cj-pt-desk: {{ section.settings.padding_top_desktop }}px;
+    --cj-pb-desk: {{ section.settings.padding_bottom_desktop }}px;
+    --cj-pt-mob: {{ section.settings.padding_top_mobile }}px;
+    --cj-pb-mob: {{ section.settings.padding_bottom_mobile }}px;
+    --cj-gap-desk: {{ section.settings.gap_desktop }}px;
+    --cj-gap-mob: {{ section.settings.gap_mobile }}px;
+    --cj-img-h-desk: {{ section.settings.image_height_desktop }}px;
+    --cj-img-h-mob: {{ section.settings.image_height_mobile }}px;
+    --cj-card-y: 0px;
+    --cj-card-opacity: 1;
+    --cj-image-zoom: 1;
+  "
+>
+  <div class="cj-products-inner">
+    {% if section.settings.kicker != blank or section.settings.heading != blank or section.settings.text != blank %}
+      <div class="cj-products-header">
+        {% if section.settings.kicker != blank %}
+          <div class="cj-products-kicker">{{ section.settings.kicker }}</div>
+        {% endif %}
+        
+        {% if section.settings.heading != blank %}
+          <h2 class="cj-products-heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        
+        {% if section.settings.text != blank %}
+          <div class="cj-products-text">{{ section.settings.text }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="cj-products-grid">
+      {% for block in section.blocks %}
+        {% liquid
+          assign selected_product = block.settings.product
+          if selected_product != blank
+            assign product_url = selected_product.url
+            assign product_title = selected_product.title
+            assign product_image = selected_product.featured_image
+          else
+            assign product_url = block.settings.custom_link
+            assign product_title = block.settings.custom_title
+            assign product_image = block.settings.custom_image
+          endif
+        %}
+
+        <div class="cj-product-card" {{ block.shopify_attributes }}>
+          {% if product_url != blank %}
+            <a href="{{ product_url }}" class="cj-product-link" aria-label="{{ product_title | escape }}">
+          {% else %}
+            <div class="cj-product-link">
+          {% endif %}
+
+            <div class="cj-product-image-wrap">
+              {% if product_image != blank %}
+                {{ product_image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'cj-product-image', alt: product_title }}
+              {% else %}
+                <div class="cj-product-placeholder">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="cj-product-info">
+              <h3 class="cj-product-title">{{ product_title | default: 'Produto Editorial' }}</h3>
+              
+              {% if block.settings.subtitle != blank %}
+                <div class="cj-product-subtitle">{{ block.settings.subtitle }}</div>
+              {% elsif selected_product != blank and section.settings.show_price %}
+                <div class="cj-product-subtitle">{{ selected_product.price | money }}</div>
+              {% endif %}
+            </div>
+
+          {% if product_url != blank %}
+            </a>
+          {% else %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</cj-product-grid>
+
+<style>
+  cj-product-grid {
+    display: block;
+    width: 100%;
+    background: var(--cj-bg);
+    color: var(--cj-text);
+    padding: var(--cj-pt-desk) 0 var(--cj-pb-desk);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .cj-products-inner {
+    width: 100%;
+    max-width: var(--cj-max-width);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .cj-products-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 72px;
+  }
+
+  .cj-products-kicker {
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--cj-accent);
+    margin-bottom: 18px;
+  }
+
+  .cj-products-heading {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(34px, 4vw, 58px);
+    line-height: 1.04;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .cj-products-text {
+    margin-top: 26px;
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--cj-muted);
+  }
+
+  .cj-products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--cj-gap-desk);
+    align-items: start;
+  }
+
+  .cj-product-card {
+    transform: translate3d(0, var(--cj-card-y), 0);
+    opacity: var(--cj-card-opacity);
+    will-change: transform, opacity;
+  }
+
+  cj-product-grid[data-ready="true"] .cj-product-card {
+    transition: transform 0.08s linear, opacity 0.18s linear;
+  }
+
+  .cj-product-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cj-product-image-wrap {
+    height: var(--cj-img-h-desk);
+    background: var(--cj-card-bg);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .cj-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scale(var(--cj-image-zoom));
+    transition: transform 0.4s ease;
+    will-change: transform;
+  }
+
+  .cj-product-link:hover .cj-product-image {
+    transform: scale(calc(var(--cj-image-zoom) + 0.035));
+  }
+
+  .cj-product-info {
+    text-align: center;
+    padding-top: 26px;
+  }
+
+  .cj-product-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    margin: 0;
+    color: var(--cj-text);
+  }
+
+  .cj-product-subtitle {
+    margin-top: 7px;
+    font-size: 15px;
+    color: var(--cj-accent);
+  }
+
+  @media (max-width: 989px) {
+    .cj-products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 749px) {
+    cj-product-grid { padding: var(--cj-pt-mob) 0 var(--cj-pb-mob); }
+    .cj-products-inner { padding: 0 16px; }
+    .cj-products-header { margin-bottom: 44px; }
+    .cj-products-heading { font-size: 31px; }
+    .cj-products-text { font-size: 14px; }
+    .cj-products-grid { gap: var(--cj-gap-mob); }
+    .cj-product-image-wrap { height: var(--cj-img-h-mob); }
+    .cj-product-info { padding-top: 14px; }
+    .cj-product-title { font-size: 14px; }
+    .cj-product-subtitle { font-size: 13px; }
+  }
+</style>
+
+<script>
+  if (!customElements.get('cj-product-grid')) {
+    customElements.define('cj-product-grid', class extends HTMLElement {
+      connectedCallback() {
+        if (this.dataset.effect !== 'true') return;
+        
+        this.cardMove = parseFloat(this.dataset.move) || 70;
+        this.imageZoomAmount = (parseFloat(this.dataset.zoom) || 8) / 100;
+        this.ticking = false;
+        
+        this.onScroll = this.onScroll.bind(this);
+        
+        this.observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            window.addEventListener('scroll', this.onScroll, { passive: true });
+            this.updateEffect();
+          } else {
+            window.removeEventListener('scroll', this.onScroll);
+          }
+        }, { rootMargin: "100px" });
+        
+        this.observer.observe(this);
+      }
+
+      onScroll() {
+        if (!this.ticking) {
+          window.requestAnimationFrame(() => {
+            this.updateEffect();
+            this.ticking = false;
+          });
+          this.ticking = true;
+        }
+      }
+
+      updateEffect() {
+        const rect = this.getBoundingClientRect();
+        const start = window.innerHeight * 0.92;
+        const end = window.innerHeight * 0.28;
+        const progress = Math.min(Math.max((start - rect.top) / (start - end), 0), 1);
+
+        const y = (1 - progress) * this.cardMove;
+        const opacity = 0.35 + progress * 0.65;
+        const zoom = 1 + progress * this.imageZoomAmount;
+
+        this.style.setProperty('--cj-card-y', `${y.toFixed(2)}px`);
+        this.style.setProperty('--cj-card-opacity', opacity.toFixed(3));
+        this.style.setProperty('--cj-image-zoom', zoom.toFixed(4));
+        this.setAttribute('data-ready', 'true');
+      }
+
+      disconnectedCallback() {
+        if (this.observer) this.observer.disconnect();
+        window.removeEventListener('scroll', this.onScroll);
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Casa Juno produtos",
+  "tag": "section",
+  "class": "section-casa-juno-produtos",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Texto superior"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Texto pequeno",
+      "default": "CASA JUNO"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Elegância não se explica."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Descrição",
+      "default": "Ela se percebe no tecido, no caimento e no silêncio de uma peça bem feita. Essenciais masculinos criados para um guarda-roupa atemporal."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Mostrar preço quando usar produto",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Efeito ao descer a tela"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_scroll_effect",
+      "label": "Ativar efeito editorial no scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "scroll_card_move",
+      "label": "Quanto os produtos sobem",
+      "min": 0,
+      "max": 140,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "scroll_image_zoom",
+      "label": "Zoom das imagens no scroll",
+      "min": 0,
+      "max": 18,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Largura máxima",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1560
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Espaço acima desktop",
+      "min": 0,
+      "max": 220,
+      "step": 5,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Espaço abaixo desktop",
+      "min": 0,
+      "max": 220,
+      "step": 5,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Espaço acima mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Espaço abaixo mobile",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "gap_desktop",
+      "label": "Espaço entre produtos desktop",
+      "min": 12,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Espaço entre produtos mobile",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "image_height_desktop",
+      "label": "Altura da imagem desktop",
+      "min": 320,
+      "max": 720,
+      "step": 10,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "label": "Altura da imagem mobile",
+      "min": 180,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "default": 250
+    },
+    {
+      "type": "header",
+      "content": "Cores"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Cor do fundo",
+      "default": "#F4EEE6"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Cor do fundo das fotos",
+      "default": "#F8F3EC"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Cor do texto principal",
+      "default": "#2A1810"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Cor da descrição",
+      "default": "#6F6258"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Cor secundária",
+      "default": "#A97654"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Produto",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produto Shopify"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Imagem personalizada"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Título personalizado"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtítulo / material",
+          "default": "Premium cotton"
+        },
+        {
+          "type": "url",
+          "id": "custom_link",
+          "label": "Link personalizado"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Casa Juno produtos",
+      "blocks": [
+        {
+          "type": "product_card",
+          "settings": {
+            "custom_title": "Polo Masculina Premium",
+            "subtitle": "Algodão premium"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "custom_title": "Camiseta Signature",
+            "subtitle": "Toque macio"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "custom_title": "Tricot Leve",
+            "subtitle": "Malha premium"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "custom_title": "Alfaiataria Casual",
+            "subtitle": "Caimento natural"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

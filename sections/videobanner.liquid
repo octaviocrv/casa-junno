@@ -1,0 +1,1225 @@
+<section
+  id="cj-video-player-{{ section.id }}"
+  class="cj-video-player"
+>
+  <div class="cj-video-player__wrapper">
+    {% if section.settings.video_url != blank %}
+      <video
+        class="cj-video-player__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="auto"
+      >
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {% else %}
+      <div class="cj-video-player__placeholder">
+        Adicione o link do vídeo MP4 nas configurações da seção.
+      </div>
+    {% endif %}
+
+   <div class="cj-video-player__overlay"></div>
+</div>
+
+{% if section.settings.show_card %}
+      <div class="cj-video-player__card">
+        {% if section.settings.card_kicker != blank %}
+          <div class="cj-video-player__card-kicker">
+            {{ section.settings.card_kicker }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.card_title != blank %}
+          <div class="cj-video-player__card-title">
+            {{ section.settings.card_title }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.card_text != blank %}
+          <div class="cj-video-player__card-text">
+            {{ section.settings.card_text }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.card_link_1_text != blank or section.settings.card_link_2_text != blank %}
+          <div class="cj-video-player__card-links">
+            {% if section.settings.card_link_1_text != blank %}
+              <a href="{{ section.settings.card_link_1_url | default: '#' }}">
+                {{ section.settings.card_link_1_text }}
+              </a>
+            {% endif %}
+
+            {% if section.settings.card_link_2_text != blank %}
+              <a href="{{ section.settings.card_link_2_url | default: '#' }}">
+                {{ section.settings.card_link_2_text }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  
+
+</section>
+
+<section class="cj-video-player-editorial-{{ section.id }}">
+  <div class="cj-video-player-editorial__inner">
+    {% if section.settings.editorial_kicker != blank %}
+      <div class="cj-video-player-editorial__kicker">
+        {{ section.settings.editorial_kicker }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.editorial_title != blank %}
+      <h2 class="cj-video-player-editorial__title">
+        {{ section.settings.editorial_title }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.editorial_text != blank %}
+      <div class="cj-video-player-editorial__text">
+        {{ section.settings.editorial_text }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+#cj-video-player-{{ section.id }} {
+  position: relative;
+  width: 100%;
+  height: {{ section.settings.video_height_desktop }}vh;
+  min-height: {{ section.settings.video_min_height_desktop }}px;
+  max-height: {{ section.settings.video_max_height_desktop }}px;
+  overflow: visible;
+  background: {{ section.settings.background_color }};
+  --cj-video-zoom: 1;
+  --cj-card-y: 0px;
+  --cj-card-scale: 1;
+
+  --cj-video-frame-x: clamp(14px, 2vw, 34px);
+  --cj-video-frame-y: clamp(8px, 1vw, 16px);
+  --cj-line-color: rgba(96, 48, 34, 0.35);
+}
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper {
+  position: absolute;
+  top: calc(var(--cj-video-frame-y) * var(--cj-frame-progress, 1));
+  right: calc(var(--cj-video-frame-x) * var(--cj-frame-progress, 1));
+  bottom: calc(var(--cj-video-frame-y) * var(--cj-frame-progress, 1));
+  left: calc(var(--cj-video-frame-x) * var(--cj-frame-progress, 1));
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  background: {{ section.settings.background_color }};
+  box-shadow: inset 0 0 0 1px var(--cj-line-color);
+  transition: box-shadow 0.12s linear;
+}
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before,
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  height: 1px;
+  background: var(--cj-line-color);
+  z-index: 5;
+  pointer-events: none;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before {
+  top: 6px;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
+  bottom: 6px;
+}
+#cj-video-player-{{ section.id }} .cj-video-player__side-line-left,
+#cj-video-player-{{ section.id }} .cj-video-player__side-line-right {
+  display: none;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before,
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: {{ section.settings.line_color }};
+  z-index: 4;
+  pointer-events: none;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::before {
+  left: 6px;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__wrapper::after {
+  right: 6px;
+}
+
+  #cj-video-player-{{ section.id }} .cj-video-player__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.video_position }};
+    display: block;
+    transform: scale(var(--cj-video-zoom, 1));
+    transform-origin: center center;
+    transition: transform 0.18s ease-out;
+    will-change: transform;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8ded2;
+    color: #3b241d;
+    font-size: 14px;
+    text-align: center;
+    padding: 24px;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, {{ section.settings.overlay_top_opacity | divided_by: 100.0 }}),
+      rgba(0, 0, 0, {{ section.settings.overlay_middle_opacity | divided_by: 100.0 }}) 42%,
+      rgba(0, 0, 0, {{ section.settings.overlay_bottom_opacity | divided_by: 100.0 }})
+    );
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__card {
+    position: absolute;
+    left: 50%;
+    bottom: {{ section.settings.card_bottom_desktop }}px;
+    z-index: 5;
+    width: min({{ section.settings.card_width_desktop }}px, calc(100% - 40px));
+    background: {{ section.settings.card_background }};
+    color: {{ section.settings.card_text_color }};
+    text-align: center;
+    padding: {{ section.settings.card_padding_y_desktop }}px {{ section.settings.card_padding_x_desktop }}px;
+    box-shadow: 0 18px 45px rgba(42, 24, 16, {{ section.settings.card_shadow_opacity | divided_by: 100.0 }});
+    transform:
+      translateX(-50%)
+      translate3d(0, var(--cj-card-y, 0px), 0)
+      scale(var(--cj-card-scale, 1));
+    transition: none;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__card-kicker {
+    font-size: {{ section.settings.card_kicker_size }}px;
+    letter-spacing: {{ section.settings.card_kicker_spacing | divided_by: 100.0 }}em;
+    text-transform: uppercase;
+    color: {{ section.settings.card_accent_color }};
+    margin-bottom: {{ section.settings.card_kicker_margin }}px;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__card-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: {{ section.settings.card_title_size_desktop }}px;
+    line-height: 1.1;
+    margin-bottom: {{ section.settings.card_title_margin }}px;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__card-text {
+    font-size: {{ section.settings.card_body_size_desktop }}px;
+    line-height: 1.7;
+    color: {{ section.settings.card_body_color }};
+    margin-bottom: {{ section.settings.card_text_margin }}px;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__card-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: {{ section.settings.card_links_gap }}px;
+    flex-wrap: wrap;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__card-links a {
+    font-size: {{ section.settings.card_link_size }}px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: {{ section.settings.card_text_color }};
+    text-decoration: none;
+    border-bottom: 1px solid rgba(42, 24, 16, 0.45);
+    padding-bottom: 5px;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  #cj-video-player-{{ section.id }} .cj-video-player__card-links a:hover {
+    opacity: 0.72;
+    transform: translateY(-1px);
+  }
+
+  .cj-video-player-editorial-{{ section.id }} {
+    position: relative;
+    z-index: 2;
+    background: {{ section.settings.background_color }};
+   padding-top: {{ section.settings.editorial_padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.editorial_padding_bottom_desktop }}px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__inner {
+    max-width: {{ section.settings.editorial_max_width }}px;
+    margin: 0 auto;
+    text-align: center;
+    color: {{ section.settings.editorial_text_color }};
+  }
+
+  .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__kicker {
+    font-size: {{ section.settings.editorial_kicker_size }}px;
+    letter-spacing: {{ section.settings.editorial_kicker_spacing | divided_by: 100.0 }}em;
+    text-transform: uppercase;
+    color: {{ section.settings.editorial_accent_color }};
+    margin-bottom: {{ section.settings.editorial_kicker_margin }}px;
+  }
+
+  .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__title {
+    margin: 0 0 {{ section.settings.editorial_title_margin }}px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: {{ section.settings.editorial_title_size_desktop }}px;
+    line-height: 1.08;
+    font-weight: 400;
+    color: {{ section.settings.editorial_title_color }};
+  }
+
+  .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__text {
+    max-width: 620px;
+    margin: 0 auto;
+    font-size: {{ section.settings.editorial_text_size_desktop }}px;
+    line-height: 1.85;
+    color: {{ section.settings.editorial_text_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    #cj-video-player-{{ section.id }} {
+      height: {{ section.settings.video_height_tablet }}svh;
+      min-height: {{ section.settings.video_min_height_tablet }}px;
+      max-height: {{ section.settings.video_max_height_tablet }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #cj-video-player-{{ section.id }} {
+      height: {{ section.settings.video_height_mobile }}svh;
+      min-height: {{ section.settings.video_min_height_mobile }}px;
+      max-height: {{ section.settings.video_max_height_mobile }}px;
+    }
+
+    #cj-video-player-{{ section.id }} .cj-video-player__card {
+      bottom: {{ section.settings.card_bottom_mobile }}px;
+      width: min({{ section.settings.card_width_mobile }}px, calc(100% - 32px));
+      padding: {{ section.settings.card_padding_y_mobile }}px {{ section.settings.card_padding_x_mobile }}px;
+    }
+
+    #cj-video-player-{{ section.id }} .cj-video-player__card-title {
+      font-size: {{ section.settings.card_title_size_mobile }}px;
+    }
+
+    #cj-video-player-{{ section.id }} .cj-video-player__card-text {
+      font-size: {{ section.settings.card_body_size_mobile }}px;
+    }
+
+    #cj-video-player-{{ section.id }} .cj-video-player__card-links {
+      gap: {{ section.settings.card_links_gap_mobile }}px;
+    }
+
+    .cj-video-player-editorial-{{ section.id }} {
+     padding-top: {{ section.settings.editorial_padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.editorial_padding_bottom_mobile }}px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__title {
+      font-size: {{ section.settings.editorial_title_size_mobile }}px;
+    }
+
+    .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__text {
+      font-size: {{ section.settings.editorial_text_size_mobile }}px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const sectionId = 'cj-video-player-{{ section.id }}';
+
+    function initCasaJunoVideoZoom() {
+      const section = document.querySelector('#' + sectionId);
+      if (!section) return;
+
+      const videos = section.querySelectorAll('.cj-video-player__video');
+      const card = section.querySelector('.cj-video-player__card');
+
+      videos.forEach(function (video) {
+        video.muted = true;
+        video.playsInline = true;
+
+        video.play().catch(function () {
+          const playOnTouch = function () {
+            video.play().catch(function () {});
+            document.removeEventListener('touchstart', playOnTouch);
+            document.removeEventListener('click', playOnTouch);
+          };
+
+          document.addEventListener('touchstart', playOnTouch, { once: true });
+          document.addEventListener('click', playOnTouch, { once: true });
+        });
+      });
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function easeOut(value) {
+        return 1 - Math.pow(1 - value, 3);
+      }
+
+      function getMode() {
+        if (window.innerWidth <= 749) return 'mobile';
+        if (window.innerWidth <= 989) return 'tablet';
+        return 'desktop';
+      }
+
+      function updateVideoZoom() {
+        const rect = section.getBoundingClientRect();
+        const mode = getMode();
+
+        const speedDesktop = {{ section.settings.animation_distance_desktop }} / 100;
+        const speedTablet = {{ section.settings.animation_distance_tablet }} / 100;
+        const speedMobile = {{ section.settings.animation_distance_mobile }} / 100;
+
+        const speedMultiplier =
+          mode === 'mobile'
+            ? speedMobile
+            : mode === 'tablet'
+              ? speedTablet
+              : speedDesktop;
+
+        /*
+          Correção importante:
+          antes o valor maior deixava a animação mais lenta, porque entrava como
+          distância. Agora o campo realmente funciona como velocidade: quanto
+          maior o número no editor, mais cedo o card encaixa no bloco abaixo.
+        */
+        const safeSpeed = Math.max(speedMultiplier, 0.35);
+        const distance = window.innerHeight * clamp(1 / safeSpeed, 0.45, 1.85);
+
+        /*
+          Loro Piana effect:
+          quanto mais você desce, mais o vídeo aproxima.
+        */
+        const rawProgress = clamp(-rect.top / distance, 0, 1);
+        const progress = easeOut(rawProgress);
+
+   const zoomStrength = {{ section.settings.video_zoom_strength }} / 100;
+const zoom = 1 + progress * zoomStrength;
+
+const frameProgress = 1 - progress * 0.92;
+
+section.style.setProperty('--cj-video-zoom', zoom.toFixed(4));
+section.style.setProperty('--cj-frame-progress', frameProgress.toFixed(4));
+
+        section.style.setProperty('--cj-video-zoom', zoom.toFixed(4));
+
+        /*
+          Força o zoom direto no vídeo também.
+          Isso evita bug do Shopify editor não aplicar a variável.
+        */
+        videos.forEach(function (video) {
+          video.style.transform = 'scale(' + zoom.toFixed(4) + ')';
+          video.style.transformOrigin = 'center center';
+          video.style.willChange = 'transform';
+        });
+
+        const cardMoveDesktop = {{ section.settings.card_move_desktop }};
+        const cardMoveTablet = {{ section.settings.card_move_tablet }};
+        const cardMoveMobile = {{ section.settings.card_move_mobile }};
+
+        const cardMove =
+          mode === 'mobile'
+            ? cardMoveMobile
+            : mode === 'tablet'
+              ? cardMoveTablet
+              : cardMoveDesktop;
+
+        const cardScaleStrength = {{ section.settings.card_scale_strength }} / 100;
+
+        /*
+          O card precisa chegar um pouco antes do zoom do vídeo para ficar
+          encaixado acima do texto "Elegância não se explica" no momento em
+          que o bloco editorial aparece por completo.
+        */
+        const cardCatchup = mode === 'mobile' ? 1.16 : mode === 'tablet' ? 1.20 : 1.26;
+        const cardProgress = easeOut(clamp(rawProgress * cardCatchup, 0, 1));
+        const cardY = cardProgress * cardMove;
+        const cardScale = 1 - cardProgress * cardScaleStrength;
+
+        if (card) {
+          section.style.setProperty('--cj-card-y', cardY.toFixed(2) + 'px');
+          section.style.setProperty('--cj-card-scale', cardScale.toFixed(4));
+        }
+      }
+
+      let ticking = false;
+
+      function requestTick() {
+        if (!ticking) {
+          window.requestAnimationFrame(function () {
+            updateVideoZoom();
+            ticking = false;
+          });
+
+          ticking = true;
+        }
+      }
+
+      updateVideoZoom();
+
+      window.addEventListener('scroll', requestTick, { passive: true });
+      window.addEventListener('resize', requestTick);
+
+      document.addEventListener('shopify:section:load', function (event) {
+        if (!event || !event.detail || event.detail.sectionId !== '{{ section.id }}') return;
+        setTimeout(updateVideoZoom, 80);
+      });
+
+      document.addEventListener('shopify:section:select', function (event) {
+        if (!event || !event.detail || event.detail.sectionId !== '{{ section.id }}') return;
+        setTimeout(updateVideoZoom, 80);
+      });
+
+      document.addEventListener('shopify:block:select', function () {
+        setTimeout(updateVideoZoom, 80);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCasaJunoVideoZoom);
+    } else {
+      initCasaJunoVideoZoom();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Video Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Vídeo"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Link do vídeo MP4"
+    },
+    {
+      "type": "select",
+      "id": "video_position",
+      "label": "Posição do vídeo",
+      "default": "center center",
+      "options": [
+        { "value": "center center", "label": "Centro" },
+        { "value": "center top", "label": "Centro topo" },
+        { "value": "center bottom", "label": "Centro baixo" },
+        { "value": "left center", "label": "Esquerda" },
+        { "value": "right center", "label": "Direita" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Cor de fundo",
+      "default": "#f4eee6"
+    },
+    {
+      "type": "range",
+      "id": "video_height_desktop",
+      "label": "Altura vídeo desktop",
+      "min": 40,
+      "max": 90,
+      "step": 1,
+      "unit": "vh",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "video_height_tablet",
+      "label": "Altura vídeo tablet",
+      "min": 40,
+      "max": 90,
+      "step": 1,
+      "unit": "svh",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "video_height_mobile",
+      "label": "Altura vídeo mobile",
+      "min": 40,
+      "max": 90,
+      "step": 1,
+      "unit": "svh",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "video_min_height_desktop",
+      "label": "Altura mínima desktop",
+      "min": 300,
+      "max": 700,
+      "step": 5,
+      "unit": "px",
+      "default": 420
+    },
+    {
+      "type": "range",
+      "id": "video_max_height_desktop",
+      "label": "Altura máxima desktop",
+      "min": 500,
+      "max": 1000,
+      "step": 5,
+      "unit": "px",
+      "default": 720
+    },
+    {
+      "type": "range",
+      "id": "video_min_height_tablet",
+      "label": "Altura mínima tablet",
+      "min": 300,
+      "max": 650,
+      "step": 5,
+      "unit": "px",
+      "default": 390
+    },
+    {
+      "type": "range",
+      "id": "video_max_height_tablet",
+      "label": "Altura máxima tablet",
+      "min": 450,
+      "max": 850,
+      "step": 5,
+      "unit": "px",
+      "default": 620
+    },
+    {
+      "type": "range",
+      "id": "video_min_height_mobile",
+      "label": "Altura mínima mobile",
+      "min": 280,
+      "max": 600,
+      "step": 5,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "video_max_height_mobile",
+      "label": "Altura máxima mobile",
+      "min": 380,
+      "max": 750,
+      "step": 5,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "header",
+      "content": "Overlay do vídeo"
+    },
+    {
+      "type": "range",
+      "id": "overlay_top_opacity",
+      "label": "Escurecimento topo",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "overlay_middle_opacity",
+      "label": "Escurecimento meio",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "overlay_bottom_opacity",
+      "label": "Escurecimento baixo",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Animação"
+    },
+    {
+      "type": "range",
+      "id": "video_zoom_strength",
+      "label": "Intensidade do zoom do vídeo",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "animation_distance_desktop",
+      "label": "Velocidade animação desktop",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "default": 165
+    },
+    {
+      "type": "range",
+      "id": "animation_distance_tablet",
+      "label": "Velocidade animação tablet",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "default": 165
+    },
+    {
+      "type": "range",
+      "id": "animation_distance_mobile",
+      "label": "Velocidade animação mobile",
+      "min": 60,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "default": 170
+    },
+    {
+      "type": "range",
+      "id": "card_move_desktop",
+      "label": "Descida do card desktop",
+      "min": 0,
+      "max": 420,
+      "step": 5,
+      "unit": "px",
+      "default": 215
+    },
+    {
+      "type": "range",
+      "id": "card_move_tablet",
+      "label": "Descida do card tablet",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "px",
+      "default": 190
+    },
+    {
+      "type": "range",
+      "id": "card_move_mobile",
+      "label": "Descida do card mobile",
+      "min": 0,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "card_scale_strength",
+      "label": "Redução do card ao descer",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "%",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Card sobre o vídeo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_card",
+      "label": "Mostrar card",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "card_kicker",
+      "label": "Texto pequeno do card",
+      "default": "COLEÇÃO"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Título do card",
+      "default": "Primavera / Verão"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Texto do card",
+      "default": "Peças essenciais para uma elegância discreta e natural."
+    },
+    {
+      "type": "text",
+      "id": "card_link_1_text",
+      "label": "Texto link 1",
+      "default": "VER COLEÇÃO"
+    },
+    {
+      "type": "url",
+      "id": "card_link_1_url",
+      "label": "Link 1"
+    },
+    {
+      "type": "text",
+      "id": "card_link_2_text",
+      "label": "Texto link 2",
+      "default": "MASCULINO"
+    },
+    {
+      "type": "url",
+      "id": "card_link_2_url",
+      "label": "Link 2"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Fundo do card",
+      "default": "#f4eee6"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Cor texto do card",
+      "default": "#2a1810"
+    },
+    {
+      "type": "color",
+      "id": "card_body_color",
+      "label": "Cor texto menor do card",
+      "default": "#6f6258"
+    },
+    {
+      "type": "color",
+      "id": "card_accent_color",
+      "label": "Cor detalhe do card",
+      "default": "#8b3f34"
+    },
+    {
+      "type": "range",
+      "id": "card_width_desktop",
+      "label": "Largura card desktop",
+      "min": 260,
+      "max": 520,
+      "step": 5,
+      "unit": "px",
+      "default": 330
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "label": "Largura card mobile",
+      "min": 240,
+      "max": 360,
+      "step": 5,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "card_bottom_desktop",
+      "label": "Posição inicial card desktop",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "card_bottom_mobile",
+      "label": "Posição inicial card mobile",
+      "min": 0,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding_y_desktop",
+      "label": "Padding vertical desktop",
+      "min": 18,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "card_padding_x_desktop",
+      "label": "Padding lateral desktop",
+      "min": 18,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "card_padding_y_mobile",
+      "label": "Padding vertical mobile",
+      "min": 16,
+      "max": 44,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "card_padding_x_mobile",
+      "label": "Padding lateral mobile",
+      "min": 16,
+      "max": 44,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_title_size_desktop",
+      "label": "Tamanho título card desktop",
+      "min": 18,
+      "max": 42,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_title_size_mobile",
+      "label": "Tamanho título card mobile",
+      "min": 16,
+      "max": 34,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "card_body_size_desktop",
+      "label": "Tamanho texto card desktop",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_body_size_mobile",
+      "label": "Tamanho texto card mobile",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "card_kicker_size",
+      "label": "Tamanho texto pequeno card",
+      "min": 8,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_kicker_spacing",
+      "label": "Espaçamento letras card",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "card_kicker_margin",
+      "label": "Margem texto pequeno card",
+      "min": 4,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "card_title_margin",
+      "label": "Margem título card",
+      "min": 6,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_text_margin",
+      "label": "Margem texto card",
+      "min": 8,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "card_link_size",
+      "label": "Tamanho links card",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_links_gap",
+      "label": "Espaço entre links desktop",
+      "min": 8,
+      "max": 44,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_links_gap_mobile",
+      "label": "Espaço entre links mobile",
+      "min": 8,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_opacity",
+      "label": "Sombra do card",
+      "min": 0,
+      "max": 35,
+      "step": 1,
+      "unit": "%",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Texto abaixo do vídeo"
+    },
+    {
+      "type": "text",
+      "id": "editorial_kicker",
+      "label": "Texto pequeno abaixo",
+      "default": "CASA JUNO"
+    },
+    {
+      "type": "text",
+      "id": "editorial_title",
+      "label": "Título abaixo",
+      "default": "Elegância não se explica."
+    },
+    {
+      "type": "textarea",
+      "id": "editorial_text",
+      "label": "Descrição abaixo",
+      "default": "Ela se percebe no tecido, no caimento e no silêncio de uma peça bem feita. Essenciais masculinos criados para um guarda-roupa atemporal."
+    },
+    {
+      "type": "color",
+      "id": "editorial_title_color",
+      "label": "Cor título abaixo",
+      "default": "#2a1810"
+    },
+    {
+      "type": "color",
+      "id": "editorial_text_color",
+      "label": "Cor texto abaixo",
+      "default": "#6f6258"
+    },
+    {
+      "type": "color",
+      "id": "editorial_accent_color",
+      "label": "Cor detalhe abaixo",
+      "default": "#8b3f34"
+    },
+    {
+      "type": "range",
+      "id": "editorial_padding_top_desktop",
+      "label": "Espaço acima do texto desktop",
+      "min": 80,
+      "max": 320,
+      "step": 5,
+      "unit": "px",
+      "default": 210
+    },
+    {
+      "type": "range",
+      "id": "editorial_padding_bottom_desktop",
+      "label": "Espaço abaixo do texto desktop",
+      "min": 40,
+      "max": 220,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "editorial_padding_top_mobile",
+      "label": "Espaço acima do texto mobile",
+      "min": 70,
+      "max": 260,
+      "step": 5,
+      "unit": "px",
+      "default": 165
+    },
+    {
+      "type": "range",
+      "id": "editorial_padding_bottom_mobile",
+      "label": "Espaço abaixo do texto mobile",
+      "min": 40,
+      "max": 180,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "editorial_max_width",
+      "label": "Largura máxima texto abaixo",
+      "min": 420,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 680
+    },
+    {
+      "type": "range",
+      "id": "editorial_kicker_size",
+      "label": "Tamanho texto pequeno abaixo",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "editorial_kicker_spacing",
+      "label": "Espaçamento letras abaixo",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "editorial_kicker_margin",
+      "label": "Margem texto pequeno abaixo",
+      "min": 4,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "editorial_title_size_desktop",
+      "label": "Tamanho título abaixo desktop",
+      "min": 26,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "editorial_title_size_mobile",
+      "label": "Tamanho título abaixo mobile",
+      "min": 24,
+      "max": 46,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "editorial_title_margin",
+      "label": "Margem título abaixo",
+      "min": 8,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "editorial_text_size_desktop",
+      "label": "Tamanho descrição abaixo desktop",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "editorial_text_size_mobile",
+      "label": "Tamanho descrição abaixo mobile",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Hero"
+    }
+  ]
+}
+{% endschema %}

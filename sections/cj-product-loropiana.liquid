@@ -1,0 +1,3159 @@
+{% comment %}
+  Casa Juno Product Page - Loro Piana inspired
+  Arquivo novo e isolado.
+  Path recomendado: sections/cj-product-loropiana.liquid
+  Nao substitui main-product.liquid.
+  Nao altera main-product-blocks.liquid.
+{% endcomment %}
+
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign first_media = product.featured_media | default: product.media.first
+  assign first_image = first_media.preview_image | default: product.featured_image
+  assign product_material = section.settings.material_text | default: product.metafields.custom.material | default: 'Linho premium'
+  assign color_label = section.settings.color_label | default: 'Cor'
+  assign size_label = section.settings.size_label | default: 'Tamanho'
+  assign collection_label = section.settings.collection_label | default: 'Casa Juno'
+  assign show_breadcrumb = section.settings.show_breadcrumb
+  assign show_vendor = section.settings.show_vendor
+  assign product_description = product.description | strip_html
+  assign image_limit = section.settings.gallery_limit | default: 7
+  assign main_image_size = section.settings.main_image_size | default: 112
+  assign main_image_size_mobile = section.settings.main_image_size_mobile | default: 86
+  assign media_stage_height_desktop = section.settings.media_stage_height_desktop | default: 760
+  assign media_stage_height_mobile = section.settings.media_stage_height_mobile | default: 460
+  assign product_form_id = 'CasaJunoProductForm-' | append: section.id
+%}
+
+<section
+  id="CasaJunoPdp-{{ section.id }}"
+  class="cj-pdp"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-cj-pdp
+>
+  <style>
+    #CasaJunoPdp-{{ section.id }} {
+      --cj-pdp-bg: {{ section.settings.page_background }};
+      --cj-pdp-card: {{ section.settings.card_background }};
+      --cj-pdp-image-bg: {{ section.settings.image_background }};
+      --cj-pdp-image-fit: {{ section.settings.image_fit }};
+      --cj-pdp-main-image-size: {{ main_image_size }}%;
+      --cj-pdp-main-image-size-mobile: {{ main_image_size_mobile }}%;
+      --cj-pdp-media-stage-height-desktop: {{ media_stage_height_desktop }}px;
+      --cj-pdp-media-stage-height-mobile: {{ media_stage_height_mobile }}px;
+      --cj-pdp-text: {{ section.settings.text_color }};
+      --cj-pdp-muted: {{ section.settings.muted_color }};
+      --cj-pdp-accent: {{ section.settings.accent_color }};
+      --cj-pdp-border: {{ section.settings.border_color }};
+      --cj-pdp-button-bg: {{ section.settings.button_background }};
+      --cj-pdp-button-text: {{ section.settings.button_text_color }};
+      --cj-pdp-soft-shadow: 0 20px 60px rgba(47, 33, 28, 0.07);
+      --cj-pdp-strong-shadow: 0 26px 80px rgba(47, 33, 28, 0.13);
+      --cj-pdp-radius: {{ section.settings.card_radius }}px;
+      --cj-pdp-max-width: {{ section.settings.max_width }}px;
+      --cj-pdp-desktop-gap: {{ section.settings.desktop_gap }}px;
+      --cj-pdp-top-padding-desktop: {{ section.settings.padding_top_desktop }}px;
+      --cj-pdp-bottom-padding-desktop: {{ section.settings.padding_bottom_desktop }}px;
+      --cj-pdp-top-padding-mobile: {{ section.settings.padding_top_mobile }}px;
+      --cj-pdp-bottom-padding-mobile: {{ section.settings.padding_bottom_mobile }}px;
+      --cj-pdp-font-heading: Georgia, 'Times New Roman', serif;
+      --cj-pdp-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--cj-pdp-bg);
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-body);
+      width: 100%;
+      overflow: clip;
+    }
+
+    #CasaJunoPdp-{{ section.id }} *,
+    #CasaJunoPdp-{{ section.id }} *::before,
+    #CasaJunoPdp-{{ section.id }} *::after {
+      box-sizing: border-box;
+    }
+
+    #CasaJunoPdp-{{ section.id }} a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    #CasaJunoPdp-{{ section.id }} button,
+    #CasaJunoPdp-{{ section.id }} input,
+    #CasaJunoPdp-{{ section.id }} select,
+    #CasaJunoPdp-{{ section.id }} textarea {
+      font: inherit;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__shell {
+      max-width: var(--cj-pdp-max-width);
+      margin: 0 auto;
+      padding: var(--cj-pdp-top-padding-desktop) 42px var(--cj-pdp-bottom-padding-desktop);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__breadcrumb {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      margin: 0 0 22px;
+      color: var(--cj-pdp-muted);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 13px;
+      line-height: 1.3;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__breadcrumb a {
+      opacity: 0.86;
+      transition: opacity 0.24s ease, color 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__breadcrumb a:hover {
+      color: var(--cj-pdp-accent);
+      opacity: 1;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__breadcrumb-separator {
+      opacity: 0.44;
+      font-size: 12px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(360px, 0.82fr);
+      gap: var(--cj-pdp-desktop-gap);
+      align-items: start;
+      min-height: 680px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__media {
+      min-width: 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__media-stage {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: var(--cj-pdp-media-stage-height-desktop);
+    height: var(--cj-pdp-media-stage-height-desktop);
+    background: var(--cj-pdp-image-bg);
+    border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 85%, transparent);
+    display: block;
+    padding: 0;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-stage::before,
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-stage::after {
+    content: none;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__badge {
+    position: absolute;
+    z-index: 4;
+    top: 26px;
+    left: 26px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: color-mix(in srgb, white 90%, transparent);
+    color: var(--cj-pdp-accent);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    box-shadow: 0 18px 36px rgba(43, 31, 27, 0.08);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__main-image-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cj-pdp-image-bg);
+    box-shadow: none;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__main-image {
+    width: auto;
+    height: auto;
+    max-width: var(--cj-pdp-main-image-size);
+    max-height: var(--cj-pdp-main-image-size);
+    display: block;
+    object-fit: var(--cj-pdp-image-fit);
+    object-position: center;
+    filter: none;
+    transition: opacity 0.32s ease, transform 0.32s ease;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__main-image.is-switching {
+    opacity: 0;
+    transform: scale(0.988);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      color: rgba(47, 33, 28, 0.26);
+      background:
+        radial-gradient(circle at 50% 34%, rgba(154, 79, 66, 0.13), transparent 26%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.55), rgba(233, 224, 214, 0.6));
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__placeholder svg {
+      width: min(380px, 68%);
+      height: auto;
+      opacity: 0.48;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__media-badge {
+      position: absolute;
+      left: 28px;
+      top: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 8px 14px 7px;
+      background: rgba(255, 253, 250, 0.86);
+      border: 1px solid rgba(116, 76, 58, 0.14);
+      border-radius: 999px;
+      color: var(--cj-pdp-accent);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 12px;
+      line-height: 1;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      z-index: 2;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__media-count {
+      position: absolute;
+      right: 28px;
+      bottom: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 8px 13px 7px;
+      background: rgba(47, 33, 28, 0.74);
+      border-radius: 999px;
+      color: #fff;
+      font-size: 12px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      z-index: 2;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb-row {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(68px, 1fr));
+      gap: 12px;
+      margin: 14px 0 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb {
+      position: relative;
+      appearance: none;
+      -webkit-appearance: none;
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: 0;
+      background: var(--cj-pdp-card);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.24s ease, transform 0.24s ease, opacity 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb:hover {
+      border-color: rgba(116, 76, 58, 0.32);
+      transform: translateY(-2px);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb.is-active {
+      border-color: var(--cj-pdp-accent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: var(--cj-pdp-image-fit);
+      object-position: center;
+      background: var(--cj-pdp-image-bg);
+      padding: 8px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb-placeholder {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(154, 79, 66, 0.16), transparent 34%),
+        linear-gradient(145deg, #f9f5ef, #e9ded4);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__info {
+      position: sticky;
+      top: calc(var(--m-header-height, 0px) + 22px);
+      align-self: start;
+      min-width: 0;
+      padding: 12px 0 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__info-card {
+      background: transparent;
+      color: var(--cj-pdp-text);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__title-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: start;
+      margin: 0 0 24px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__eyebrow {
+      margin: 0 0 10px;
+      color: var(--cj-pdp-muted);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 13px;
+      line-height: 1.3;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__title {
+      margin: 0;
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: clamp(34px, 3vw, 56px);
+      line-height: 0.98;
+      font-weight: 400;
+      letter-spacing: -0.035em;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__save {
+      position: relative;
+      width: 46px;
+      height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 72%, transparent);
+      border-radius: 999px;
+      background: rgba(255, 253, 250, 0.64);
+      color: var(--cj-pdp-text);
+      cursor: pointer;
+      transition: color 0.24s ease, border-color 0.24s ease, background 0.24s ease, transform 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__save:hover {
+      color: var(--cj-pdp-accent);
+      border-color: color-mix(in srgb, var(--cj-pdp-accent) 46%, transparent);
+      background: #fffdfa;
+      transform: translateY(-1px);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__save.is-saved {
+      color: var(--cj-pdp-accent);
+      border-color: color-mix(in srgb, var(--cj-pdp-accent) 50%, transparent);
+      background: rgba(154, 79, 66, 0.08);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__save svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.35;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__price-row {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 12px;
+      min-height: 34px;
+      margin: 0 0 28px;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__price {
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: clamp(25px, 2.15vw, 32px);
+      line-height: 1.05;
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      white-space: nowrap;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__compare {
+      color: color-mix(in srgb, var(--cj-pdp-muted) 78%, white);
+      font-size: 16px;
+      line-height: 1.1;
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+      opacity: 0.84;
+      white-space: nowrap;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__tax-note {
+      display: block;
+      margin: -14px 0 30px;
+      color: var(--cj-pdp-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__summary {
+      margin: 0 0 32px;
+      padding: 0 0 26px;
+      border-bottom: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__summary-text {
+      max-width: 540px;
+      margin: 0;
+      color: var(--cj-pdp-muted);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 18px;
+      line-height: 1.55;
+      font-weight: 400;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin: 0 0 30px;
+      border-top: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-line {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 18px;
+      align-items: baseline;
+      min-height: 52px;
+      padding: 16px 0;
+      border-bottom: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-label {
+      color: var(--cj-pdp-muted);
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-value {
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 400;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__variant-area {
+      margin: 0 0 28px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__option {
+      margin: 0 0 24px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__option-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 13px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__option-title {
+      margin: 0;
+      color: var(--cj-pdp-muted);
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__option-value {
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 17px;
+      letter-spacing: normal;
+      text-transform: none;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-guide-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--cj-pdp-accent);
+      font-size: 13px;
+      line-height: 1.2;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
+      transition: color 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-guide-btn:hover {
+      color: var(--cj-pdp-text);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__swatch {
+      position: relative;
+      min-width: 52px;
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 88%, transparent);
+      background: transparent;
+      color: var(--cj-pdp-text);
+      cursor: pointer;
+      transition: border-color 0.24s ease, color 0.24s ease, background 0.24s ease, transform 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__swatch:hover {
+      border-color: color-mix(in srgb, var(--cj-pdp-accent) 44%, transparent);
+      transform: translateY(-1px);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__swatch.is-selected {
+      border-color: var(--cj-pdp-accent);
+      color: var(--cj-pdp-accent);
+      background: rgba(154, 79, 66, 0.055);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__swatch.is-disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__swatch-text {
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 15px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__sizes {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size {
+      position: relative;
+      appearance: none;
+      -webkit-appearance: none;
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 8px;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 88%, transparent);
+      background: transparent;
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      transition: border-color 0.24s ease, background 0.24s ease, color 0.24s ease, transform 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size:hover {
+      border-color: color-mix(in srgb, var(--cj-pdp-accent) 44%, transparent);
+      transform: translateY(-1px);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size.is-selected {
+      border-color: var(--cj-pdp-accent);
+      color: var(--cj-pdp-accent);
+      background: rgba(154, 79, 66, 0.055);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size.is-disabled {
+      opacity: 0.34;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__form {
+      margin: 0 0 26px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__quantity-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 12px;
+      margin: 0 0 12px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__qty {
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+      align-items: stretch;
+      min-height: 54px;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 88%, transparent);
+      background: transparent;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__qty-btn {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--cj-pdp-text);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      transition: color 0.24s ease, background 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__qty-btn:hover {
+      color: var(--cj-pdp-accent);
+      background: rgba(154, 79, 66, 0.045);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__qty-input {
+      width: 100%;
+      min-width: 0;
+      border: 0 !important;
+      outline: 0 !important;
+      box-shadow: none !important;
+      text-align: center;
+      color: var(--cj-pdp-text) !important;
+      background: transparent !important;
+      font-family: var(--cj-pdp-font-heading) !important;
+      font-size: 16px !important;
+      -moz-appearance: textfield;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__qty-input::-webkit-outer-spin-button,
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__qty-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__add {
+      appearance: none;
+      -webkit-appearance: none;
+      min-height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px 22px;
+      border: 1px solid var(--cj-pdp-button-bg);
+      background: var(--cj-pdp-button-bg);
+      color: var(--cj-pdp-button-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.24s ease, color 0.24s ease, transform 0.24s ease, opacity 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__add:hover {
+      transform: translateY(-1px);
+      background: var(--cj-pdp-accent);
+      border-color: var(--cj-pdp-accent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__add[disabled] {
+      opacity: 0.46;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__buy-now {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px 22px;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 88%, transparent);
+      background: transparent;
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 15px;
+      line-height: 1;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.24s ease, color 0.24s ease, background 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__buy-now:hover {
+      border-color: var(--cj-pdp-accent);
+      color: var(--cj-pdp-accent);
+      background: rgba(154, 79, 66, 0.045);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__form-message {
+      margin: 12px 0 0;
+      color: var(--cj-pdp-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__form-message.is-error {
+      color: #8c2f24;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__services {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 0 30px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__service {
+      min-height: 98px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 80%, transparent);
+      background: rgba(255, 253, 250, 0.38);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__service-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--cj-pdp-accent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__service-text {
+      margin: 0;
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion {
+      border-top: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-item {
+      border-bottom: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-trigger {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      min-height: 62px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--cj-pdp-text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-title {
+      display: block;
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 400;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-icon {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cj-pdp-accent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-icon::before,
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-icon::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 14px;
+      height: 1px;
+      background: currentColor;
+      transform: translate(-50%, -50%);
+      transition: transform 0.24s ease, opacity 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-icon::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-item.is-open .cj-pdp__accordion-icon::after {
+      transform: translate(-50%, -50%) rotate(0deg);
+      opacity: 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-panel {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.34s cubic-bezier(0.42, 0, 0.18, 1);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-body {
+      padding: 0 0 24px;
+      color: var(--cj-pdp-muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-body p {
+      margin: 0 0 12px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-body ul,
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-body ol {
+      margin: 12px 0 0;
+      padding-left: 18px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__accordion-body li {
+      margin: 0 0 8px;
+    }
+
+
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-details {
+    margin-top: 18px;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-details-title {
+    margin: 0 0 12px;
+    color: var(--cj-pdp-muted);
+    font-family: var(--cj-pdp-font-heading);
+    font-size: 13px;
+    line-height: 1.3;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-detail-card {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    min-height: 320px;
+    aspect-ratio: 4 / 5;
+    background: var(--cj-pdp-image-bg);
+    border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 82%, transparent);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-detail-card img {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.42s ease;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-detail-card:hover img {
+    transform: scale(1.025);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-detail-caption {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 12px;
+    margin: 0;
+    padding: 8px 10px;
+    background: rgba(255, 253, 250, 0.84);
+    color: var(--cj-pdp-text);
+    font-size: 12px;
+    line-height: 1.35;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-details-grid[data-count="1"] {
+    grid-template-columns: 1fr;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__media-details-grid[data-count="3"] .cj-pdp__media-detail-card:first-child {
+    grid-column: span 2;
+  }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media {
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid color-mix(in srgb, var(--cj-pdp-border) 90%, transparent);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-title {
+    margin: 0 0 14px;
+    color: var(--cj-pdp-muted);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 12px;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-card {
+    margin: 0;
+    min-width: 0;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-frame {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: #f8f4ef;
+    border: 1px solid rgba(136, 104, 75, .14);
+    overflow: hidden;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transition: transform .35s ease;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-card:hover .cj-pdp__detail-media-img {
+    transform: scale(1.025);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-caption {
+    display: block;
+    margin-top: 9px;
+    color: var(--cj-pdp-muted);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial {
+    border-top: 1px solid color-mix(in srgb, var(--cj-pdp-border) 90%, transparent);
+    padding-top: 52px;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+    gap: 28px;
+    padding-bottom: 20px;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5.35;
+    overflow: hidden;
+    background: var(--cj-pdp-soft);
+    border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 70%, transparent);
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.38s ease;
+  }
+
+  #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-card:hover .cj-pdp__editorial-img {
+      transform: scale(1.035);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-meta {
+      display: block;
+      margin: 12px 0 0;
+      color: var(--cj-pdp-muted);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 13px;
+      line-height: 1.3;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__bottom-story {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(32px, 5vw, 86px);
+      align-items: center;
+      margin: 78px 0 0;
+      padding: 54px;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 76%, transparent);
+      background: rgba(255, 253, 250, 0.42);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-kicker {
+      margin: 0 0 14px;
+      color: var(--cj-pdp-accent);
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-title {
+      margin: 0;
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: clamp(34px, 4vw, 64px);
+      line-height: 0.98;
+      font-weight: 400;
+      letter-spacing: -0.045em;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-copy {
+      margin: 22px 0 0;
+      color: var(--cj-pdp-muted);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 18px;
+      line-height: 1.62;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 32px 0 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-point {
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px;
+      background: var(--cj-pdp-card);
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 78%, transparent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-number {
+      color: var(--cj-pdp-accent);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-point-text {
+      margin: 0;
+      color: var(--cj-pdp-text);
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5.2;
+      background: var(--cj-pdp-card);
+      overflow: hidden;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__story-placeholder {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 54% 28%, rgba(154, 79, 66, 0.18), transparent 28%),
+        linear-gradient(145deg, #f8f2eb, #e4d5c8);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      display: flex;
+      align-items: stretch;
+      justify-content: flex-end;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.32s ease, visibility 0.32s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(31, 27, 24, 0.48);
+      opacity: 0;
+      transition: opacity 0.32s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal.is-open .cj-pdp__size-modal-backdrop {
+      opacity: 1;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-panel {
+      position: relative;
+      width: min(540px, 92vw);
+      height: 100%;
+      padding: 42px 38px;
+      background: var(--cj-pdp-bg);
+      color: var(--cj-pdp-text);
+      overflow-y: auto;
+      transform: translateX(102%);
+      transition: transform 0.46s cubic-bezier(0.64, 0, 0.22, 1);
+      box-shadow: -26px 0 80px rgba(37, 27, 20, 0.16);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal.is-open .cj-pdp__size-modal-panel {
+      transform: translateX(0);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-close {
+      position: absolute;
+      right: 28px;
+      top: 28px;
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--cj-pdp-text);
+      cursor: pointer;
+      font-size: 28px;
+      line-height: 1;
+      transition: color 0.24s ease, border-color 0.24s ease, transform 0.24s ease;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-close:hover {
+      color: var(--cj-pdp-accent);
+      border-color: var(--cj-pdp-accent);
+      transform: rotate(90deg);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-title {
+      max-width: 340px;
+      margin: 0 0 14px;
+      font-family: var(--cj-pdp-font-heading);
+      font-size: 38px;
+      line-height: 1;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-copy {
+      max-width: 400px;
+      margin: 0 0 28px;
+      color: var(--cj-pdp-muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 420px;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table th,
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+      border-right: 1px solid color-mix(in srgb, var(--cj-pdp-border) 86%, transparent);
+      text-align: left;
+      color: var(--cj-pdp-text);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table th:last-child,
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table td:last-child {
+      border-right: 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-table th {
+      background: var(--cj-pdp-card);
+      color: var(--cj-pdp-muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__size-note {
+      margin: 18px 0 0;
+      color: var(--cj-pdp-muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__mobile-sticky {
+      display: none;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.78s cubic-bezier(0.22, 1, 0.36, 1), transform 0.78s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+
+    #CasaJunoPdp-{{ section.id }} .cj-pdp__fade-up.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (hover: hover) {
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-stage:hover .cj-pdp__main-image {
+        transform: scale(1.012);
+      }
+    }
+
+    @media (max-width: 1279px) {
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__shell {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__hero {
+        grid-template-columns: minmax(0, 1fr) minmax(350px, 0.86fr);
+        gap: 34px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-stage {
+        aspect-ratio: 1 / 1;
+        padding: 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-stage::before {
+        content: none;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__main-image-wrap {
+        width: 100%;
+        height: 100%;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__detail-media-grid {
+        grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+        gap: 10px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-count {
+        right: 14px;
+        bottom: 14px;
+        min-height: 30px;
+        padding: 7px 10px 6px;
+        font-size: 10px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb-row {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 0 0 8px;
+        scroll-snap-type: x mandatory;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb {
+        flex: 0 0 68px;
+        scroll-snap-align: start;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__info {
+        position: static;
+        top: auto;
+        width: 100%;
+        padding: 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__title-row {
+        margin-bottom: 18px;
+        gap: 14px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__title {
+        font-size: clamp(34px, 10vw, 48px);
+        line-height: 1;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__save {
+        width: 42px;
+        height: 42px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__summary {
+        margin-bottom: 24px;
+        padding-bottom: 22px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__summary-text {
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-line {
+        grid-template-columns: 98px 1fr;
+        gap: 12px;
+        min-height: 48px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__sizes {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__quantity-row {
+        grid-template-columns: 112px 1fr;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__services {
+        grid-template-columns: 1fr;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__service {
+        min-height: 72px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial {
+        margin-top: 42px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-head {
+        display: block;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-copy {
+        max-width: none;
+        margin-top: 12px;
+        text-align: left;
+        font-size: 15px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-track {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 0 0 10px;
+        scroll-snap-type: x mandatory;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-card {
+        flex: 0 0 58%;
+        scroll-snap-align: start;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__bottom-story {
+        display: block;
+        margin-top: 46px;
+        padding: 24px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__story-list {
+        grid-template-columns: 1fr;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__story-image {
+        margin-top: 24px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-panel {
+        width: min(500px, 94vw);
+        padding: 34px 22px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__size-modal-title {
+        font-size: 34px;
+      }
+    }
+
+    @media (max-width: 749px) {
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__shell {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__breadcrumb {
+        padding: 0 18px;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__hero {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        min-height: 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media,
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__info {
+        width: 100%;
+        min-width: 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-stage {
+        width: 100%;
+        height: var(--cj-pdp-media-stage-height-mobile);
+        min-height: var(--cj-pdp-media-stage-height-mobile);
+        aspect-ratio: auto;
+        padding: 14px;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-badge {
+        top: 14px;
+        left: 14px;
+        min-height: 28px;
+        padding: 7px 11px 6px;
+        font-size: 10px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-count {
+        right: 12px;
+        bottom: 12px;
+        min-height: 28px;
+        padding: 7px 10px 6px;
+        font-size: 10px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__main-image-wrap {
+        min-height: 0;
+        height: 100%;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__main-image {
+        max-width: var(--cj-pdp-main-image-size-mobile);
+        max-height: 88%;
+        object-fit: contain;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        margin: 10px 0 0;
+        padding: 0 14px;
+        overflow: visible;
+        scroll-snap-type: none;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb {
+        flex: initial;
+        min-width: 0;
+        aspect-ratio: 1 / 1.12;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__thumb-img {
+        padding: 7px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-details {
+        padding: 0 14px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-details-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-detail-card,
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__media-detail-card img {
+        min-height: 180px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__info {
+        padding: 26px 18px 0;
+        overflow: hidden;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__info-card {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__title-row {
+        grid-template-columns: minmax(0, 1fr) 38px;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__eyebrow {
+        margin-bottom: 7px;
+        font-size: 11px;
+        letter-spacing: 0.13em;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__title {
+        font-size: clamp(34px, 9.2vw, 42px);
+        line-height: 1.01;
+        letter-spacing: -0.035em;
+        overflow-wrap: anywhere;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__save {
+        width: 38px;
+        height: 38px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__save svg {
+        width: 19px;
+        height: 19px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__price {
+        font-size: 26px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__summary {
+        margin-bottom: 22px;
+        padding-bottom: 22px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__summary-text {
+        max-width: 100%;
+        font-size: 15px;
+        line-height: 1.58;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-list {
+        margin-bottom: 24px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-line {
+        grid-template-columns: 86px minmax(0, 1fr);
+        gap: 12px;
+        min-height: 48px;
+        padding: 14px 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-label {
+        font-size: 11px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__meta-value {
+        font-size: 17px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__option {
+        margin-bottom: 20px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__sizes {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__size {
+        min-height: 44px;
+        font-size: 14px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__swatch {
+        min-height: 44px;
+        padding: 9px 12px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__services {
+        gap: 8px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__service {
+        min-height: 66px;
+        padding: 14px;
+      }
+
+
+      #CasaJunoPdp-{{ section.id }} {
+        padding-bottom: {% if section.settings.enable_mobile_sticky %}78px{% else %}0{% endif %};
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__price-row {
+        margin-bottom: 22px;
+        gap: 9px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__compare {
+        font-size: 14px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__tax-note {
+        margin-bottom: 22px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__quantity-row {
+        grid-template-columns: 1fr;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__qty {
+        grid-template-columns: 54px 1fr 54px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__add {
+        min-height: 56px;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__editorial-card {
+        flex-basis: 68%;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__mobile-sticky {
+        {% if section.settings.enable_mobile_sticky %}
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 70;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 12px;
+          align-items: center;
+          padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+          background: rgba(255, 253, 250, 0.94);
+          border-top: 1px solid rgba(116, 76, 58, 0.14);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          transform: translateY(110%);
+          transition: transform 0.32s ease;
+        {% else %}
+          display: none;
+        {% endif %}
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__mobile-sticky.is-visible {
+        transform: translateY(0);
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__mobile-sticky-title {
+        min-width: 0;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__mobile-sticky-name {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--cj-pdp-text);
+        font-family: var(--cj-pdp-font-heading);
+        font-size: 15px;
+        line-height: 1.2;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__mobile-sticky-price {
+        display: block;
+        margin-top: 3px;
+        color: var(--cj-pdp-muted);
+        font-size: 12px;
+        line-height: 1;
+      }
+
+      #CasaJunoPdp-{{ section.id }} .cj-pdp__mobile-sticky-btn {
+        min-height: 44px;
+        padding: 12px 18px;
+        border: 1px solid var(--cj-pdp-button-bg);
+        background: var(--cj-pdp-button-bg);
+        color: var(--cj-pdp-button-text);
+        font-family: var(--cj-pdp-font-heading);
+        font-size: 12px;
+        line-height: 1;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #CasaJunoPdp-{{ section.id }} *,
+      #CasaJunoPdp-{{ section.id }} *::before,
+      #CasaJunoPdp-{{ section.id }} *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+
+  <div class="cj-pdp__shell">
+    {% if show_breadcrumb %}
+      <nav class="cj-pdp__breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">Casa Juno</a>
+        <span class="cj-pdp__breadcrumb-separator">/</span>
+        {% if collection %}
+          <a href="{{ collection.url }}">{{ collection.title }}</a>
+        {% else %}
+          <a href="/collections/all">Coleção</a>
+        {% endif %}
+        <span class="cj-pdp__breadcrumb-separator">/</span>
+        <span>{{ product.title }}</span>
+      </nav>
+    {% endif %}
+
+    <div class="cj-pdp__hero">
+      <div class="cj-pdp__media cj-pdp__fade-up">
+        <div class="cj-pdp__media-stage" data-cj-main-stage>
+          <span class="cj-pdp__media-badge">{{ section.settings.media_badge }}</span>
+          <div class="cj-pdp__main-image-wrap">
+            {% if first_image != blank %}
+              {% assign first_image_alt = first_image.alt | default: product.title | escape %}
+              {{ first_image | image_url: width: 1400 | image_tag:
+                class: 'cj-pdp__main-image',
+                widths: '420, 620, 820, 1000, 1200, 1400',
+                loading: 'eager',
+                fetchpriority: 'high',
+                alt: first_image_alt,
+                data-cj-main-image: ''
+              }}
+            {% else %}
+              <div class="cj-pdp__placeholder">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+          <span class="cj-pdp__media-count" data-cj-media-count>1 / {{ product.media.size | default: 1 }}</span>
+        </div>
+
+        <div class="cj-pdp__thumb-row" aria-label="Galeria do produto">
+          {% if product.media.size > 0 %}
+            {% for media in product.media limit: image_limit %}
+              {% assign thumb_image = media.preview_image %}
+              <button
+                type="button"
+                class="cj-pdp__thumb {% if forloop.first %}is-active{% endif %}"
+                data-cj-thumb
+                data-full-image="{{ thumb_image | image_url: width: 1400 }}"
+                data-image-alt="{{ thumb_image.alt | default: product.title | escape }}"
+                data-index="{{ forloop.index }}"
+                aria-label="Ver imagem {{ forloop.index }}"
+              >
+                {% if thumb_image != blank %}
+                  {% assign thumb_alt = thumb_image.alt | default: product.title | escape %}
+                  {{ thumb_image | image_url: width: 240 | image_tag:
+                    class: 'cj-pdp__thumb-img',
+                    widths: '80, 120, 160, 200, 240',
+                    loading: 'lazy',
+                    alt: thumb_alt
+                  }}
+                {% else %}
+                  <span class="cj-pdp__thumb-placeholder"></span>
+                {% endif %}
+              </button>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        {% assign detail_blocks = section.blocks | where: 'type', 'detail_image' %}
+        {% assign media_extra_count = 0 %}
+        {% for i in (1..4) %}
+          {% assign image_key = 'media_extra_image_' | append: i %}
+          {% if section.settings[image_key] != blank %}
+            {% assign media_extra_count = media_extra_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+        {% assign settings_media_count = media_extra_count %}
+        {% if settings_media_count == 0 %}
+          {% for block in detail_blocks limit: 4 %}
+            {% if block.settings.image != blank %}
+              {% assign media_extra_count = media_extra_count | plus: 1 %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        {% if media_extra_count > 0 %}
+          <div class="cj-pdp__media-details" aria-label="Imagens abaixo da foto principal">
+            {% if section.settings.detail_media_title != blank %}
+              <p class="cj-pdp__media-details-title">{{ section.settings.detail_media_title }}</p>
+            {% endif %}
+            <div class="cj-pdp__media-details-grid" data-count="{{ media_extra_count }}">
+              {% for i in (1..4) %}
+                {% assign image_key = 'media_extra_image_' | append: i %}
+                {% assign caption_key = 'media_extra_caption_' | append: i %}
+                {% assign extra_image = section.settings[image_key] %}
+                {% assign extra_caption = section.settings[caption_key] %}
+                {% if extra_image != blank %}
+                  {% assign extra_alt = extra_caption | default: product.title | escape %}
+                  <figure class="cj-pdp__media-detail-card">
+                    {{ extra_image | image_url: width: 1600 | image_tag:
+                      widths: '360, 520, 720, 920, 1200, 1600',
+                      loading: 'lazy',
+                      alt: extra_alt
+                    }}
+                    {% if extra_caption != blank %}
+                      <figcaption class="cj-pdp__media-detail-caption">{{ extra_caption }}</figcaption>
+                    {% endif %}
+                  </figure>
+                {% endif %}
+              {% endfor %}
+              {% if settings_media_count == 0 %}
+                {% for block in detail_blocks limit: 4 %}
+                  {% if block.settings.image != blank %}
+                    {% assign block_detail_alt = block.settings.caption | default: product.title | escape %}
+                    <figure class="cj-pdp__media-detail-card" {{ block.shopify_attributes }}>
+                      {{ block.settings.image | image_url: width: 1600 | image_tag:
+                        widths: '360, 520, 720, 920, 1200, 1600',
+                        loading: 'lazy',
+                        alt: block_detail_alt
+                      }}
+                      {% if block.settings.caption != blank %}
+                        <figcaption class="cj-pdp__media-detail-caption">{{ block.settings.caption }}</figcaption>
+                      {% endif %}
+                    </figure>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="cj-pdp__info cj-pdp__fade-up">
+        <div class="cj-pdp__info-card">
+          <div class="cj-pdp__title-row">
+            <div>
+              <p class="cj-pdp__eyebrow">{{ collection_label }}</p>
+              <h1 class="cj-pdp__title">{{ product.title }}</h1>
+            </div>
+            <button type="button" class="cj-pdp__save" data-cj-save aria-label="Salvar produto">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="cj-pdp__price-row" aria-live="polite">
+            <span class="cj-pdp__price" data-cj-price>{{ current_variant.price | money }}</span>
+            <span class="cj-pdp__compare" data-cj-compare {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}>
+              {{ current_variant.compare_at_price | money }}
+            </span>
+          </div>
+
+          {% if section.settings.tax_note != blank %}
+            <span class="cj-pdp__tax-note">{{ section.settings.tax_note }}</span>
+          {% endif %}
+
+          <div class="cj-pdp__summary">
+            {% if section.settings.short_description != blank %}
+              <p class="cj-pdp__summary-text">{{ section.settings.short_description }}</p>
+            {% elsif product_description != blank %}
+              <p class="cj-pdp__summary-text">{{ product_description | truncate: 220 }}</p>
+            {% else %}
+              <p class="cj-pdp__summary-text">Uma peça essencial da Casa Juno, criada para unir caimento refinado, toque confortável e elegância discreta no dia a dia.</p>
+            {% endif %}
+          </div>
+
+          <div class="cj-pdp__meta-list">
+            <div class="cj-pdp__meta-line">
+              <span class="cj-pdp__meta-label">Material</span>
+              <span class="cj-pdp__meta-value">{{ product_material }}</span>
+            </div>
+            <div class="cj-pdp__meta-line">
+              <span class="cj-pdp__meta-label">{{ color_label }}</span>
+              <span class="cj-pdp__meta-value" data-cj-color-label>
+                {% for option in product.options_with_values %}
+                  {% assign option_down = option.name | downcase %}
+                  {% if option_down contains 'color' or option_down contains 'cor' %}
+                    {{ option.selected_value }}
+                  {% endif %}
+                {% endfor %}
+              </span>
+            </div>
+            {% if show_vendor and product.vendor != blank %}
+              <div class="cj-pdp__meta-line">
+                <span class="cj-pdp__meta-label">Marca</span>
+                <span class="cj-pdp__meta-value">{{ product.vendor }}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          {% form 'product', product, id: product_form_id, class: 'cj-pdp__form', data-cj-product-form: '' %}
+            <input type="hidden" name="id" value="{{ current_variant.id }}" data-cj-variant-id>
+
+            {% unless product.has_only_default_variant %}
+              <div class="cj-pdp__variant-area" data-cj-variant-area>
+                {% for option in product.options_with_values %}
+                  {% assign option_down = option.name | downcase %}
+                  {% assign option_index = forloop.index0 %}
+                  {% assign option_key = 'option' | append: forloop.index %}
+                  {% assign is_color_option = false %}
+                  {% assign is_size_option = false %}
+                  {% if option_down contains 'color' or option_down contains 'cor' %}
+                    {% assign is_color_option = true %}
+                  {% endif %}
+                  {% if option_down contains 'size' or option_down contains 'tamanho' or option_down contains 'tam' %}
+                    {% assign is_size_option = true %}
+                  {% endif %}
+
+                  <div class="cj-pdp__option" data-cj-option-group data-option-index="{{ option_index }}">
+                    <div class="cj-pdp__option-head">
+                      <p class="cj-pdp__option-title">
+                        {{ option.name }}:
+                        <span class="cj-pdp__option-value" data-cj-option-selected>{{ option.selected_value }}</span>
+                      </p>
+                      {% if is_size_option %}
+                        <button type="button" class="cj-pdp__size-guide-btn" data-cj-size-open>Guia de tamanhos</button>
+                      {% endif %}
+                    </div>
+
+                    {% if is_size_option %}
+                      <div class="cj-pdp__sizes">
+                        {% for value in option.values %}
+                          <button
+                            type="button"
+                            class="cj-pdp__size {% if value == option.selected_value %}is-selected{% endif %}"
+                            data-cj-option-button
+                            data-option-index="{{ option_index }}"
+                            data-option-value="{{ value | escape }}"
+                          >
+                            {{ value }}
+                          </button>
+                        {% endfor %}
+                      </div>
+                    {% else %}
+                      <div class="cj-pdp__swatches">
+                        {% for value in option.values %}
+                          <button
+                            type="button"
+                            class="cj-pdp__swatch {% if value == option.selected_value %}is-selected{% endif %}"
+                            data-cj-option-button
+                            data-option-index="{{ option_index }}"
+                            data-option-value="{{ value | escape }}"
+                          >
+                            <span class="cj-pdp__swatch-text">{{ value }}</span>
+                          </button>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endunless %}
+
+            <div class="cj-pdp__quantity-row">
+              <div class="cj-pdp__qty" aria-label="Quantidade">
+                <button type="button" class="cj-pdp__qty-btn" data-cj-qty-minus aria-label="Diminuir quantidade">−</button>
+                <input class="cj-pdp__qty-input" type="number" name="quantity" value="1" min="1" step="1" inputmode="numeric" data-cj-qty-input>
+                <button type="button" class="cj-pdp__qty-btn" data-cj-qty-plus aria-label="Aumentar quantidade">+</button>
+              </div>
+              <button type="submit" class="cj-pdp__add" data-cj-add {% unless current_variant.available %}disabled{% endunless %}>
+                {% if current_variant.available %}
+                  {{ section.settings.add_to_cart_text }}
+                {% else %}
+                  Produto indisponível
+                {% endif %}
+              </button>
+            </div>
+
+            {% if section.settings.show_buy_now %}
+              <button type="button" class="cj-pdp__buy-now" data-cj-buy-now {% unless current_variant.available %}disabled{% endunless %}>
+                {{ section.settings.buy_now_text }}
+              </button>
+            {% endif %}
+
+            <p class="cj-pdp__form-message" data-cj-form-message>{{ section.settings.after_button_note }}</p>
+          {% endform %}
+
+          {% if section.settings.show_services %}
+            <div class="cj-pdp__services">
+              <div class="cj-pdp__service">
+                <svg class="cj-pdp__service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 7h11v10H3z"></path>
+                  <path d="M14 10h4l3 3v4h-7z"></path>
+                  <circle cx="7" cy="18" r="1.7"></circle>
+                  <circle cx="18" cy="18" r="1.7"></circle>
+                </svg>
+                <p class="cj-pdp__service-text">{{ section.settings.service_1_text }}</p>
+              </div>
+              <div class="cj-pdp__service">
+                <svg class="cj-pdp__service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 8v13H3V8"></path>
+                  <path d="M1 3h22v5H1z"></path>
+                  <path d="M12 3v18"></path>
+                  <path d="M12 3c-1.2-2-5-2-5 1 0 2.5 5 4 5 4s5-1.5 5-4c0-3-3.8-3-5-1z"></path>
+                </svg>
+                <p class="cj-pdp__service-text">{{ section.settings.service_2_text }}</p>
+              </div>
+              <div class="cj-pdp__service">
+                <svg class="cj-pdp__service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <path d="m9 12 2 2 4-5"></path>
+                </svg>
+                <p class="cj-pdp__service-text">{{ section.settings.service_3_text }}</p>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="cj-pdp__accordion" data-cj-accordion>
+            <div class="cj-pdp__accordion-item is-open" data-cj-accordion-item>
+              <button type="button" class="cj-pdp__accordion-trigger" aria-expanded="true" data-cj-accordion-trigger>
+                <span class="cj-pdp__accordion-title">Sobre o produto</span>
+                <span class="cj-pdp__accordion-icon" aria-hidden="true"></span>
+              </button>
+              <div class="cj-pdp__accordion-panel" data-cj-accordion-panel>
+                <div class="cj-pdp__accordion-body">
+                  {% if section.settings.about_text != blank %}
+                    {{ section.settings.about_text }}
+                  {% elsif product.description != blank %}
+                    {{ product.description }}
+                  {% else %}
+                    <p>Peça desenvolvida para entregar presença, conforto e acabamento premium sem excesso visual.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="cj-pdp__accordion-item" data-cj-accordion-item>
+              <button type="button" class="cj-pdp__accordion-trigger" aria-expanded="false" data-cj-accordion-trigger>
+                <span class="cj-pdp__accordion-title">Detalhes do produto</span>
+                <span class="cj-pdp__accordion-icon" aria-hidden="true"></span>
+              </button>
+              <div class="cj-pdp__accordion-panel" data-cj-accordion-panel>
+                <div class="cj-pdp__accordion-body">{{ section.settings.details_text }}</div>
+              </div>
+            </div>
+
+            <div class="cj-pdp__accordion-item" data-cj-accordion-item>
+              <button type="button" class="cj-pdp__accordion-trigger" aria-expanded="false" data-cj-accordion-trigger>
+                <span class="cj-pdp__accordion-title">Cuidados e manutenção</span>
+                <span class="cj-pdp__accordion-icon" aria-hidden="true"></span>
+              </button>
+              <div class="cj-pdp__accordion-panel" data-cj-accordion-panel>
+                <div class="cj-pdp__accordion-body">{{ section.settings.care_text }}</div>
+              </div>
+            </div>
+
+            <div class="cj-pdp__accordion-item" data-cj-accordion-item>
+              <button type="button" class="cj-pdp__accordion-trigger" aria-expanded="false" data-cj-accordion-trigger>
+                <span class="cj-pdp__accordion-title">Trocas e devoluções</span>
+                <span class="cj-pdp__accordion-icon" aria-hidden="true"></span>
+              </button>
+              <div class="cj-pdp__accordion-panel" data-cj-accordion-panel>
+                <div class="cj-pdp__accordion-body">{{ section.settings.returns_text }}</div>
+              </div>
+            </div>
+
+            <div class="cj-pdp__accordion-item" data-cj-accordion-item>
+              <button type="button" class="cj-pdp__accordion-trigger" aria-expanded="false" data-cj-accordion-trigger>
+                <span class="cj-pdp__accordion-title">Pagamento</span>
+                <span class="cj-pdp__accordion-icon" aria-hidden="true"></span>
+              </button>
+              <div class="cj-pdp__accordion-panel" data-cj-accordion-panel>
+                <div class="cj-pdp__accordion-body">{{ section.settings.payment_text }}</div>
+              </div>
+            </div>
+
+            <div class="cj-pdp__accordion-item" data-cj-accordion-item>
+              <button type="button" class="cj-pdp__accordion-trigger" aria-expanded="false" data-cj-accordion-trigger>
+                <span class="cj-pdp__accordion-title">Serviço e segurança</span>
+                <span class="cj-pdp__accordion-icon" aria-hidden="true"></span>
+              </button>
+              <div class="cj-pdp__accordion-panel" data-cj-accordion-panel>
+                <div class="cj-pdp__accordion-body">{{ section.settings.security_text }}</div>
+              </div>
+            </div>
+
+            <div class="cj-pdp__accordion-item" data-cj-accordion-item>
+              <button type="button" class="cj-pdp__accordion-trigger" aria-expanded="false" data-cj-accordion-trigger>
+                <span class="cj-pdp__accordion-title">Informações de envio</span>
+                <span class="cj-pdp__accordion-icon" aria-hidden="true"></span>
+              </button>
+              <div class="cj-pdp__accordion-panel" data-cj-accordion-panel>
+                <div class="cj-pdp__accordion-body">{{ section.settings.shipping_text }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if section.settings.show_story_block %}
+      <div class="cj-pdp__bottom-story cj-pdp__fade-up">
+        <div>
+          <p class="cj-pdp__story-kicker">{{ section.settings.story_kicker }}</p>
+          <h2 class="cj-pdp__story-title">{{ section.settings.story_title }}</h2>
+          <p class="cj-pdp__story-copy">{{ section.settings.story_copy }}</p>
+          <div class="cj-pdp__story-list">
+            <div class="cj-pdp__story-point">
+              <span class="cj-pdp__story-number">01</span>
+              <p class="cj-pdp__story-point-text">{{ section.settings.story_point_1 }}</p>
+            </div>
+            <div class="cj-pdp__story-point">
+              <span class="cj-pdp__story-number">02</span>
+              <p class="cj-pdp__story-point-text">{{ section.settings.story_point_2 }}</p>
+            </div>
+            <div class="cj-pdp__story-point">
+              <span class="cj-pdp__story-number">03</span>
+              <p class="cj-pdp__story-point-text">{{ section.settings.story_point_3 }}</p>
+            </div>
+            <div class="cj-pdp__story-point">
+              <span class="cj-pdp__story-number">04</span>
+              <p class="cj-pdp__story-point-text">{{ section.settings.story_point_4 }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="cj-pdp__story-image">
+          {% if section.settings.story_image != blank %}
+            {% assign story_image_alt = section.settings.story_title | default: product.title | escape %}
+            {{ section.settings.story_image | image_url: width: 980 | image_tag:
+              widths: '360, 520, 720, 980',
+              loading: 'lazy',
+              alt: story_image_alt
+            }}
+          {% elsif first_image != blank %}
+            {% assign story_first_alt = product.title | escape %}
+            {{ first_image | image_url: width: 980 | image_tag:
+              widths: '360, 520, 720, 980',
+              loading: 'lazy',
+              alt: story_first_alt
+            }}
+          {% else %}
+            <span class="cj-pdp__story-placeholder"></span>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="cj-pdp__size-modal" data-cj-size-modal aria-hidden="true" role="dialog" aria-modal="true" aria-label="Guia de tamanhos Casa Juno">
+    <button type="button" class="cj-pdp__size-modal-backdrop" data-cj-size-close aria-label="Fechar guia de tamanhos"></button>
+    <div class="cj-pdp__size-modal-panel">
+      <button type="button" class="cj-pdp__size-modal-close" data-cj-size-close aria-label="Fechar">×</button>
+      <h2 class="cj-pdp__size-modal-title">Guia de tamanhos</h2>
+      <p class="cj-pdp__size-modal-copy">Medidas aproximadas para modelagem masculina no Brasil. Para um caimento mais solto, escolha um tamanho acima.</p>
+      <div class="cj-pdp__size-table-wrap">
+        <table class="cj-pdp__size-table">
+          <thead>
+            <tr>
+              <th>Tamanho</th>
+              <th>Peito</th>
+              <th>Cintura</th>
+              <th>Altura sugerida</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>P</td>
+              <td>88-96 cm</td>
+              <td>76-84 cm</td>
+              <td>1,65-1,75 m</td>
+            </tr>
+            <tr>
+              <td>M</td>
+              <td>96-104 cm</td>
+              <td>84-92 cm</td>
+              <td>1,70-1,82 m</td>
+            </tr>
+            <tr>
+              <td>G</td>
+              <td>104-112 cm</td>
+              <td>92-100 cm</td>
+              <td>1,78-1,88 m</td>
+            </tr>
+            <tr>
+              <td>GG</td>
+              <td>112-120 cm</td>
+              <td>100-108 cm</td>
+              <td>1,84-1,95 m</td>
+            </tr>
+            <tr>
+              <td>XGG</td>
+              <td>120-128 cm</td>
+              <td>108-116 cm</td>
+              <td>1,90 m+</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cj-pdp__size-note">As medidas podem variar levemente conforme tecido, lavagem e proposta de caimento da peça.</p>
+    </div>
+  </div>
+
+  <div class="cj-pdp__mobile-sticky" data-cj-mobile-sticky>
+    <span class="cj-pdp__mobile-sticky-title">
+      <span class="cj-pdp__mobile-sticky-name">{{ product.title }}</span>
+      <span class="cj-pdp__mobile-sticky-price" data-cj-mobile-price>{{ current_variant.price | money }}</span>
+    </span>
+    <button type="button" class="cj-pdp__mobile-sticky-btn" data-cj-mobile-add>Comprar</button>
+  </div>
+
+  <script type="application/json" data-cj-variants-json>
+    {{ product.variants | json }}
+  </script>
+
+  <script>
+    (function () {
+      var root = document.getElementById('CasaJunoPdp-{{ section.id }}');
+      if (!root) return;
+
+      var variantsEl = root.querySelector('[data-cj-variants-json]');
+      var variants = [];
+      try {
+        variants = JSON.parse(variantsEl ? variantsEl.textContent : '[]');
+      } catch (error) {
+        variants = [];
+      }
+
+      var moneyFormat = {{ shop.money_format | json }};
+      var selectedOptions = [];
+      {% for option in product.options_with_values %}
+        selectedOptions.push({{ option.selected_value | json }});
+      {% endfor %}
+
+      var mainImage = root.querySelector('[data-cj-main-image]');
+      var mediaCount = root.querySelector('[data-cj-media-count]');
+      var thumbs = Array.prototype.slice.call(root.querySelectorAll('[data-cj-thumb]'));
+      var optionButtons = Array.prototype.slice.call(root.querySelectorAll('[data-cj-option-button]'));
+      var variantInput = root.querySelector('[data-cj-variant-id]');
+      var priceEl = root.querySelector('[data-cj-price]');
+      var compareEl = root.querySelector('[data-cj-compare]');
+      var mobilePriceEl = root.querySelector('[data-cj-mobile-price]');
+      var colorLabel = root.querySelector('[data-cj-color-label]');
+      var addBtn = root.querySelector('[data-cj-add]');
+      var buyNowBtn = root.querySelector('[data-cj-buy-now]');
+      var form = root.querySelector('[data-cj-product-form]');
+      var qtyInput = root.querySelector('[data-cj-qty-input]');
+      var qtyMinus = root.querySelector('[data-cj-qty-minus]');
+      var qtyPlus = root.querySelector('[data-cj-qty-plus]');
+      var formMessage = root.querySelector('[data-cj-form-message]');
+      var mobileSticky = root.querySelector('[data-cj-mobile-sticky]');
+      var mobileAdd = root.querySelector('[data-cj-mobile-add]');
+      var saveButton = root.querySelector('[data-cj-save]');
+      var sizeModal = root.querySelector('[data-cj-size-modal]');
+      var sizeOpenButtons = Array.prototype.slice.call(root.querySelectorAll('[data-cj-size-open]'));
+      var sizeCloseButtons = Array.prototype.slice.call(root.querySelectorAll('[data-cj-size-close]'));
+      var accordion = root.querySelector('[data-cj-accordion]');
+      var fadeItems = Array.prototype.slice.call(root.querySelectorAll('.cj-pdp__fade-up'));
+      var sectionProductId = root.getAttribute('data-product-id');
+
+      function formatMoney(cents) {
+        if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+          return window.Shopify.formatMoney(cents, moneyFormat);
+        }
+        var value = (Number(cents || 0) / 100).toFixed(2).replace('.', ',');
+        return 'R$ ' + value;
+      }
+
+      function findVariant() {
+        if (!variants.length) return null;
+        return variants.find(function (variant) {
+          if (!variant.options) return false;
+          return variant.options.every(function (value, index) {
+            return String(value) === String(selectedOptions[index]);
+          });
+        }) || null;
+      }
+
+      function setButtonAvailability(button, isAvailable, soldOutText, availableText) {
+        if (!button) return;
+        if (isAvailable) {
+          button.removeAttribute('disabled');
+          if (availableText) button.textContent = availableText;
+        } else {
+          button.setAttribute('disabled', 'disabled');
+          if (soldOutText) button.textContent = soldOutText;
+        }
+      }
+
+      function updateLabels() {
+        var groups = Array.prototype.slice.call(root.querySelectorAll('[data-cj-option-group]'));
+        groups.forEach(function (group) {
+          var index = Number(group.getAttribute('data-option-index'));
+          var label = group.querySelector('[data-cj-option-selected]');
+          if (label) label.textContent = selectedOptions[index] || '';
+        });
+        if (colorLabel) {
+          var colorIndex = -1;
+          groups.forEach(function (group) {
+            var title = group.querySelector('.cj-pdp__option-title');
+            var text = title ? title.textContent.toLowerCase() : '';
+            if (text.indexOf('cor') !== -1 || text.indexOf('color') !== -1) {
+              colorIndex = Number(group.getAttribute('data-option-index'));
+            }
+          });
+          if (colorIndex >= 0) colorLabel.textContent = selectedOptions[colorIndex] || '';
+        }
+      }
+
+      function updateOptionButtonStates() {
+        optionButtons.forEach(function (button) {
+          var index = Number(button.getAttribute('data-option-index'));
+          var value = button.getAttribute('data-option-value');
+          if (String(selectedOptions[index]) === String(value)) {
+            button.classList.add('is-selected');
+          } else {
+            button.classList.remove('is-selected');
+          }
+        });
+      }
+
+      function updateVariantUI() {
+        var variant = findVariant();
+        updateLabels();
+        updateOptionButtonStates();
+
+        if (!variant) {
+          setButtonAvailability(addBtn, false, 'Indisponível', '{{ section.settings.add_to_cart_text | escape }}');
+          setButtonAvailability(buyNowBtn, false, '{{ section.settings.buy_now_text | escape }}', '{{ section.settings.buy_now_text | escape }}');
+          if (formMessage) {
+            formMessage.classList.add('is-error');
+            formMessage.textContent = 'Essa combinação de opções não está disponível no momento.';
+          }
+          return;
+        }
+
+        if (variantInput) variantInput.value = variant.id;
+        if (priceEl) priceEl.textContent = formatMoney(variant.price);
+        if (mobilePriceEl) mobilePriceEl.textContent = formatMoney(variant.price);
+        if (compareEl) {
+          if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+            compareEl.hidden = false;
+            compareEl.textContent = formatMoney(variant.compare_at_price);
+          } else {
+            compareEl.hidden = true;
+            compareEl.textContent = '';
+          }
+        }
+        setButtonAvailability(addBtn, variant.available, 'Produto indisponível', '{{ section.settings.add_to_cart_text | escape }}');
+        setButtonAvailability(buyNowBtn, variant.available, '{{ section.settings.buy_now_text | escape }}', '{{ section.settings.buy_now_text | escape }}');
+        if (formMessage) {
+          formMessage.classList.remove('is-error');
+          formMessage.textContent = '{{ section.settings.after_button_note | escape }}';
+        }
+
+        if (variant.featured_image && mainImage) {
+          var variantImage = variant.featured_image.src;
+          if (variantImage && mainImage.src.indexOf(variantImage) === -1) {
+            changeMainImage(variantImage, variant.featured_image.alt || {{ product.title | json }}, null);
+          }
+        }
+      }
+
+      function changeMainImage(src, alt, index) {
+        if (!mainImage || !src) return;
+        mainImage.classList.add('is-changing');
+        window.setTimeout(function () {
+          mainImage.src = src;
+          mainImage.srcset = '';
+          if (alt) mainImage.alt = alt;
+          mainImage.classList.remove('is-changing');
+        }, 130);
+
+        if (typeof index !== 'undefined' && index !== null && mediaCount) {
+          mediaCount.textContent = index + ' / ' + Math.max(thumbs.length, 1);
+        }
+      }
+
+      thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+          var src = thumb.getAttribute('data-full-image');
+          var alt = thumb.getAttribute('data-image-alt') || {{ product.title | json }};
+          var index = thumb.getAttribute('data-index') || '1';
+          thumbs.forEach(function (item) { item.classList.remove('is-active'); });
+          thumb.classList.add('is-active');
+          changeMainImage(src, alt, index);
+        });
+      });
+
+      optionButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          if (button.classList.contains('is-disabled')) return;
+          var index = Number(button.getAttribute('data-option-index'));
+          var value = button.getAttribute('data-option-value');
+          selectedOptions[index] = value;
+          updateVariantUI();
+        });
+      });
+
+      if (qtyMinus && qtyInput) {
+        qtyMinus.addEventListener('click', function () {
+          var value = Math.max(1, Number(qtyInput.value || 1) - 1);
+          qtyInput.value = value;
+        });
+      }
+
+      if (qtyPlus && qtyInput) {
+        qtyPlus.addEventListener('click', function () {
+          var value = Math.max(1, Number(qtyInput.value || 1) + 1);
+          qtyInput.value = value;
+        });
+      }
+
+      if (buyNowBtn && form) {
+        buyNowBtn.addEventListener('click', function () {
+          var variantId = variantInput ? variantInput.value : '';
+          var quantity = qtyInput ? qtyInput.value : '1';
+          if (!variantId) return;
+          var url = '/cart/' + encodeURIComponent(variantId) + ':' + encodeURIComponent(quantity) + '?checkout';
+          window.location.href = url;
+        });
+      }
+
+      if (mobileAdd && addBtn) {
+        mobileAdd.addEventListener('click', function () {
+          addBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          window.setTimeout(function () { addBtn.focus({ preventScroll: true }); }, 380);
+        });
+      }
+
+      if (saveButton) {
+        var saveKey = 'casa-juno-saved-' + sectionProductId;
+        try {
+          if (window.localStorage.getItem(saveKey) === '1') saveButton.classList.add('is-saved');
+        } catch (error) {}
+        saveButton.addEventListener('click', function () {
+          saveButton.classList.toggle('is-saved');
+          try {
+            window.localStorage.setItem(saveKey, saveButton.classList.contains('is-saved') ? '1' : '0');
+          } catch (error) {}
+        });
+      }
+
+      function openSizeModal() {
+        if (!sizeModal) return;
+        sizeModal.classList.add('is-open');
+        sizeModal.setAttribute('aria-hidden', 'false');
+        document.documentElement.style.overflow = 'hidden';
+      }
+
+      function closeSizeModal() {
+        if (!sizeModal) return;
+        sizeModal.classList.remove('is-open');
+        sizeModal.setAttribute('aria-hidden', 'true');
+        document.documentElement.style.overflow = '';
+      }
+
+      sizeOpenButtons.forEach(function (button) {
+        button.addEventListener('click', openSizeModal);
+      });
+
+      sizeCloseButtons.forEach(function (button) {
+        button.addEventListener('click', closeSizeModal);
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeSizeModal();
+      });
+
+      if (accordion) {
+        var items = Array.prototype.slice.call(accordion.querySelectorAll('[data-cj-accordion-item]'));
+        function setPanelHeight(item, open) {
+          var panel = item.querySelector('[data-cj-accordion-panel]');
+          var trigger = item.querySelector('[data-cj-accordion-trigger]');
+          if (!panel) return;
+          if (open) {
+            item.classList.add('is-open');
+            if (trigger) trigger.setAttribute('aria-expanded', 'true');
+            panel.style.height = panel.scrollHeight + 'px';
+          } else {
+            item.classList.remove('is-open');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+            panel.style.height = '0px';
+          }
+        }
+        items.forEach(function (item) {
+          var trigger = item.querySelector('[data-cj-accordion-trigger]');
+          if (item.classList.contains('is-open')) setPanelHeight(item, true);
+          if (!trigger) return;
+          trigger.addEventListener('click', function () {
+            var isOpen = item.classList.contains('is-open');
+            setPanelHeight(item, !isOpen);
+          });
+        });
+        window.addEventListener('resize', function () {
+          items.forEach(function (item) {
+            if (item.classList.contains('is-open')) setPanelHeight(item, true);
+          });
+        }, { passive: true });
+      }
+
+      if ('IntersectionObserver' in window) {
+        var fadeObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              fadeObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        fadeItems.forEach(function (item) { fadeObserver.observe(item); });
+      } else {
+        fadeItems.forEach(function (item) { item.classList.add('is-visible'); });
+      }
+
+      if (mobileSticky) {
+        var stickyObserverTarget = addBtn || form;
+        if ('IntersectionObserver' in window && stickyObserverTarget) {
+          var stickyObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (window.innerWidth > 749) return;
+              if (entry.isIntersecting) {
+                mobileSticky.classList.remove('is-visible');
+              } else {
+                mobileSticky.classList.add('is-visible');
+              }
+            });
+          }, { threshold: 0.01 });
+          stickyObserver.observe(stickyObserverTarget);
+        }
+      }
+
+      updateVariantUI();
+      window.setTimeout(function () {
+        fadeItems.forEach(function (item) { item.classList.add('is-visible'); });
+      }, 600);
+    })();
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "image": [
+        {% for media in product.media limit: image_limit %}
+          {{ media.preview_image | image_url: width: 1200 | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      "description": {{ product_description | default: section.settings.short_description | json }},
+      "brand": {
+        "@type": "Brand",
+        "name": {{ shop.name | json }}
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": {{ shop.url | append: product.url | json }},
+        "priceCurrency": {{ cart.currency.iso_code | json }},
+        "price": {{ current_variant.price | divided_by: 100.0 | json }},
+        "availability": "https://schema.org/{% if current_variant.available %}InStock{% else %}OutOfStock{% endif %}",
+        "itemCondition": "https://schema.org/NewCondition"
+      }
+    }
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Casa Juno PDP Loro",
+  "tag": "section",
+  "class": "section-casa-juno-pdp-loro",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Estrutura"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Mostrar breadcrumb",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Mostrar marca/vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_now",
+      "label": "Mostrar botão comprar agora",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_sticky",
+      "label": "Mostrar botão fixo no mobile",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_services",
+      "label": "Mostrar serviços abaixo do botão",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_editorial_gallery",
+      "label": "Mostrar galeria editorial com 7 imagens",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_story_block",
+      "label": "Mostrar bloco de história no final",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "gallery_limit",
+      "min": 1,
+      "max": 7,
+      "step": 1,
+      "label": "Quantidade de imagens na galeria",
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "main_image_size",
+      "min": 80,
+      "max": 140,
+      "step": 2,
+      "unit": "%",
+      "label": "Tamanho da imagem principal no desktop",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "main_image_size_mobile",
+      "min": 62,
+      "max": 112,
+      "step": 2,
+      "unit": "%",
+      "label": "Tamanho da imagem principal no mobile",
+      "default": 86
+    },
+    {
+      "type": "range",
+      "id": "media_stage_height_desktop",
+      "min": 520,
+      "max": 980,
+      "step": 20,
+      "unit": "px",
+      "label": "Altura do campo da imagem principal no desktop",
+      "default": 760
+    },
+    {
+      "type": "range",
+      "id": "media_stage_height_mobile",
+      "min": 340,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "label": "Altura do campo da imagem principal no mobile",
+      "default": 460
+    },
+    {
+      "type": "header",
+      "content": "Campos de imagem abaixo da foto principal"
+    },
+    {
+      "type": "text",
+      "id": "detail_media_title",
+      "label": "Título do grid abaixo da foto principal",
+      "default": "Detalhes da peça"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use os 4 campos abaixo para imagem única ou grid com 2, 3 ou 4 imagens. Também é possível usar blocos de imagem, que agora aparecem abaixo da foto principal."
+    },
+    {
+      "type": "image_picker",
+      "id": "media_extra_image_1",
+      "label": "Imagem abaixo da foto principal 1"
+    },
+    {
+      "type": "text",
+      "id": "media_extra_caption_1",
+      "label": "Legenda da imagem 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_extra_image_2",
+      "label": "Imagem abaixo da foto principal 2"
+    },
+    {
+      "type": "text",
+      "id": "media_extra_caption_2",
+      "label": "Legenda da imagem 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_extra_image_3",
+      "label": "Imagem abaixo da foto principal 3"
+    },
+    {
+      "type": "text",
+      "id": "media_extra_caption_3",
+      "label": "Legenda da imagem 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_extra_image_4",
+      "label": "Imagem abaixo da foto principal 4"
+    },
+    {
+      "type": "text",
+      "id": "media_extra_caption_4",
+      "label": "Legenda da imagem 4"
+    },
+    {
+      "type": "header",
+      "content": "Textos principais"
+    },
+    {
+      "type": "text",
+      "id": "collection_label",
+      "label": "Texto acima do nome",
+      "default": "Casa Juno"
+    },
+    {
+      "type": "text",
+      "id": "material_text",
+      "label": "Material",
+      "default": "Linho premium"
+    },
+    {
+      "type": "text",
+      "id": "color_label",
+      "label": "Label de cor",
+      "default": "Cor"
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Label de tamanho",
+      "default": "Tamanho"
+    },
+    {
+      "type": "text",
+      "id": "media_badge",
+      "label": "Selo na imagem principal",
+      "default": "Nova coleção"
+    },
+    {
+      "type": "text",
+      "id": "tax_note",
+      "label": "Nota abaixo do preço",
+      "default": "Frete calculado no checkout. Troca facilitada em até 30 dias."
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Texto do botão adicionar",
+      "default": "Adicionar ao carrinho"
+    },
+    {
+      "type": "text",
+      "id": "buy_now_text",
+      "label": "Texto do botão comprar agora",
+      "default": "Comprar agora"
+    },
+    {
+      "type": "text",
+      "id": "after_button_note",
+      "label": "Texto abaixo dos botões",
+      "default": "Atendimento Casa Juno disponível para ajudar com tamanho, troca e entrega."
+    },
+    {
+      "type": "textarea",
+      "id": "short_description",
+      "label": "Descrição curta",
+      "default": "Elegância silenciosa em uma peça masculina de caimento refinado, criada para acompanhar dias de trabalho, encontros e momentos de presença."
+    },
+    {
+      "type": "header",
+      "content": "Modelo"
+    },
+    {
+      "type": "header",
+      "content": "Serviços"
+    },
+    {
+      "type": "text",
+      "id": "service_1_text",
+      "label": "Serviço 1",
+      "default": "Entrega grátis para pedidos selecionados"
+    },
+    {
+      "type": "text",
+      "id": "service_2_text",
+      "label": "Serviço 2",
+      "default": "Embalagem premium Casa Juno"
+    },
+    {
+      "type": "text",
+      "id": "service_3_text",
+      "label": "Serviço 3",
+      "default": "Compra segura e troca facilitada"
+    },
+    {
+      "type": "header",
+      "content": "Acordeões"
+    },
+    {
+      "type": "richtext",
+      "id": "about_text",
+      "label": "Sobre o produto",
+      "default": "<p>Peça essencial da Casa Juno com construção limpa, acabamento premium e presença discreta. Ideal para quem busca elegância sem exagero.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "details_text",
+      "label": "Detalhes do produto",
+      "default": "<ul><li>Caimento masculino regular.</li><li>Toque macio e respirável.</li><li>Acabamento refinado nas costuras.</li><li>Design versátil para uso casual ou elegante.</li></ul>"
+    },
+    {
+      "type": "richtext",
+      "id": "care_text",
+      "label": "Cuidados e manutenção",
+      "default": "<p>Lavar à mão ou em ciclo delicado. Não utilizar alvejante. Secar à sombra. Passar em temperatura baixa quando necessário.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "returns_text",
+      "label": "Trocas e devoluções",
+      "default": "<p>Você pode solicitar troca ou devolução conforme nossa política vigente. O produto deve estar sem sinais de uso, com etiqueta e embalagem original.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "payment_text",
+      "label": "Pagamento",
+      "default": "<p>Pagamento seguro por cartão, Pix ou métodos disponíveis no checkout. Todas as transações são processadas em ambiente protegido.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "security_text",
+      "label": "Serviço e segurança",
+      "default": "<p>Nosso suporte acompanha sua compra do pedido à entrega. Seus dados são tratados com segurança e privacidade.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_text",
+      "label": "Informações de envio",
+      "default": "<p>Após a confirmação do pagamento, o pedido é preparado e enviado com rastreamento. O prazo final aparece no checkout conforme seu endereço.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Galeria editorial"
+    },
+    {
+      "type": "text",
+      "id": "editorial_title",
+      "label": "Título da galeria",
+      "default": "Detalhes da peça"
+    },
+    {
+      "type": "textarea",
+      "id": "editorial_copy",
+      "label": "Texto da galeria",
+      "default": "Imagem editorial do produto"
+    },
+    {
+      "type": "header",
+      "content": "Bloco final de história"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image",
+      "label": "Imagem do bloco final"
+    },
+    {
+      "type": "text",
+      "id": "story_kicker",
+      "label": "Chamada pequena",
+      "default": "Elegância não se explica"
+    },
+    {
+      "type": "text",
+      "id": "story_title",
+      "label": "Título",
+      "default": "Criada para presença, não para excesso."
+    },
+    {
+      "type": "textarea",
+      "id": "story_copy",
+      "label": "Texto",
+      "default": "A Casa Juno trabalha com uma estética de luxo discreto: tecidos agradáveis, proporções limpas e detalhes que aparecem quando vistos de perto."
+    },
+    {
+      "type": "text",
+      "id": "story_point_1",
+      "label": "Ponto 1",
+      "default": "Caimento pensado para valorizar a silhueta masculina."
+    },
+    {
+      "type": "text",
+      "id": "story_point_2",
+      "label": "Ponto 2",
+      "default": "Textura e acabamento com aparência premium."
+    },
+    {
+      "type": "text",
+      "id": "story_point_3",
+      "label": "Ponto 3",
+      "default": "Visual limpo para combinar com diferentes peças."
+    },
+    {
+      "type": "text",
+      "id": "story_point_4",
+      "label": "Ponto 4",
+      "default": "Experiência de compra elegante do produto ao recebimento."
+    },
+    {
+      "type": "header",
+      "content": "Cores"
+    },
+    {
+      "type": "color",
+      "id": "page_background",
+      "label": "Fundo da página",
+      "default": "#F7F1EA"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Fundo dos cards",
+      "default": "#EFE4D8"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Fundo das imagens",
+      "default": "#F3F0EB"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Encaixe das imagens",
+      "default": "contain",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Preencher quadrado"
+        },
+        {
+          "value": "contain",
+          "label": "Mostrar imagem inteira"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Texto principal",
+      "default": "#2F211C"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Texto secundário",
+      "default": "#6D625C"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Destaque",
+      "default": "#9A4F42"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Bordas",
+      "default": "#D8C7B8"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Fundo do botão",
+      "default": "#2F211C"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Texto do botão",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Espaçamentos"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1100,
+      "max": 1800,
+      "step": 10,
+      "unit": "px",
+      "label": "Largura máxima",
+      "default": 1680
+    },
+    {
+      "type": "range",
+      "id": "desktop_gap",
+      "min": 28,
+      "max": 110,
+      "step": 2,
+      "unit": "px",
+      "label": "Espaço entre imagem e informações",
+      "default": 68
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Arredondamento dos cards",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding topo desktop",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding baixo desktop",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding topo mobile",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding baixo mobile",
+      "default": 52
+    }
+  ],
+  "blocks": [
+    {
+      "type": "detail_image",
+      "name": "foto principal",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagem"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Legenda opcional"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Casa Juno PDP Loro"
+    }
+  ]
+}
+{% endschema %}

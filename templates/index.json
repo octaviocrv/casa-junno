@@ -1,0 +1,498 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "videobanner_nqFzpT": {
+      "type": "videobanner",
+      "name": "Video Banner",
+      "settings": {
+        "video_url": "https://cdn.shopify.com/videos/c/o/v/729aee66588d439e99e38d0f43890867.mp4",
+        "video_position": "center center",
+        "background_color": "#f4eee6",
+        "video_height_desktop": 78,
+        "video_height_tablet": 60,
+        "video_height_mobile": 63,
+        "video_min_height_desktop": 420,
+        "video_max_height_desktop": 720,
+        "video_min_height_tablet": 390,
+        "video_max_height_tablet": 620,
+        "video_min_height_mobile": 360,
+        "video_max_height_mobile": 520,
+        "overlay_top_opacity": 14,
+        "overlay_middle_opacity": 8,
+        "overlay_bottom_opacity": 22,
+        "video_zoom_strength": 20,
+        "animation_distance_desktop": 160,
+        "animation_distance_tablet": 115,
+        "animation_distance_mobile": 165,
+        "card_move_desktop": 260,
+        "card_move_tablet": 135,
+        "card_move_mobile": 220,
+        "card_scale_strength": 5,
+        "show_card": true,
+        "card_kicker": "COLEÇÃO",
+        "card_title": "Primavera / Verão",
+        "card_text": "Peças essenciais para uma elegância discreta e natural.",
+        "card_link_1_text": "VER COLEÇÃO",
+        "card_link_1_url": "",
+        "card_link_2_text": "MASCULINO",
+        "card_link_2_url": "",
+        "card_background": "#f4eee6",
+        "card_text_color": "#2a1810",
+        "card_body_color": "#6f6258",
+        "card_accent_color": "#5c4635",
+        "card_width_desktop": 295,
+        "card_width_mobile": 255,
+        "card_bottom_desktop": 30,
+        "card_bottom_mobile": 12,
+        "card_padding_y_desktop": 34,
+        "card_padding_x_desktop": 34,
+        "card_padding_y_mobile": 24,
+        "card_padding_x_mobile": 24,
+        "card_title_size_desktop": 25,
+        "card_title_size_mobile": 22,
+        "card_body_size_desktop": 13,
+        "card_body_size_mobile": 11,
+        "card_kicker_size": 10,
+        "card_kicker_spacing": 22,
+        "card_kicker_margin": 14,
+        "card_title_margin": 18,
+        "card_text_margin": 22,
+        "card_link_size": 12,
+        "card_links_gap": 21,
+        "card_links_gap_mobile": 20,
+        "card_shadow_opacity": 0,
+        "editorial_kicker": "CASA JUNNO",
+        "editorial_title": "Elegância não se explica.",
+        "editorial_text": "Ela se revela no tecido, no caimento e no silêncio de uma peça bem-feita.\nEssenciais masculinos criados para um guarda-roupa atemporal.",
+        "editorial_title_color": "#2a1810",
+        "editorial_text_color": "#6f6258",
+        "editorial_accent_color": "#5c4635",
+        "editorial_padding_top_desktop": 230,
+        "editorial_padding_bottom_desktop": 40,
+        "editorial_padding_top_mobile": 240,
+        "editorial_padding_bottom_mobile": 40,
+        "editorial_max_width": 650,
+        "editorial_kicker_size": 11,
+        "editorial_kicker_spacing": 22,
+        "editorial_kicker_margin": 14,
+        "editorial_title_size_desktop": 46,
+        "editorial_title_size_mobile": 34,
+        "editorial_title_margin": 18,
+        "editorial_text_size_desktop": 15,
+        "editorial_text_size_mobile": 14
+      }
+    },
+    "casa_juno_produtos_wQtjLT": {
+      "type": "casa-juno-produtos",
+      "blocks": {
+        "product_card_8ycixq": {
+          "type": "product_card",
+          "settings": {
+            "product": "sueter-gola-ziper",
+            "custom_image": "shopify://shop_images/IMG_0624.jpg",
+            "custom_title": "",
+            "subtitle": "Premium cotton",
+            "custom_link": ""
+          }
+        },
+        "product_card_e6c3Vj": {
+          "type": "product_card",
+          "settings": {
+            "product": "casa-juno-polo-ziper-premium",
+            "custom_image": "shopify://shop_images/12-polo-algodao-creme.jpg",
+            "custom_title": "Polo Masculina Premium",
+            "subtitle": "Algodão premium",
+            "custom_link": ""
+          }
+        },
+        "product_card_tzN9Yr": {
+          "type": "product_card",
+          "settings": {
+            "product": "casa-juno-camiseta-signature",
+            "custom_image": "shopify://shop_images/ChatGPT_Image_31_de_mai._de_2026_12_22_29.png",
+            "custom_title": "Camiseta Signature",
+            "subtitle": "Toque macio",
+            "custom_link": ""
+          }
+        },
+        "product_card_Tg7FDM": {
+          "type": "product_card",
+          "settings": {
+            "product": "casa-juno-sueter-tricot-premium",
+            "custom_image": "shopify://shop_images/16-sueter-azul.jpg",
+            "custom_title": "Tricot Leve",
+            "subtitle": "Malha premium",
+            "custom_link": ""
+          }
+        },
+        "product_card_UaxW93": {
+          "type": "product_card",
+          "disabled": true,
+          "settings": {
+            "product": "casa-juno-calca-alfaiataria-casual",
+            "custom_image": "shopify://shop_images/calca-creme-02.jpg",
+            "custom_title": "Alfaiataria Casual",
+            "subtitle": "Caimento natural",
+            "custom_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_card_8ycixq",
+        "product_card_e6c3Vj",
+        "product_card_tzN9Yr",
+        "product_card_Tg7FDM",
+        "product_card_UaxW93"
+      ],
+      "name": "Casa Juno produtos",
+      "settings": {
+        "kicker": "",
+        "heading": "",
+        "text": "",
+        "show_price": false,
+        "enable_scroll_effect": true,
+        "scroll_card_move": 70,
+        "scroll_image_zoom": 8,
+        "max_width": 1560,
+        "padding_top_desktop": 55,
+        "padding_bottom_desktop": 100,
+        "padding_top_mobile": 72,
+        "padding_bottom_mobile": 80,
+        "gap_desktop": 36,
+        "gap_mobile": 16,
+        "image_height_desktop": 520,
+        "image_height_mobile": 250,
+        "background_color": "#f4eee6",
+        "card_background": "#f5f1eb",
+        "text_color": "#2a1810",
+        "muted_color": "#6f6258",
+        "accent_color": "#5c4635"
+      }
+    },
+    "casa_juno_three_editorials_QHeTTb": {
+      "type": "casa-juno-three-editorials",
+      "blocks": {
+        "produto_9THBdT": {
+          "type": "produto",
+          "settings": {
+            "image": "shopify://shop_images/TEXTURED_KNIT_POLO_SHIRT.jpg",
+            "eyebrow": "Primavera / Verão",
+            "title": "Polo sem botão",
+            "button_text": "Descubra agora",
+            "link": "shopify://products/casa-juno-polo-sem-botao-premium"
+          }
+        },
+        "produto_CtXYrc": {
+          "type": "produto",
+          "settings": {
+            "image": "shopify://shop_images/Massimo_Dutti_Limited_Edition_Spring_2021_Men_s_Campaign.jpg",
+            "eyebrow": "Primavera / Verão",
+            "title": "Basicas",
+            "button_text": "Descubra agora",
+            "link": "shopify://products/casa-juno-camiseta-signature"
+          }
+        },
+        "produto_yUNQgg": {
+          "type": "produto",
+          "settings": {
+            "image": "shopify://shop_images/28.jpg",
+            "eyebrow": "Primavera / Verão",
+            "title": "Calças",
+            "button_text": "Descubra agora",
+            "link": "shopify://products/casa-juno-calca-alfaiataria-casual"
+          }
+        }
+      },
+      "block_order": [
+        "produto_9THBdT",
+        "produto_CtXYrc",
+        "produto_yUNQgg"
+      ],
+      "name": "Casa Juno produtos",
+      "settings": {
+        "small_heading": "",
+        "heading": "",
+        "description": "",
+        "max_width": 1500,
+        "image_height": 600,
+        "mobile_image_height": 460,
+        "column_gap": 36,
+        "mobile_gap": 52,
+        "card_text_gap": 28,
+        "image_radius": 0,
+        "padding_top": 80,
+        "padding_bottom": 96,
+        "mobile_padding_top": 52,
+        "mobile_padding_bottom": 72,
+        "background_color": "#fffefc",
+        "text_color": "#2a1810",
+        "muted_color": "#6f6258",
+        "accent_color": "#5c4635"
+      }
+    },
+    "casa_juno_look_carousel_QqwKDC": {
+      "type": "casa-juno-look-carousel",
+      "blocks": {
+        "product_9MRUnr": {
+          "type": "product",
+          "settings": {
+            "product": "casa-juno-polo-masculina-premium",
+            "image": "shopify://shop_images/FAP8329_W000_LARGE_e5830bc4-47ee-4163-8b9a-b7113f46e828.jpg",
+            "title": "Produto Casa Juno",
+            "material": "Algodão premium",
+            "custom_link": "shopify://products/casa-juno-polo-sem-botao-premium"
+          }
+        },
+        "product_mGnjpc": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image": "shopify://shop_images/C8DEA9C8-BB6C-434E-824D-1AD1C7C78362_FAO8420_W058_MEDIUM_e220e963-9fbc-4cd3-a4d2-e81441e4ff4b.avif",
+            "title": "Calça de Alfaitaria",
+            "material": "Modelagem reta",
+            "custom_link": "shopify://products/casa-juno-calca-alfaiataria-casual"
+          }
+        }
+      },
+      "block_order": [
+        "product_9MRUnr",
+        "product_mGnjpc"
+      ],
+      "name": "Casa Juno look carousel",
+      "settings": {
+        "main_image": "shopify://shop_images/DF02075F-EDB9-4D8E-8C5D-796752CDD640_FAP8329_W000_ZOOM.jpg",
+        "kicker": "Casa Junno",
+        "title": "The Look",
+        "subtitle": "Uma seleção essencial com caimento refinado, textura discreta e elegância natural.",
+        "button_label": "Ver todos os looks",
+        "button_link": "",
+        "bg_color": "#fffdfa",
+        "panel_bg": "#efe8e1",
+        "text_color": "#2a1810",
+        "muted_color": "#6f6258",
+        "accent_color": "#5c4635",
+        "border_color": "#cdb8a8",
+        "max_width": 1320,
+        "desktop_height": 760,
+        "left_width": 52,
+        "padding_top": 70,
+        "padding_bottom": 80,
+        "mobile_image_height": 480,
+        "padding_top_mobile": 44,
+        "padding_bottom_mobile": 54
+      }
+    },
+    "casa_juno_look_editorial_FyKg3f": {
+      "type": "casa-juno-look-editorial",
+      "name": "Casa Juno Look Editorial",
+      "settings": {
+        "show_top_block": true,
+        "small_image": "shopify://shop_images/ChatGPT_Image_15_de_jun._de_2026_17_52_07.png",
+        "small_image_link": "",
+        "big_image": "shopify://shop_images/polo-azul-01.jpg",
+        "big_image_link": "shopify://products/casa-juno-polo-ziper-premium",
+        "top_title": "Camadas essenciais",
+        "top_description": "<p>Essenciais criados para o cotidiano, unindo conforto, caimento fluido e elegância atemporal.</p>",
+        "top_link_1_text": "– Coleção Verão/Primavera –",
+        "top_link_1_url": "shopify://collections",
+        "top_link_2_text": "",
+        "top_link_2_url": "",
+        "show_bottom_block": true,
+        "bottom_heading": "Companheira versátil para viagens",
+        "bottom_text": "<p>Unindo funcionalidade, conforto e linhas modernas, esta peça acompanha com naturalidade uma rotina em movimento.</p>",
+        "bottom_image": "shopify://shop_images/ChatGPT_Image_4_de_mai._de_2026_11_18_33.png",
+        "bottom_image_link": "shopify://products/casa-juno-camisa-manga-longa-premium",
+        "bottom_badge_text": "Traveller",
+        "bottom_link_text": "– Descubra mais –",
+        "bottom_link_url": "shopify://collections",
+        "bottom_margin_top": 90,
+        "bottom_margin_top_mobile": 70,
+        "bg_color": "#fffdfb",
+        "card_bg": "#f8f5ef",
+        "text_color": "#2a1810",
+        "muted_color": "#6f6258",
+        "accent_color": "#5c4635",
+        "max_width": 1300,
+        "padding_top": 70,
+        "padding_bottom": 110,
+        "padding_top_mobile": 45,
+        "padding_bottom_mobile": 80
+      }
+    },
+    "casa_juno_service_icons_V8QNwx": {
+      "type": "casa-juno-service-icons",
+      "blocks": {
+        "service_Pj3QPV": {
+          "type": "service",
+          "settings": {
+            "icon_image": "shopify://shop_images/02-trocas-devolucoes-caixinha.png",
+            "title": "Free Shipping",
+            "link_label": "Discover More",
+            "link_url": ""
+          }
+        },
+        "service_qUQVeM": {
+          "type": "service",
+          "settings": {
+            "icon_image": "shopify://shop_images/01-entrega-gratis-motinha.png",
+            "title": "Free Returns and Exchange",
+            "link_label": "Discover More",
+            "link_url": ""
+          }
+        },
+        "service_MMDjNT": {
+          "type": "service",
+          "settings": {
+            "icon_image": "shopify://shop_images/03-atendimento-personalizado-agendamento.png",
+            "title": "Book a Private Appointment in Store",
+            "link_label": "Discover More",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "service_Pj3QPV",
+        "service_qUQVeM",
+        "service_MMDjNT"
+      ],
+      "name": "Casa Juno serviços",
+      "settings": {
+        "heading": "À sua disposição",
+        "background_color": "#f8f5ef",
+        "text_color": "#8a684b",
+        "secondary_text_color": "#6f6258",
+        "accent_color": "#8a684b",
+        "divider_color": "#b88b7c",
+        "max_width": 1280,
+        "padding_top_desktop": 80,
+        "padding_bottom_desktop": 112,
+        "side_padding_desktop": 18,
+        "heading_gap_desktop": 20,
+        "card_min_height_desktop": 300,
+        "card_side_padding_desktop": 24,
+        "visual_height_desktop": 106,
+        "visual_gap_desktop": 10,
+        "icon_width": 240,
+        "icon_height": 162,
+        "title_max_width": 300,
+        "heading_size_desktop": 30,
+        "title_size_desktop": 22,
+        "title_line_height": 1,
+        "cta_margin_top_desktop": 38,
+        "cta_size_desktop": 22,
+        "divider_top_desktop": 40,
+        "divider_height_desktop": 280,
+        "divider_opacity": 35,
+        "padding_top_mobile": 68,
+        "padding_bottom_mobile": 72,
+        "side_padding_mobile": 20,
+        "heading_gap_mobile": 54,
+        "heading_size_mobile": 23,
+        "mobile_gap": 72,
+        "visual_height_mobile": 122,
+        "visual_gap_mobile": 26,
+        "icon_width_mobile": 90,
+        "icon_height_mobile": 82,
+        "title_size_mobile": 16,
+        "title_max_width_mobile": 300,
+        "cta_margin_top_mobile": 46,
+        "cta_size_mobile": 16
+      }
+    },
+    "casa_juno_inside_carousel_FC46yP": {
+      "type": "casa-juno-inside-carousel",
+      "blocks": {
+        "article_tgLeEi": {
+          "type": "article",
+          "settings": {
+            "image": "shopify://shop_images/Soft_as_the_sky_this_fabric_weaves_comfort_into_elegance_offering_endless_customization_for_your_unique_style____fabric_fashionstyle_fashion_thepasaa_foryou_explorepage_customisationa.jpg",
+            "title": "O toque do tecido",
+            "description": "Texturas nobres, acabamento limpo e uma construção feita para durar além da estação.",
+            "link": ""
+          }
+        },
+        "article_GpPydE": {
+          "type": "article",
+          "settings": {
+            "image": "shopify://shop_images/31.jpg",
+            "title": "Detalhes de atelier",
+            "description": "Cada costura, etiqueta e acabamento reforça a linguagem silenciosa da Casa Junno.",
+            "link": ""
+          }
+        },
+        "article_JB8Aih": {
+          "type": "article",
+          "settings": {
+            "image": "shopify://shop_images/A_Hands-On_Approach_at_BAS_Atelier_-_Florida_Design.jpg",
+            "title": "A arte do caimento",
+            "description": "Peças essenciais com proporções equilibradas para uma elegância natural.",
+            "link": ""
+          }
+        },
+        "article_PfKmxq": {
+          "type": "article",
+          "settings": {
+            "image": "shopify://shop_images/6cab1c2cbb503768275fcc6ce1bf9c22.jpg",
+            "title": "Guarda-roupa atemporal",
+            "description": "Essenciais masculinos para quem prefere qualidade visível apenas de perto.",
+            "link": ""
+          }
+        },
+        "article_fpMreq": {
+          "type": "article",
+          "settings": {
+            "image": "shopify://shop_images/32.jpg",
+            "title": "Ateliê Casa Junno",
+            "description": "Uma seleção pensada para quem valoriza tecido, caimento e presença discreta.",
+            "link": ""
+          }
+        },
+        "article_eA3hDH": {
+          "type": "article",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_4_de_mai._de_2026_12_11_04.png",
+            "title": "Presente Casa Junno",
+            "description": "Uma experiência sofisticada desde a escolha da peça até o primeiro uso.",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "article_tgLeEi",
+        "article_GpPydE",
+        "article_JB8Aih",
+        "article_PfKmxq",
+        "article_fpMreq",
+        "article_eA3hDH"
+      ],
+      "name": "Casa Juno inside carousel",
+      "settings": {
+        "heading": "Inside Casa Junno",
+        "background_color": "#f4eee8",
+        "text_color": "#2a1810",
+        "muted_color": "#6f6258",
+        "accent_color": "#9a4f45",
+        "max_width": 1480,
+        "padding_top": 96,
+        "padding_bottom": 112
+      }
+    }
+  },
+  "order": [
+    "videobanner_nqFzpT",
+    "casa_juno_produtos_wQtjLT",
+    "casa_juno_three_editorials_QHeTTb",
+    "casa_juno_look_carousel_QqwKDC",
+    "casa_juno_look_editorial_FyKg3f",
+    "casa_juno_service_icons_V8QNwx",
+    "casa_juno_inside_carousel_FC46yP"
+  ]
+}

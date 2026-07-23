@@ -1,0 +1,117 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu_Lxjazt": {
+          "type": "menu",
+          "settings": {
+            "title": "Politicas & Cookies",
+            "menu": "politicas-e-cookies"
+          }
+        }
+      },
+      "block_order": [
+        "menu_Lxjazt"
+      ],
+      "settings": {
+        "page_bg": "#f4eee6",
+        "box_bg": "#5c4635",
+        "text_color": "#fff7ef",
+        "muted_color": "#f4d8cf",
+        "bottom_color": "#5c4635",
+        "bottom_area_bg": "#f4eee6",
+        "box_width": 1600,
+        "padding_top": 8,
+        "padding_bottom": 20,
+        "padding_top_mobile": 28,
+        "padding_bottom_mobile": 40,
+        "bottom_area_padding": 0,
+        "bottom_area_padding_mobile": 8,
+        "newsletter_title": "Inscreva-se para receber novidades!",
+        "newsletter_text": "Descubra nosso universo, nossas coleções e os últimos lançamentos.",
+        "email_placeholder": "Seu email",
+        "legal_text": "Eu reconheço que meu endereço de e-mail será tratado de acordo com as disposições da Política de Privacidade.",
+        "locale_text": "PT/BR",
+        "logo_image": "shopify://shop_images/ChatGPT_Image_30_de_abr._de_2026_15_09_22-Photoroom.png",
+        "logo_text": "Casa Junno",
+        "logo_width": 140,
+        "logo_width_mobile": 100,
+        "copyright": "© Casa Junno 2026 | Casa Junno Loja Oficial Online  | Todos os direitos reservados.",
+        "instagram_url": "",
+        "facebook_url": "",
+        "linkedin_url": "",
+        "wechat_url": "",
+        "weibo_url": "",
+        "tiktok_url": ""
+      }
+    },
+    "mobile-sticky-bar": {
+      "type": "mobile-sticky-bar",
+      "disabled": true,
+      "settings": {
+        "show_mobile_sticky": true,
+        "show_home_icon": true,
+        "show_collection_icon": true,
+        "show_cart_icon": true,
+        "show_search_icon": true,
+        "show_account_icon": false,
+        "show_wishlist_icon": false
+      }
+    },
+    "age-verifier-popup": {
+      "type": "age-verifier-popup",
+      "blocks": {
+        "block-1": {
+          "type": "heading",
+          "settings": {
+            "heading": "Confirm your age"
+          }
+        },
+        "block-2": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Are you 18 years old or older?</p>"
+          }
+        },
+        "block-3": {
+          "type": "buttons",
+          "settings": {
+            "decline_button": "No, I'm not",
+            "approve_button": "Yes, I am"
+          }
+        }
+      },
+      "block_order": [
+        "block-1",
+        "block-2",
+        "block-3"
+      ],
+      "disabled": true,
+      "settings": {
+        "design_mode": false,
+        "enable": false,
+        "bg_blur": true,
+        "decline_heading": "Come back when you're older",
+        "decline_content": "<p>Sorry, the content of this store can't be seen by a younger audience. Come back when you're older.</p>",
+        "return_button": "Oops, I entered incorrectly"
+      }
+    }
+  },
+  "order": [
+    "footer",
+    "mobile-sticky-bar",
+    "age-verifier-popup"
+  ]
+}

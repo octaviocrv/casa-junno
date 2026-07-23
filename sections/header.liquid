@@ -1,0 +1,491 @@
+{%- comment -%}
+  CASA JUNNO - Editorial Header
+  Refatorado: Unificação CSS, suporte nativo a Web Components e navegação Journal/Society/Concierge.
+{%- endcomment -%}
+
+{{ 'header.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'mega-menu.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'header.js' | asset_url }}" defer="defer"></script>
+
+{%- if section.settings.show_currency_switcher or section.settings.show_country_selector or section.settings.show_language_switcher -%}
+  <script src="{{ 'localization-form.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  {% if section.settings.logo %}
+    {% assign image_size = section.settings.logo.width %}
+    "logo": {{ section.settings.logo | image_url: width: image_size | prepend: "https:" | json }},
+  {% endif %}
+  "url": {{ shop.url | append: page.url | json }}
+}
+</script>
+
+{% style %}
+  :root {
+    --logo-width-desktop: {{ section.settings.logo_max_width }}px;
+    --logo-width-mobile: {{ section.settings.mobile_logo_max_width }}px;
+    --cj-header-bg: {{ section.settings.casa_juno_header_desktop_bg | default: '#ffffff' }};
+    --cj-header-text: {{ section.settings.casa_juno_header_text_color | default: '#2f211c' }};
+    --cj-header-accent: {{ section.settings.casa_juno_header_accent_color | default: '#9a4f42' }};
+    --cj-panel-bg: {{ section.settings.casa_juno_panel_bg | default: '#ffffff' }};
+    --cj-panel-card-bg: {{ section.settings.casa_juno_panel_card_bg | default: '#f7f3ee' }};
+    --cj-panel-text: {{ section.settings.casa_juno_panel_text_color | default: '#2f211c' }};
+    --cj-panel-muted: {{ section.settings.casa_juno_panel_muted_color | default: '#6d625c' }};
+    --cj-panel-accent: {{ section.settings.casa_juno_panel_accent_color | default: '#9a4f42' }};
+    --cj-backdrop-opacity: {{ section.settings.casa_juno_panel_backdrop_opacity | default: 50 | divided_by: 100.0 }};
+    --cj-panel-top: 98px;
+  }
+
+  /* ==========================================================================
+     CORE LAYOUT & EDITORIAL TYPOGRAPHY
+     ========================================================================== */
+  .cj-header-desktop-shell {
+    width: 100%;
+    background: var(--cj-header-bg);
+    color: var(--cj-header-text);
+    font-family: Georgia, 'Times New Roman', serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .cj-header-desktop-shell__row--main {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) auto minmax(240px, 1fr);
+    align-items: center;
+    min-height: 64px;
+    padding: 14px 56px 6px;
+    gap: 24px;
+  }
+
+  .cj-header-desktop-shell__center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cj-header-logo {
+    width: var(--logo-width-desktop);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+
+  .cj-header-logo__img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* --- ALINHAMENTO DOS ÍCONES --- */
+  .cj-header-desktop-shell__left,
+  .cj-header-desktop-shell__right {
+    display: flex;
+    align-items: center;
+  }
+
+  .cj-header-desktop-shell__left {
+    justify-content: flex-start;
+  }
+
+  .cj-header-desktop-shell__right {
+    justify-content: flex-end;
+    gap: 20px;
+  }
+
+  .cj-header-desktop-shell__right > * {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* --- ÍCONES E BOTÕES --- */
+  .cj-header-search-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .cj-header-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cj-header-text);
+    text-decoration: none;
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cj-header-action:hover,
+  .cj-header-search-btn:hover {
+    opacity: 0.55;
+    transform: translateY(-1px);
+  }
+
+  /* --- MENU DE NAVEGAÇÃO PRINCIPAL --- */
+  .cj-header-desktop-shell__row--nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 8px 56px 12px;
+  }
+
+  .cj-header-nav-link {
+    position: relative;
+    color: rgba(47, 33, 28, 0.85); /* Preto ligeiramente suavizado */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Contraste sans-serif moderno */
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em; /* Tracking amplo (luxo) */
+    text-decoration: none;
+    padding-bottom: 4px;
+    transition: color 0.4s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .cj-header-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0; 
+    left: 50%; 
+    right: 50%;
+    height: 1px;
+    background: var(--cj-header-text);
+    opacity: 0.3;
+    transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1), right 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cj-header-nav-link:hover,
+  .cj-header-nav-link.is-active {
+    color: var(--cj-header-text);
+  }
+
+  .cj-header-nav-link:hover::after,
+  .cj-header-nav-link.is-active::after {
+    left: 0; 
+    right: 0;
+  }
+
+  /* ==========================================================================
+     PAINÉIS DESLIZANTES & BACKDROP (BUTTERY SMOOTH)
+     ========================================================================== */
+     
+  .cj-header-backdrop {
+    position: fixed;
+    top: var(--cj-panel-top);
+    left: 0; right: 0; bottom: 0;
+    background: rgba(20, 10, 5, var(--cj-backdrop-opacity));
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 87;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+  }
+
+  .cj-header-backdrop:not([hidden]) {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .cj-search-panel,
+  .cj-men-panel {
+    position: fixed;
+    top: var(--cj-panel-top);
+    left: 0; right: 0;
+    background: var(--cj-panel-bg);
+    z-index: 88;
+    opacity: 0;
+    visibility: hidden;
+    clip-path: inset(0 0 100% 0);
+    /* Curva cubic-bezier amanteigada (easeOutExpo) */
+    transition: clip-path 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, visibility 0.8s;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+  }
+
+  [data-panel-open="true"] {
+    opacity: 1;
+    visibility: visible;
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* --- REFINAMENTO INTERNO DOS PAINÉIS --- */
+  .cj-panel-close {
+    position: absolute;
+    top: 24px;
+    right: 48px;
+    background: transparent;
+    border: none;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--cj-panel-muted);
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cj-panel-close:hover {
+    color: var(--cj-header-text);
+    transform: rotate(90deg);
+  }
+
+  .cj-search-panel__input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: transparent;
+    padding: 24px 0 16px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(24px, 3vw, 36px);
+    color: var(--cj-panel-text);
+    outline: none;
+    transition: border-color 0.4s ease;
+  }
+
+  .cj-search-panel__input::placeholder {
+    color: var(--cj-panel-muted);
+    opacity: 0.6;
+  }
+
+  .cj-search-panel__input:focus {
+    border-bottom-color: var(--cj-panel-accent);
+  }
+
+  .cj-men-panel__nav a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    color: var(--cj-panel-text);
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    transition: color 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cj-men-panel__nav a span {
+    color: var(--cj-panel-muted);
+    transition: transform 0.4s ease;
+  }
+
+  .cj-men-panel__nav a:hover {
+    color: var(--cj-panel-accent);
+    transform: translateX(8px);
+  }
+
+  .cj-men-panel__nav a:hover span {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 1023px) {
+    .cj-header-desktop-shell { display: none; }
+    .m-header__mobile {
+      min-height: 56px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+    .cj-mobile-nav {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      padding: 6px 0;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    .cj-mobile-nav .cj-header-nav-link {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      padding-bottom: 3px;
+    }
+  }
+{% endstyle %}
+
+<cj-header data-section-id="{{ section.id }}">
+  <m-header class="m-header m:block" data-sticky="{{ section.settings.header_sticky }}">
+    {% render 'header__topbar', header: section %}
+    
+    <div class="m-header__wrapper">
+      {% comment %} --- HEADER MOBILE --- {% endcomment %}
+      <header class="m-header__mobile container-fluid m:flex m:items-center">
+        <span class="m-menu-button m:flex m:flex-1 m:w-3/12">
+          <div class="m-hamburger-box"><div class="m-hamburger-box__inner"></div></div>
+        </span>
+
+        <div class="m-logo m-logo--mobile m:w-6/12 m:justify-center">
+          <a href="{{ routes.root_url }}" class="m-logo__image">
+            <span class="cj-header-logo__text">{{ section.settings.logo_text | default: shop.name }}</span>
+          </a>
+        </div>
+
+        <div class="m-header__mobile-right m:w-3/12 m:flex m:justify-end">
+          {% render 'cart' %}
+        </div>
+
+        {% comment %} Navegação Rápida Mobile Editorial {% endcomment %}
+        <nav class="cj-mobile-nav w-full">
+          <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
+          <a class="cj-header-nav-link" href="/collections/all">Shop</a>
+          <a class="cj-header-nav-link" href="/blogs/journal">Journal</a>
+        </nav>
+      </header>
+
+      {% comment %} --- HEADER DESKTOP --- {% endcomment %}
+      <header class="m-header__desktop">
+        <div class="cj-header-desktop-shell">
+          <div class="cj-header-desktop-shell__row cj-header-desktop-shell__row--main">
+            
+            {% comment %} Esquerda: Busca Editorial {% endcomment %}
+            <div class="cj-header-desktop-shell__left">
+              <button class="cj-header-search-btn" type="button" data-action="toggle-search" aria-label="Abrir Busca">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="10.8" cy="10.8" r="6.8"/><path d="M16.1 16.1 21 21"/></svg>
+                <span class="ml-2 text-sm font-serif">Buscar</span>
+              </button>
+            </div>
+
+            {% comment %} Centro: Logo / Identidade Visual {% endcomment %}
+            <div class="cj-header-desktop-shell__center">
+              <a href="{{ routes.root_url }}" class="cj-header-logo">
+                {% if section.settings.logo != blank %}
+                  {{ section.settings.logo | image_url: width: 400 | image_tag: class: 'cj-header-logo__img', loading: 'eager', alt: shop.name }}
+                {% else %}
+                  <span class="cj-header-logo__text">{{ section.settings.logo_text | default: shop.name }}</span>
+                {% endif %}
+              </a>
+            </div>
+
+            {% comment %} Direita: Conta & Favs {% endcomment %}
+            <div class="cj-header-desktop-shell__right">
+              <a class="cj-header-action" href="{{ routes.account_url }}" aria-label="Minha Conta">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+              </a>
+              {% render 'cart' %}
+            </div>
+          </div>
+
+          {% comment %} Menu de Navegação Revista Digital {% endcomment %}
+          <nav class="cj-header-desktop-shell__row cj-header-desktop-shell__row--nav" aria-label="Menu Principal">
+            <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
+            <button class="cj-header-nav-link" type="button" data-action="toggle-men">Shop</button>
+            <a class="cj-header-nav-link is-active" href="/blogs/journal">Journal</a>
+            <a class="cj-header-nav-link" href="/pages/society">Society</a>
+            <a class="cj-header-nav-link" href="/pages/concierge">Concierge</a>
+          </nav>
+        </div>
+      </header>
+    </div>
+
+    {% comment %} --- PAINÉIS FLUTUANTES (SEARCH & SHOP) --- {% endcomment %}
+    <div class="cj-header-backdrop" data-element="backdrop" hidden></div>
+
+    {% comment %} Painel de Busca {% endcomment %}
+    <section class="cj-search-panel" data-element="search-panel" role="dialog" aria-modal="true" aria-label="Busca Editorial">
+      <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
+      <div class="cj-search-panel__inner p-12">
+        <form action="{{ routes.search_url }}" method="get" class="cj-search-panel__form">
+          <input class="cj-search-panel__input" type="search" name="q" placeholder="Digite para buscar peças, tecidos ou artigos do Journal..." autocomplete="off">
+        </form>
+      </div>
+    </section>
+
+    {% comment %} Painel de Coleções (Shop) {% endcomment %}
+    <section class="cj-men-panel" data-element="men-panel" role="dialog" aria-modal="true" aria-label="Categorias Masculinas">
+      <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
+      <div class="cj-men-panel__inner p-12 grid grid-cols-2 gap-8">
+        <nav class="cj-men-panel__nav flex flex-col gap-4">
+          <a href="/collections/camisas" class="text-xl font-serif">Camisas de Linho <span>›</span></a>
+          <a href="/collections/tricot" class="text-xl font-serif">Tricot & Cashmere <span>›</span></a>
+          <a href="/collections/alfaiataria" class="text-xl font-serif">Alfaiataria <span>›</span></a>
+        </nav>
+      </div>
+    </section>
+  </m-header>
+</cj-header>
+
+<script>
+  if (!customElements.get('cj-header')) {
+    customElements.define('cj-header', class CJHeader extends HTMLElement {
+      connectedCallback() {
+        this.backdrop = this.querySelector('[data-element="backdrop"]');
+        this.searchPanel = this.querySelector('[data-element="search-panel"]');
+        this.menPanel = this.querySelector('[data-element="men-panel"]');
+
+        this.addEventListener('click', (e) => {
+          const target = e.target.closest('[data-action]');
+          if (!target) return;
+
+          const action = target.dataset.action;
+          if (action === 'toggle-search') this.togglePanel(this.searchPanel);
+          if (action === 'toggle-men') this.togglePanel(this.menPanel);
+          if (action === 'close-panels') this.closeAll();
+        });
+
+        if (this.backdrop) {
+          this.backdrop.addEventListener('click', () => this.closeAll());
+        }
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') this.closeAll();
+        });
+      }
+
+      togglePanel(panelToOpen) {
+        const isOpen = panelToOpen.getAttribute('data-panel-open') === 'true';
+        this.closeAll();
+
+        if (!isOpen) {
+          panelToOpen.setAttribute('data-panel-open', 'true');
+          this.backdrop.removeAttribute('hidden');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      closeAll() {
+        [this.searchPanel, this.menPanel].forEach(p => p?.removeAttribute('data-panel-open'));
+        if (this.backdrop) this.backdrop.setAttribute('hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Header Editorial",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo da Marca"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Texto do Logo",
+      "default": "CASA JUNNO"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 100,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "label": "Largura Logo Desktop",
+      "default": 160
+    }
+  ]
+}
+{% endschema %}

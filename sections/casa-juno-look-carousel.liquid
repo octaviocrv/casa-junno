@@ -1,0 +1,917 @@
+{% comment %}
+  Section: Casa Juno Look Carousel
+  Inspired by Loro Piana editorial product look section.
+{% endcomment %}
+
+<section
+  id="cj-look-{{ section.id }}"
+  class="cj-look-section"
+  style="
+    --cj-bg: {{ section.settings.bg_color }};
+    --cj-panel-bg: {{ section.settings.panel_bg }};
+    --cj-text: {{ section.settings.text_color }};
+    --cj-muted: {{ section.settings.muted_color }};
+    --cj-accent: {{ section.settings.accent_color }};
+    --cj-border: {{ section.settings.border_color }};
+    --cj-max-width: {{ section.settings.max_width }}px;
+    --cj-padding-top: {{ section.settings.padding_top }}px;
+    --cj-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --cj-image-width: {{ section.settings.left_width }}%;
+    --cj-content-width: {{ 100 | minus: section.settings.left_width }}%;
+    --cj-desktop-height: {{ section.settings.desktop_height }}px;
+    --cj-mobile-image-height: {{ section.settings.mobile_image_height }}px;
+  "
+>
+  <div class="cj-look-wrap">
+    <div class="cj-look-grid">
+
+      <div class="cj-look-main">
+        {% if section.settings.main_image != blank %}
+          {{
+            section.settings.main_image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'cj-look-main-img',
+              loading: 'lazy',
+              widths: '600, 900, 1200, 1600',
+              sizes: '(min-width: 990px) 50vw, 100vw'
+          }}
+        {% else %}
+          <div class="cj-look-placeholder">
+            <span>Imagem principal</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="cj-look-panel">
+        <div class="cj-look-head">
+          {% if section.settings.kicker != blank %}
+            <div class="cj-look-kicker">{{ section.settings.kicker }}</div>
+          {% endif %}
+
+          {% if section.settings.title != blank %}
+            <h2 class="cj-look-title">{{ section.settings.title }}</h2>
+          {% endif %}
+
+          {% if section.settings.subtitle != blank %}
+            <p class="cj-look-subtitle">{{ section.settings.subtitle }}</p>
+          {% endif %}
+        </div>
+
+        <div class="cj-look-carousel" data-cj-look-carousel>
+          <div class="cj-look-track" data-cj-look-track>
+            {% for block in section.blocks %}
+              {% assign linked_product = block.settings.product %}
+
+              <article class="cj-look-slide" {{ block.shopify_attributes }}>
+                {% if linked_product != blank %}
+                  <a class="cj-look-product-link" href="{{ linked_product.url }}">
+                {% elsif block.settings.custom_link != blank %}
+                  <a class="cj-look-product-link" href="{{ block.settings.custom_link }}">
+                {% else %}
+                  <div class="cj-look-product-link">
+                {% endif %}
+
+                  <div class="cj-look-product-image-box">
+                    {% if block.settings.image != blank %}
+                      {{
+                        block.settings.image
+                        | image_url: width: 900
+                        | image_tag:
+                          class: 'cj-look-product-img',
+                          loading: 'lazy',
+                          widths: '300, 450, 600, 900',
+                          sizes: '(min-width: 990px) 28vw, 80vw'
+                      }}
+                    {% elsif linked_product != blank and linked_product.featured_image != blank %}
+                      {{
+                        linked_product.featured_image
+                        | image_url: width: 900
+                        | image_tag:
+                          class: 'cj-look-product-img',
+                          loading: 'lazy',
+                          widths: '300, 450, 600, 900',
+                          sizes: '(min-width: 990px) 28vw, 80vw'
+                      }}
+                    {% else %}
+                      <div class="cj-look-product-placeholder">
+                        <span>Produto</span>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <div class="cj-look-product-info">
+                    <h3 class="cj-look-product-title">
+                      {% if block.settings.title != blank %}
+                        {{ block.settings.title }}
+                      {% elsif linked_product != blank %}
+                        {{ linked_product.title }}
+                      {% else %}
+                        Nome do produto
+                      {% endif %}
+                    </h3>
+
+                    {% if block.settings.material != blank %}
+                      <p class="cj-look-product-material">{{ block.settings.material }}</p>
+                    {% endif %}
+                  </div>
+
+                {% if linked_product != blank or block.settings.custom_link != blank %}
+                  </a>
+                {% else %}
+                  </div>
+                {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+
+          {% if section.blocks.size > 1 %}
+            <button class="cj-look-arrow cj-look-arrow-prev" type="button" aria-label="Produto anterior" data-cj-look-prev>
+              <span>‹</span>
+            </button>
+
+            <button class="cj-look-arrow cj-look-arrow-next" type="button" aria-label="Próximo produto" data-cj-look-next>
+              <span>›</span>
+            </button>
+
+            <div class="cj-look-dots" data-cj-look-dots>
+              {% for block in section.blocks %}
+                <button
+                  class="cj-look-dot{% if forloop.first %} is-active{% endif %}"
+                  type="button"
+                  aria-label="Ir para produto {{ forloop.index }}"
+                  data-cj-look-dot="{{ forloop.index0 }}"
+                ></button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if section.settings.button_label != blank %}
+          <div class="cj-look-button-wrap">
+            <a class="cj-look-button" href="{{ section.settings.button_link }}">
+              {{ section.settings.button_label }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  #cj-look-{{ section.id }} {
+    background: var(--cj-bg);
+    padding-top: var(--cj-padding-top);
+    padding-bottom: var(--cj-padding-bottom);
+    color: var(--cj-text);
+    overflow: hidden;
+  }
+
+  #cj-look-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-wrap {
+    width: min(var(--cj-max-width), calc(100% - 48px));
+    margin: 0 auto;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-grid {
+    display: grid;
+    grid-template-columns: var(--cj-image-width) var(--cj-content-width);
+    min-height: var(--cj-desktop-height);
+    background: var(--cj-panel-bg);
+    overflow: hidden;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-main {
+    position: relative;
+    background: #f8f5ef;
+    min-height: var(--cj-desktop-height);
+    overflow: hidden;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-main-img {
+    width: 100%;
+    height: 100%;
+    min-height: var(--cj-desktop-height);
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transform: scale(1.01);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: var(--cj-desktop-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f3ec;
+    color: var(--cj-muted);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-panel {
+    position: relative;
+    min-width: 0;
+    background: var(--cj-panel-bg);
+    padding: 78px 64px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-head {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-kicker {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cj-accent);
+    margin-bottom: 18px;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-title {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.15;
+    color: var(--cj-text);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-subtitle {
+    max-width: 390px;
+    margin: 18px auto 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--cj-muted);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 26px;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-track {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    transition:
+      transform 950ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 420ms ease;
+    will-change: transform;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 100%;
+    opacity: 0.42;
+    transform: scale(0.965);
+    transition:
+      opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-slide.is-active {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-image-box {
+    width: min(100%, 330px);
+    aspect-ratio: 3 / 4.2;
+    margin: 0 auto;
+    background: #f8f5ef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    padding: 22px;
+    transition:
+      transform 850ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter 850ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-link:hover .cj-look-product-img {
+    transform: scale(1.035);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cj-muted);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-info {
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-title {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--cj-text);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-product-material {
+    margin: 9px 0 0;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--cj-accent);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-arrow {
+    position: absolute;
+    top: 38%;
+    z-index: 3;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--cj-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 28px rgba(42, 24, 16, 0.08);
+    transition:
+      transform 320ms ease,
+      background 320ms ease,
+      opacity 320ms ease;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-arrow:hover {
+    transform: translateY(-50%) scale(1.05);
+    background: #fff;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-arrow span {
+    display: block;
+    font-size: 30px;
+    line-height: 1;
+    transform: translateY(-2px);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-arrow-prev {
+    left: 2px;
+    transform: translateY(-50%);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-arrow-next {
+    right: 2px;
+    transform: translateY(-50%);
+  }
+
+  #cj-look-{{ section.id }} .cj-look-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 46px;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-dot {
+    width: 14px;
+    height: 2px;
+    padding: 0;
+    border: 0;
+    background: var(--cj-muted);
+    opacity: 0.45;
+    cursor: pointer;
+    transition:
+      width 360ms ease,
+      opacity 360ms ease,
+      background 360ms ease;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-dot.is-active {
+    width: 26px;
+    background: var(--cj-accent);
+    opacity: 1;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-button-wrap {
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    min-height: 44px;
+    padding: 12px 22px;
+    border: 1px solid var(--cj-border);
+    background: transparent;
+    color: var(--cj-text);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    transition:
+      background 320ms ease,
+      color 320ms ease,
+      border-color 320ms ease;
+  }
+
+  #cj-look-{{ section.id }} .cj-look-button:hover {
+    background: var(--cj-text);
+    color: var(--cj-bg);
+    border-color: var(--cj-text);
+  }
+
+  @media screen and (max-width: 989px) {
+    #cj-look-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-wrap {
+      width: calc(100% - 28px);
+    }
+
+    #cj-look-{{ section.id }} .cj-look-grid {
+      display: block;
+      min-height: 0;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-main {
+      min-height: var(--cj-mobile-image-height);
+      height: var(--cj-mobile-image-height);
+    }
+
+    #cj-look-{{ section.id }} .cj-look-main-img {
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-placeholder {
+      min-height: var(--cj-mobile-image-height);
+    }
+
+    #cj-look-{{ section.id }} .cj-look-panel {
+      padding: 42px 22px 46px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-head {
+      margin-bottom: 34px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-title {
+      font-size: 27px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-subtitle {
+      font-size: 13px;
+      max-width: 310px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-carousel {
+      padding: 0 14px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-product-image-box {
+      width: min(100%, 270px);
+    }
+
+    #cj-look-{{ section.id }} .cj-look-product-img {
+      padding: 18px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-product-info {
+      margin-top: 24px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-arrow {
+      width: 38px;
+      height: 38px;
+      top: 36%;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-arrow span {
+      font-size: 26px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-dots {
+      margin-top: 34px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-button-wrap {
+      margin-top: 36px;
+    }
+  }
+
+  @media screen and (max-width: 520px) {
+    #cj-look-{{ section.id }} .cj-look-wrap {
+      width: 100%;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-grid {
+      border-radius: 0;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-panel {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    #cj-look-{{ section.id }} .cj-look-product-image-box {
+      width: min(100%, 245px);
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const root = document.getElementById('cj-look-{{ section.id }}');
+    if (!root) return;
+
+    const carousel = root.querySelector('[data-cj-look-carousel]');
+    const track = root.querySelector('[data-cj-look-track]');
+    const slides = Array.from(root.querySelectorAll('.cj-look-slide'));
+    const prev = root.querySelector('[data-cj-look-prev]');
+    const next = root.querySelector('[data-cj-look-next]');
+    const dots = Array.from(root.querySelectorAll('[data-cj-look-dot]'));
+
+    if (!carousel || !track || slides.length === 0) return;
+
+    let index = 0;
+    let locked = false;
+    let startX = 0;
+    let currentX = 0;
+    let dragging = false;
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function setActive(newIndex) {
+      index = clamp(newIndex, 0, slides.length - 1);
+
+      track.style.transform = 'translate3d(' + (-index * 100) + '%, 0, 0)';
+
+      slides.forEach(function (slide, i) {
+        if (i === index) {
+          slide.classList.add('is-active');
+        } else {
+          slide.classList.remove('is-active');
+        }
+      });
+
+      dots.forEach(function (dot, i) {
+        if (i === index) {
+          dot.classList.add('is-active');
+        } else {
+          dot.classList.remove('is-active');
+        }
+      });
+    }
+
+    function goTo(newIndex) {
+      if (locked) return;
+
+      locked = true;
+      setActive(newIndex);
+
+      window.setTimeout(function () {
+        locked = false;
+      }, 780);
+    }
+
+    if (prev) {
+      prev.addEventListener('click', function () {
+        if (index <= 0) {
+          goTo(slides.length - 1);
+        } else {
+          goTo(index - 1);
+        }
+      });
+    }
+
+    if (next) {
+      next.addEventListener('click', function () {
+        if (index >= slides.length - 1) {
+          goTo(0);
+        } else {
+          goTo(index + 1);
+        }
+      });
+    }
+
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        const target = Number(dot.getAttribute('data-cj-look-dot'));
+        goTo(target);
+      });
+    });
+
+    carousel.addEventListener('touchstart', function (event) {
+      if (!event.touches || !event.touches.length) return;
+      dragging = true;
+      startX = event.touches[0].clientX;
+      currentX = startX;
+    }, { passive: true });
+
+    carousel.addEventListener('touchmove', function (event) {
+      if (!dragging || !event.touches || !event.touches.length) return;
+      currentX = event.touches[0].clientX;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', function () {
+      if (!dragging) return;
+
+      const diff = startX - currentX;
+
+      if (Math.abs(diff) > 45) {
+        if (diff > 0) {
+          if (index >= slides.length - 1) {
+            goTo(0);
+          } else {
+            goTo(index + 1);
+          }
+        } else {
+          if (index <= 0) {
+            goTo(slides.length - 1);
+          } else {
+            goTo(index - 1);
+          }
+        }
+      }
+
+      dragging = false;
+      startX = 0;
+      currentX = 0;
+    });
+
+    setActive(0);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Casa Juno look carousel",
+  "tag": "section",
+  "class": "section-casa-juno-look-carousel",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Imagem principal"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Imagem grande à esquerda"
+    },
+    {
+      "type": "header",
+      "content": "Textos"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Texto pequeno",
+      "default": "Casa Juno"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "The Look"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Descrição",
+      "default": "Uma seleção essencial com caimento refinado, textura discreta e elegância natural."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texto do botão",
+      "default": "Ver todos os looks"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link do botão"
+    },
+    {
+      "type": "header",
+      "content": "Cores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Cor de fundo da página",
+      "default": "#F4EEE6"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg",
+      "label": "Cor do painel",
+      "default": "#EFE8E1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Cor do texto principal",
+      "default": "#2A1810"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Cor do texto secundário",
+      "default": "#6F6258"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Cor vinho / marrom branding",
+      "default": "#9A4F3F"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Cor da borda",
+      "default": "#CDB8A8"
+    },
+    {
+      "type": "header",
+      "content": "Layout desktop"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Largura máxima",
+      "min": 1000,
+      "max": 1800,
+      "step": 10,
+      "unit": "px",
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Altura desktop",
+      "min": 520,
+      "max": 920,
+      "step": 10,
+      "unit": "px",
+      "default": 760
+    },
+    {
+      "type": "range",
+      "id": "left_width",
+      "label": "Largura da imagem esquerda",
+      "min": 38,
+      "max": 62,
+      "step": 1,
+      "unit": "%",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espaço superior desktop",
+      "min": 0,
+      "max": 180,
+      "step": 2,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espaço inferior desktop",
+      "min": 0,
+      "max": 180,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Layout mobile"
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "label": "Altura da imagem mobile",
+      "min": 320,
+      "max": 680,
+      "step": 10,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Espaço superior mobile",
+      "min": 0,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Espaço inferior mobile",
+      "min": 0,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Produto do look",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produto Shopify"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagem manual do produto"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título manual",
+          "default": "Produto Casa Juno"
+        },
+        {
+          "type": "text",
+          "id": "material",
+          "label": "Material / subtítulo",
+          "default": "Algodão premium"
+        },
+        {
+          "type": "url",
+          "id": "custom_link",
+          "label": "Link manual se não escolher produto"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Casa Juno look carousel",
+      "blocks": [
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
