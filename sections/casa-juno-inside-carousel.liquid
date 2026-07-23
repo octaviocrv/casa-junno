@@ -20,13 +20,20 @@
       <h2>{{ section.settings.heading }}</h2>
 
       {% if section.blocks.size > 1 %}
+        {% assign slides_total = section.blocks.size %}
+        {% if slides_total < 10 %}
+          {% assign slides_total_label = '0' | append: slides_total %}
+        {% else %}
+          {% assign slides_total_label = slides_total %}
+        {% endif %}
+
         <div class="cj-inside-controls">
           <button class="cj-inside-arrow cj-inside-prev" type="button" aria-label="Anterior">
             ‹
           </button>
 
           <span class="cj-inside-count">
-            <span class="cj-current">1</span>/<span>{{ section.blocks.size }}</span>
+            <span class="cj-current">01</span>/<span>{{ slides_total_label }}</span>
           </span>
 
           <button class="cj-inside-arrow cj-inside-next" type="button" aria-label="Próximo">
@@ -39,7 +46,12 @@
     <div class="cj-inside-slider">
       <div class="cj-inside-track">
         {% for block in section.blocks %}
-          <article class="cj-inside-card" {{ block.shopify_attributes }}>
+          {% assign card_index_label = forloop.index %}
+          {% if forloop.index < 10 %}
+            {% assign card_index_label = '0' | append: forloop.index %}
+          {% endif %}
+
+          <article class="cj-inside-card{% if block.settings.link != blank %} is-clickable{% endif %}" {{ block.shopify_attributes }}>
             {% if block.settings.link != blank %}
               <a href="{{ block.settings.link }}" class="cj-inside-card-link">
             {% else %}
@@ -64,6 +76,8 @@
               </div>
 
               <div class="cj-inside-content">
+                <div class="cj-inside-meta">{{ card_index_label }}</div>
+
                 {% if block.settings.title != blank %}
                   <h3>{{ block.settings.title }}</h3>
                 {% endif %}
@@ -72,6 +86,10 @@
                   <p>{{ block.settings.description }}</p>
                 {% endif %}
               </div>
+
+              {% if block.settings.link != blank %}
+                <span class="cj-inside-cta" aria-hidden="true">Explorar</span>
+              {% endif %}
 
             {% if block.settings.link != blank %}
               </a>
@@ -87,6 +105,8 @@
 
 <style>
   #CasaJunoInside-{{ section.id }} {
+    position: relative;
+    isolation: isolate;
     background: var(--cj-bg);
     color: var(--cj-text);
     padding-top: var(--cj-padding-top);
@@ -94,7 +114,20 @@
     overflow: hidden;
   }
 
+  #CasaJunoInside-{{ section.id }}::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 45%),
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0) 38%);
+  }
+
   #CasaJunoInside-{{ section.id }} .cj-inside-wrap {
+    position: relative;
+    z-index: 1;
     max-width: var(--cj-max-width);
     margin: 0 auto;
     padding: 0 42px;
@@ -105,54 +138,74 @@
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    margin-bottom: 34px;
+    margin-bottom: 40px;
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-header h2 {
     margin: 0;
     font-family: Georgia, "Times New Roman", serif;
-    font-size: 28px;
+    font-size: clamp(26px, 2.2vw, 34px);
     font-weight: 400;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
     color: var(--cj-text);
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-controls {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(47, 33, 28, 0.14);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     color: var(--cj-text);
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-arrow {
     appearance: none;
-    border: 0;
-    background: transparent;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(47, 33, 28, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
     color: var(--cj-text);
-    font-size: 28px;
+    font-size: 20px;
     line-height: 1;
     cursor: pointer;
-    padding: 6px 8px;
+    padding: 0;
     transition:
-      transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-      opacity 0.35s ease,
-      color 0.35s ease;
+      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      background-color 0.25s ease;
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-arrow:hover {
     color: var(--cj-accent);
-    transform: translateY(-1px);
+    border-color: rgba(154, 79, 69, 0.45);
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px) scale(0.98);
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-arrow:disabled {
-    opacity: 0.28;
+    opacity: 0.35;
+    border-color: rgba(47, 33, 28, 0.08);
+    background: rgba(255, 255, 255, 0.45);
     cursor: default;
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-count {
-    font-size: 15px;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.12em;
     color: var(--cj-muted);
-    min-width: 38px;
+    min-width: 58px;
     text-align: center;
   }
 
@@ -165,7 +218,7 @@
     display: flex;
     gap: 28px;
     will-change: transform;
-    transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.82s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-card {
@@ -174,16 +227,48 @@
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-card-link {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     text-decoration: none;
     color: inherit;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(47, 33, 28, 0.12);
+    background: rgba(255, 255, 255, 0.68);
+    transition:
+      transform 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.35s ease,
+      box-shadow 0.42s ease;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-card.is-clickable .cj-inside-card-link:hover,
+  #CasaJunoInside-{{ section.id }} .cj-inside-card.is-clickable .cj-inside-card-link:focus-visible {
+    border-color: rgba(154, 79, 69, 0.42);
+    box-shadow: 0 14px 32px rgba(42, 24, 16, 0.1);
+    transform: translateY(-3px);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-card.is-clickable .cj-inside-card-link:focus-visible {
+    outline: none;
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-image-box {
+    position: relative;
     width: 100%;
     aspect-ratio: 0.74 / 1;
     overflow: hidden;
     background: #f7f3ee;
+    border-radius: 10px;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-image-box::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    pointer-events: none;
+    z-index: 2;
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-image {
@@ -197,8 +282,8 @@
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-card:hover .cj-inside-image {
-    transform: scale(1.035);
-    filter: brightness(0.97);
+    transform: scale(1.04);
+    filter: brightness(0.96);
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-placeholder {
@@ -216,15 +301,24 @@
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-content {
-    padding-top: 22px;
+    padding-top: 18px;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-meta {
+    margin-bottom: 11px;
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--cj-accent);
+    font-variant-numeric: tabular-nums;
   }
 
   #CasaJunoInside-{{ section.id }} .cj-inside-content h3 {
-    margin: 0 0 12px;
+    margin: 0 0 10px;
     font-family: Georgia, "Times New Roman", serif;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 400;
-    line-height: 1.28;
+    line-height: 1.3;
     color: var(--cj-text);
   }
 
@@ -232,8 +326,32 @@
     margin: 0;
     color: var(--cj-muted);
     font-size: 15px;
-    line-height: 1.55;
-    max-width: 95%;
+    line-height: 1.58;
+    max-width: 100%;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-cta {
+    margin-top: auto;
+    padding-top: 18px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cj-accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-cta::after {
+    content: "→";
+    font-size: 13px;
+    transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #CasaJunoInside-{{ section.id }} .cj-inside-card.is-clickable .cj-inside-card-link:hover .cj-inside-cta::after,
+  #CasaJunoInside-{{ section.id }} .cj-inside-card.is-clickable .cj-inside-card-link:focus-visible .cj-inside-cta::after {
+    transform: translateX(4px);
   }
 
   @media screen and (max-width: 989px) {
@@ -247,6 +365,15 @@
 
     #CasaJunoInside-{{ section.id }} .cj-inside-header h2 {
       font-size: 25px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-card-link {
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-content h3 {
+      font-size: 18px;
     }
   }
 
@@ -269,12 +396,14 @@
     }
 
     #CasaJunoInside-{{ section.id }} .cj-inside-controls {
-      gap: 10px;
+      gap: 8px;
+      padding: 4px 8px;
     }
 
     #CasaJunoInside-{{ section.id }} .cj-inside-arrow {
-      font-size: 25px;
-      padding: 4px 5px;
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
     }
 
     #CasaJunoInside-{{ section.id }} .cj-inside-track {
@@ -291,7 +420,7 @@
     }
 
     #CasaJunoInside-{{ section.id }} .cj-inside-card {
-      flex: 0 0 78%;
+      flex: 0 0 80%;
       scroll-snap-align: start;
     }
 
@@ -312,6 +441,11 @@
       font-size: 14px;
       line-height: 1.5;
     }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-cta {
+      padding-top: 14px;
+      font-size: 10px;
+    }
   }
 </style>
 
@@ -329,6 +463,7 @@
     if (!track || !cards.length) return;
 
     let index = 0;
+    const formatSlideNumber = (value) => String(value).padStart(2, '0');
 
     function getCardsPerView() {
       if (window.innerWidth <= 749) return 1;
@@ -346,7 +481,6 @@
     }
 
     function update() {
-      const perView = getCardsPerView();
       const max = maxIndex();
 
       if (index > max) index = max;
@@ -366,7 +500,7 @@
         track.style.transform = `translate3d(${-move}px, 0, 0)`;
       }
 
-      if (current) current.textContent = index + 1;
+      if (current) current.textContent = formatSlideNumber(index + 1);
 
       if (prev) prev.disabled = index === 0;
       if (next) next.disabled = index >= max;
@@ -395,19 +529,19 @@
       }, 150);
     });
 
-    if (window.innerWidth <= 749) {
-      track.addEventListener('scroll', () => {
-        const cardWidth = cards[0].getBoundingClientRect().width + getGap();
-        const newIndex = Math.round(track.scrollLeft / cardWidth);
+    track.addEventListener('scroll', () => {
+      if (window.innerWidth > 749) return;
 
-        if (newIndex !== index) {
-          index = Math.max(0, Math.min(newIndex, maxIndex()));
-          if (current) current.textContent = index + 1;
-          if (prev) prev.disabled = index === 0;
-          if (next) next.disabled = index >= maxIndex();
-        }
-      }, { passive: true });
-    }
+      const cardWidth = cards[0].getBoundingClientRect().width + getGap();
+      const newIndex = Math.round(track.scrollLeft / cardWidth);
+
+      if (newIndex !== index) {
+        index = Math.max(0, Math.min(newIndex, maxIndex()));
+        if (current) current.textContent = formatSlideNumber(index + 1);
+        if (prev) prev.disabled = index === 0;
+        if (next) next.disabled = index >= maxIndex();
+      }
+    }, { passive: true });
 
     update();
   })();

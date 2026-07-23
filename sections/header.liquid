@@ -169,6 +169,21 @@
     right: 0;
   }
 
+  .cj-header-nav-link.is-disabled {
+    opacity: 0.42;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .cj-header-nav-link.is-disabled::after {
+    display: none;
+  }
+
+  .cj-men-panel__link.is-disabled {
+    opacity: 0.42;
+    pointer-events: none;
+  }
+
   .cj-header-backdrop {
     position: fixed;
     top: var(--cj-panel-top);
@@ -187,6 +202,68 @@
   .cj-header-backdrop:not([hidden]) {
     opacity: 1;
     visibility: visible;
+  }
+
+  .cj-men-panel {
+    position: fixed;
+    top: var(--cj-panel-top);
+    left: 0;
+    right: 0;
+    z-index: 88;
+    background: var(--cj-panel-bg);
+    color: var(--cj-panel-text);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate3d(0, -14px, 0);
+    transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+    box-shadow: 0 20px 45px rgba(25, 14, 9, 0.12);
+  }
+
+  .cj-men-panel[data-panel-open="true"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .cj-panel-close {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: var(--cj-panel-muted);
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    transition: opacity 0.25s ease;
+  }
+
+  .cj-panel-close:hover {
+    opacity: 0.55;
+  }
+
+  .cj-men-panel__inner {
+    width: min(100%, 1120px);
+    margin: 0 auto;
+    padding: 56px 32px 34px;
+  }
+
+  .cj-men-panel__nav a,
+  .cj-men-panel__nav .cj-men-panel__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 0;
+    color: var(--cj-panel-text);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(47, 33, 28, 0.08);
+  }
+
+  .cj-men-panel__nav a:hover {
+    color: var(--cj-panel-accent);
   }
 
   .search-container {
@@ -356,8 +433,35 @@
 
   @media (max-width: 1023px) {
     .cj-header-desktop-shell { display: none; }
+
+    .cj-men-panel {
+      top: calc(var(--cj-panel-top) - 10px);
+    }
+
+    .cj-men-panel__inner {
+      padding: 52px 18px 24px;
+    }
   }
 {% endstyle %}
+
+{% liquid
+  assign shop_all_url = routes.all_products_collection_url
+  if shop_all_url == blank
+    assign shop_all_url = '/collections/all'
+  endif
+
+  assign camisas_collection = collections['camisas']
+  assign tricot_collection = collections['tricot']
+  assign alfaiataria_collection = collections['alfaiataria']
+  assign journal_blog = blogs['journal']
+  assign society_page = pages['society']
+  assign concierge_page = pages['concierge']
+
+  assign has_shop_panel = false
+  if camisas_collection != blank or tricot_collection != blank or alfaiataria_collection != blank
+    assign has_shop_panel = true
+  endif
+%}
 
 <cj-header data-section-id="{{ section.id }}">
   <m-header class="m-header m:block" data-sticky="{{ section.settings.header_sticky }}">
@@ -381,8 +485,13 @@
 
         <nav class="cj-mobile-nav w-full">
           <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
-          <a class="cj-header-nav-link" href="/collections/all">Shop</a>
-          <a class="cj-header-nav-link" href="/blogs/journal">Journal</a>
+          <a class="cj-header-nav-link" href="{{ shop_all_url }}">Shop</a>
+
+          {% if journal_blog != blank %}
+            <a class="cj-header-nav-link" href="{{ journal_blog.url }}">Journal</a>
+          {% else %}
+            <span class="cj-header-nav-link is-disabled" aria-disabled="true">Journal</span>
+          {% endif %}
         </nav>
       </header>
 
@@ -439,10 +548,30 @@
 
           <nav class="cj-header-desktop-shell__row cj-header-desktop-shell__row--nav" aria-label="Menu Principal">
             <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
-            <button class="cj-header-nav-link" type="button" data-action="toggle-men">Shop</button>
-            <a class="cj-header-nav-link is-active" href="/blogs/journal">Journal</a>
-            <a class="cj-header-nav-link" href="/pages/society">Society</a>
-            <a class="cj-header-nav-link" href="/pages/concierge">Concierge</a>
+
+            {% if has_shop_panel %}
+              <button class="cj-header-nav-link" type="button" data-action="toggle-men">Shop</button>
+            {% else %}
+              <a class="cj-header-nav-link" href="{{ shop_all_url }}">Shop</a>
+            {% endif %}
+
+            {% if journal_blog != blank %}
+              <a class="cj-header-nav-link" href="{{ journal_blog.url }}">Journal</a>
+            {% else %}
+              <span class="cj-header-nav-link is-disabled" aria-disabled="true">Journal</span>
+            {% endif %}
+
+            {% if society_page != blank %}
+              <a class="cj-header-nav-link" href="{{ society_page.url }}">Society</a>
+            {% else %}
+              <span class="cj-header-nav-link is-disabled" aria-disabled="true">Society</span>
+            {% endif %}
+
+            {% if concierge_page != blank %}
+              <a class="cj-header-nav-link" href="{{ concierge_page.url }}">Concierge</a>
+            {% else %}
+              <span class="cj-header-nav-link is-disabled" aria-disabled="true">Concierge</span>
+            {% endif %}
           </nav>
         </div>
       </header>
@@ -454,9 +583,23 @@
       <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
       <div class="cj-men-panel__inner p-12 grid grid-cols-2 gap-8">
         <nav class="cj-men-panel__nav flex flex-col gap-4">
-          <a href="/collections/camisas" class="text-xl font-serif">Camisas de Linho <span>›</span></a>
-          <a href="/collections/tricot" class="text-xl font-serif">Tricot & Cashmere <span>›</span></a>
-          <a href="/collections/alfaiataria" class="text-xl font-serif">Alfaiataria <span>›</span></a>
+          {% if camisas_collection != blank %}
+            <a href="{{ camisas_collection.url }}" class="text-xl font-serif">Camisas de Linho <span>›</span></a>
+          {% else %}
+            <span class="cj-men-panel__link is-disabled text-xl font-serif" aria-disabled="true">Camisas de Linho <span>›</span></span>
+          {% endif %}
+
+          {% if tricot_collection != blank %}
+            <a href="{{ tricot_collection.url }}" class="text-xl font-serif">Tricot & Cashmere <span>›</span></a>
+          {% else %}
+            <span class="cj-men-panel__link is-disabled text-xl font-serif" aria-disabled="true">Tricot & Cashmere <span>›</span></span>
+          {% endif %}
+
+          {% if alfaiataria_collection != blank %}
+            <a href="{{ alfaiataria_collection.url }}" class="text-xl font-serif">Alfaiataria <span>›</span></a>
+          {% else %}
+            <span class="cj-men-panel__link is-disabled text-xl font-serif" aria-disabled="true">Alfaiataria <span>›</span></span>
+          {% endif %}
         </nav>
       </div>
     </section>

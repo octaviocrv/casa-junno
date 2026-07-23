@@ -1,6 +1,8 @@
 {%- comment -%}
   CASA JUNNO - Product Grid Editorial
   Refatorado: Web Components, IntersectionObserver para performance e CSS Otimizado.
+  Refino estético "quiet luxury": object-fit cover, hover mais lento,
+  tracking editorial, subtítulo em etiqueta e underline animado no título.
 {%- endcomment -%}
 
 <cj-product-grid
@@ -24,6 +26,7 @@
     --cj-gap-mob: {{ section.settings.gap_mobile }}px;
     --cj-img-h-desk: {{ section.settings.image_height_desktop }}px;
     --cj-img-h-mob: {{ section.settings.image_height_mobile }}px;
+    --cj-img-fit: {{ section.settings.image_fit }};
     --cj-card-y: 0px;
     --cj-card-opacity: 1;
     --cj-image-zoom: 1;
@@ -79,12 +82,12 @@
             </div>
 
             <div class="cj-product-info">
-              <h3 class="cj-product-title">{{ product_title | default: 'Produto Editorial' }}</h3>
+              <h3 class="cj-product-title"><span class="cj-product-title-inner">{{ product_title | default: 'Produto Editorial' }}</span></h3>
               
               {% if block.settings.subtitle != blank %}
                 <div class="cj-product-subtitle">{{ block.settings.subtitle }}</div>
               {% elsif selected_product != blank and section.settings.show_price %}
-                <div class="cj-product-subtitle">{{ selected_product.price | money }}</div>
+                <div class="cj-product-subtitle cj-product-price">{{ selected_product.price | money }}</div>
               {% endif %}
             </div>
 
@@ -128,6 +131,7 @@
     font-size: 13px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
+    font-weight: 400;
     color: var(--cj-accent);
     margin-bottom: 18px;
   }
@@ -136,6 +140,7 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(34px, 4vw, 58px);
     line-height: 1.04;
+    letter-spacing: 0.005em;
     font-weight: 400;
     margin: 0;
   }
@@ -180,14 +185,14 @@
   .cj-product-image {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: var(--cj-img-fit, cover);
     transform: scale(var(--cj-image-zoom));
-    transition: transform 0.4s ease;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
   }
 
   .cj-product-link:hover .cj-product-image {
-    transform: scale(calc(var(--cj-image-zoom) + 0.035));
+    transform: scale(calc(var(--cj-image-zoom) + 0.045));
   }
 
   .cj-product-info {
@@ -198,13 +203,37 @@
   .cj-product-title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
     margin: 0;
     color: var(--cj-text);
   }
 
+  .cj-product-title-inner {
+    display: inline;
+    background-image: linear-gradient(var(--cj-accent), var(--cj-accent));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    padding-bottom: 3px;
+    transition: background-size 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .cj-product-link:hover .cj-product-title-inner {
+    background-size: 100% 1px;
+  }
+
   .cj-product-subtitle {
-    margin-top: 7px;
-    font-size: 15px;
+    margin-top: 9px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cj-muted);
+  }
+
+  .cj-product-subtitle.cj-product-price {
+    letter-spacing: 0.04em;
+    text-transform: none;
     color: var(--cj-accent);
   }
 
@@ -222,7 +251,12 @@
     .cj-product-image-wrap { height: var(--cj-img-h-mob); }
     .cj-product-info { padding-top: 14px; }
     .cj-product-title { font-size: 14px; }
-    .cj-product-subtitle { font-size: 13px; }
+    .cj-product-subtitle { font-size: 10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cj-product-image,
+    .cj-product-title-inner { transition: none !important; }
   }
 </style>
 
@@ -351,6 +385,17 @@
     {
       "type": "header",
       "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Enquadramento da imagem",
+      "info": "Preencher corta a foto para preencher a caixa (visual editorial). Conter mostra a foto inteira com margens.",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Preencher (editorial)" },
+        { "value": "contain", "label": "Conter (foto inteira)" }
+      ]
     },
     {
       "type": "range",

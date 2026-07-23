@@ -1,13 +1,18 @@
 {% comment %}
   Casa Juno Serviços — versão PT com assets
-  Estilo Loro Piana “À sua disposição”.
+  Estilo Loro Piana "À sua disposição".
 
   O que foi ajustado:
   - Textos em português.
-  - CTA “Descubra mais”.
+  - CTA "Descubra mais".
   - 1º card usa asset: casa-juno-servico-motinha.png
   - 2º card usa asset: casa-juno-servico-caixinha.png
   - 3º card fica com fallback SVG até você enviar a imagem final.
+
+  Refino estético (quiet luxury):
+  - CTA com hover mais sereno (só cor/opacidade, sem salto vertical).
+  - Traços do CTA como pseudo-elementos com respiro e tracking.
+  - prefers-reduced-motion respeitado.
 {% endcomment %}
 
 <section id="casa-juno-services-{{ section.id }}" class="cj-services-section">
@@ -87,9 +92,9 @@
 
             {% if service_cta != blank %}
               {% if block.settings.link_url != blank %}
-                <a href="{{ block.settings.link_url }}" class="cj-service-cta">– {{ service_cta }} –</a>
+                <a href="{{ block.settings.link_url }}" class="cj-service-cta">{{ service_cta }}</a>
               {% else %}
-                <div class="cj-service-cta">– {{ service_cta }} –</div>
+                <div class="cj-service-cta">{{ service_cta }}</div>
               {% endif %}
             {% endif %}
           </div>
@@ -236,16 +241,25 @@
     font-size: {{ section.settings.cta_size_desktop }}px;
     line-height: 1.2;
     font-weight: 400;
-    letter-spacing: 0;
+    letter-spacing: 0.02em;
     color: var(--cj-services-accent);
     text-decoration: none;
     cursor: pointer;
-    transition: opacity 220ms ease, transform 220ms ease;
+    transition: opacity 260ms ease, color 260ms ease;
+  }
+
+  #casa-juno-services-{{ section.id }} .cj-service-cta::before {
+    content: "– ";
+    opacity: 0.7;
+  }
+
+  #casa-juno-services-{{ section.id }} .cj-service-cta::after {
+    content: " –";
+    opacity: 0.7;
   }
 
   #casa-juno-services-{{ section.id }} .cj-service-cta:hover {
-    opacity: 0.74;
-    transform: translateY(-1px);
+    opacity: 0.72;
   }
 
   @media screen and (max-width: 989px) {
@@ -374,6 +388,12 @@
   @media screen and (min-width: 990px) {
     #casa-juno-services-{{ section.id }}.cj-services-section a {
       text-decoration: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #casa-juno-services-{{ section.id }} .cj-service-cta {
+      transition: none;
     }
   }
 </style>
