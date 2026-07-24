@@ -465,6 +465,14 @@
         "padding_top": 96,
         "padding_bottom": 112
       }
+    },
+    "custom_liquid_JFQVcW": {
+      "type": "custom-liquid",
+      "name": "Journal",
+      "settings": {
+        "custom_liquid": "",
+        "custom_class": ""
+      }
     }
   },
   "order": [
@@ -474,6 +482,7 @@
     "casa_juno_look_carousel_QqwKDC",
     "casa_juno_look_editorial_FyKg3f",
     "casa_juno_service_icons_V8QNwx",
-    "casa_juno_inside_carousel_FC46yP"
+    "casa_juno_inside_carousel_FC46yP",
+    "custom_liquid_JFQVcW"
   ]
 }
