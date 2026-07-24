@@ -1,414 +1,443 @@
 {% comment %}
-  Casa Juno Serviços — versão PT com assets
-  Estilo Loro Piana "À sua disposição".
-
-  O que foi ajustado:
-  - Textos em português.
-  - CTA "Descubra mais".
-  - 1º card usa asset: casa-juno-servico-motinha.png
-  - 2º card usa asset: casa-juno-servico-caixinha.png
-  - 3º card fica com fallback SVG até você enviar a imagem final.
-
-  Refino estético (quiet luxury):
-  - CTA com hover mais sereno (só cor/opacidade, sem salto vertical).
-  - Traços do CTA como pseudo-elementos com respiro e tracking.
-  - prefers-reduced-motion respeitado.
+  Casa Juno Serviços — Vitrine Sensorial (Estilo de vida & luxo discreto)
+  Conceito: Tela dividida interativa. Fotos reais substituem ícones.
 {% endcomment %}
 
-<section id="casa-juno-services-{{ section.id }}" class="cj-services-section">
-  <div class="cj-services-container">
-    {% assign section_heading = section.settings.heading %}
-    {% if section_heading == 'At your service' %}
-      {% assign section_heading = 'À sua disposição' %}
-    {% endif %}
-
-    {% if section_heading != blank %}
-      <h2 class="cj-services-heading">{{ section_heading }}</h2>
-    {% endif %}
-
-    {% if section.blocks.size > 0 %}
-      <div class="cj-services-grid">
-        {% for block in section.blocks %}
-          {% assign service_title = block.settings.title %}
-          {% case service_title %}
-            {% when 'Free Shipping' %}
-              {% assign service_title = 'Entrega grátis' %}
-            {% when 'Free Returns and Exchange' %}
-              {% assign service_title = 'Trocas e devoluções grátis' %}
-            {% when 'Book a Private Appointment in Store' %}
-              {% assign service_title = 'Atendimento personalizado' %}
-          {% endcase %}
-
-          {% assign service_cta = block.settings.link_label %}
-          {% if service_cta == 'Discover More' %}
-            {% assign service_cta = 'Descubra mais' %}
-          {% endif %}
-
-          <div class="cj-service-card" {{ block.shopify_attributes }}>
-            <div class="cj-service-visual">
-              {% if block.settings.icon_image != blank %}
-                <img
-                  src="{{ block.settings.icon_image | image_url: width: 900 }}"
-                  alt="{{ service_title | escape }}"
-                  class="cj-service-icon"
-                  loading="lazy"
-                  onerror="this.style.display='none';"
-                  width="560"
-                  height="420"
-                >
-              {% else %}
-                {% case forloop.index %}
-                  {% when 1 %}
-                    <img
-                      src="{{ 'casa-juno-servico-motinha.png' | asset_url }}"
-                      alt="{{ service_title | escape }}"
-                      class="cj-service-icon cj-service-icon--asset cj-service-icon--scooter"
-                      loading="lazy"
-                      onerror="this.style.display='none';"
-                    >
-                  {% when 2 %}
-                    <img
-                      src="{{ 'casa-juno-servico-caixinha.png' | asset_url }}"
-                      alt="{{ service_title | escape }}"
-                      class="cj-service-icon cj-service-icon--asset cj-service-icon--box"
-                      loading="lazy"
-                      onerror="this.style.display='none';"
-                    >
-                  {% else %}
-                    <img
-                      src="{{ 'casa-juno-servico-agendamento.png' | asset_url }}"
-                      alt="{{ service_title | escape }}"
-                      class="cj-service-icon cj-service-icon--asset cj-service-icon--appointment"
-                      loading="lazy"
-                      onerror="this.style.display='none';"
-                    >
-                {% endcase %}
-              {% endif %}
-            </div>
-
-            {% if service_title != blank %}
-              <div class="cj-service-title">{{ service_title }}</div>
-            {% endif %}
-
-            {% if service_cta != blank %}
-              {% if block.settings.link_url != blank %}
-                <a href="{{ block.settings.link_url }}" class="cj-service-cta">{{ service_cta }}</a>
-              {% else %}
-                <div class="cj-service-cta">{{ service_cta }}</div>
-              {% endif %}
-            {% endif %}
-          </div>
-        {% endfor %}
+<section id="cj-sensory-services-{{ section.id }}" class="cj-sensory-section">
+  <div class="cj-sensory-container">
+    
+    {% if section.settings.kicker != blank or section.settings.heading != blank %}
+      <div class="cj-sensory-header">
+        {% if section.settings.kicker != blank %}
+          <span class="cj-sensory-kicker">{{ section.settings.kicker }}</span>
+        {% endif %}
+        {% if section.settings.heading != blank %}
+          <h2 class="cj-sensory-heading">{{ section.settings.heading }}</h2>
+        {% endif %}
       </div>
     {% endif %}
+
+    <div class="cj-sensory-grid">
+      
+      <!-- LADO ESQUERDO: Mídia (Imagens Fotográficas) -->
+      <div class="cj-sensory-media">
+        <div class="cj-sensory-media-inner">
+          {% for block in section.blocks %}
+            <div class="cj-sensory-image-wrapper {% if forloop.first %}is-active{% endif %}" data-media-index="{{ forloop.index0 }}">
+              {% assign asset_image_name = block.settings.asset_image | strip %}
+              {% if asset_image_name != blank %}
+                <img
+                  src="{{ asset_image_name | asset_url }}"
+                  loading="lazy"
+                  class="cj-sensory-img"
+                  alt="{{ block.settings.title | escape }}"
+                >
+              {% elsif block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 1200 | image_tag: 
+                  loading: 'lazy', 
+                  class: 'cj-sensory-img',
+                  alt: block.settings.title | escape 
+                }}
+              {% else %}
+                <!-- Espaço reservado elegante caso não haja imagem -->
+                <div class="cj-sensory-placeholder">
+                  <span>Adicione uma foto no editor</span>
+                </div>
+              {% endif %}
+              <div class="cj-sensory-overlay"></div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- LADO DIREITO: Menu Tipográfico -->
+      <div class="cj-sensory-content">
+        <div class="cj-sensory-list">
+          {% for block in section.blocks %}
+            <div class="cj-sensory-item {% if forloop.first %}is-active{% endif %}" data-item-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              
+              <div class="cj-sensory-item-number">0{{ forloop.index }}</div>
+              
+              <div class="cj-sensory-item-body">
+                <h3 class="cj-sensory-item-title">{{ block.settings.title }}</h3>
+                
+                <div class="cj-sensory-item-desc-wrapper">
+                  <p class="cj-sensory-item-text">{{ block.settings.text }}</p>
+                  
+                  {% if block.settings.link_label != blank and block.settings.link_url != blank %}
+                    <a href="{{ block.settings.link_url }}" class="cj-sensory-link">
+                      {{ block.settings.link_label }}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
 <style>
-  #casa-juno-services-{{ section.id }} {
-    --cj-services-bg: {{ section.settings.background_color }};
-    --cj-services-text: {{ section.settings.text_color }};
-    --cj-services-muted: {{ section.settings.secondary_text_color }};
-    --cj-services-accent: {{ section.settings.accent_color }};
-    --cj-services-divider: {{ section.settings.divider_color }};
-    background: var(--cj-services-bg);
-    color: var(--cj-services-text);
+  #cj-sensory-services-{{ section.id }} {
+    --bg-color: {{ section.settings.background_color }};
+    --text-main: {{ section.settings.text_color }};
+    --text-muted: {{ section.settings.secondary_text_color }};
+    --accent: {{ section.settings.accent_color }};
+    --line-color: rgba(38, 33, 29, 0.12); /* Linha muito sutil */
+    
+    background-color: var(--bg-color);
+    color: var(--text-main);
     padding-top: {{ section.settings.padding_top_desktop }}px;
     padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
-    font-family: var(--font-body-family), "Times New Roman", serif;
+    font-family: var(--font-body-family), "Helvetica Neue", sans-serif;
   }
 
-  #casa-juno-services-{{ section.id }} * {
+  #cj-sensory-services-{{ section.id }} * {
     box-sizing: border-box;
   }
 
-  #casa-juno-services-{{ section.id }} .cj-services-container {
+  .cj-sensory-container {
     max-width: {{ section.settings.max_width }}px;
     margin: 0 auto;
-    padding-left: {{ section.settings.side_padding_desktop }}px;
-    padding-right: {{ section.settings.side_padding_desktop }}px;
+    padding: 0 {{ section.settings.side_padding_desktop }}px;
   }
 
-  #casa-juno-services-{{ section.id }} .cj-services-heading {
-    margin: 0 0 {{ section.settings.heading_gap_desktop }}px;
+  /* Cabeçalho */
+  .cj-sensory-header {
     text-align: center;
-    font-family: var(--font-heading-family), "Times New Roman", serif;
-    font-size: {{ section.settings.heading_size_desktop }}px;
+    margin-bottom: 72px;
+  }
+
+  .cj-sensory-kicker {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .cj-sensory-heading {
+    margin: 0;
+    font-family: var(--font-heading-family), "Georgia", "Times New Roman", serif;
+    font-size: clamp(28px, 4vw, 42px);
     font-weight: 400;
-    line-height: 1.18;
-    letter-spacing: -0.015em;
-    color: var(--cj-services-text);
+    line-height: 1.15;
+    color: var(--text-main);
   }
 
-  #casa-juno-services-{{ section.id }} .cj-services-grid {
+  /* Grid Principal */
+  .cj-sensory-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
   }
 
-  #casa-juno-services-{{ section.id }} .cj-service-card {
-    min-height: {{ section.settings.card_min_height_desktop }}px;
-    padding: 0 {{ section.settings.card_side_padding_desktop }}px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
+  /* Lado Esquerdo: Imagens */
+  .cj-sensory-media {
     position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
   }
 
-  #casa-juno-services-{{ section.id }} .cj-service-card:not(:last-child)::after {
-    content: "";
+  .cj-sensory-media-inner {
     position: absolute;
-    top: {{ section.settings.divider_top_desktop }}px;
-    right: 0;
-    width: 1px;
-    height: {{ section.settings.divider_height_desktop }}px;
-    background: var(--cj-services-divider);
-    opacity: {{ section.settings.divider_opacity | divided_by: 100.0 }};
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-visual {
-    height: calc({{ section.settings.visual_height_desktop }}px * 1.65);
-    margin-bottom: {{ section.settings.visual_gap_desktop }}px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-icon {
-    max-width: {{ section.settings.icon_width }}px;
-    max-height: {{ section.settings.icon_height }}px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    filter: grayscale(100%) contrast(0.95);
-    opacity: 0.9;
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-icon--asset {
-    filter: grayscale(100%) contrast(1.04) brightness(1.02);
-    opacity: 0.92;
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-icon--scooter {
-    width: min(280px, 100%);
-    max-width: 280px;
-    max-height: 190px;
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-icon--box {
-    width: min(270px, 100%);
-    max-width: 270px;
-    max-height: 190px;
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-icon--appointment {
-    max-width: calc({{ section.settings.icon_width }}px + 64px);
-    max-height: calc({{ section.settings.icon_height }}px + 38px);
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-placeholder {
-    width: {{ section.settings.icon_width }}px;
-    height: {{ section.settings.icon_height }}px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(25, 23, 21, 0.68);
-    opacity: 0.86;
-  }
-
-  #casa-juno-services-{{ section.id }} .cj-service-placeholder svg {
+    inset: 0;
     width: 100%;
     height: 100%;
   }
 
-  #casa-juno-services-{{ section.id }} .cj-service-title {
-    max-width: {{ section.settings.title_max_width }}px;
-    margin: 0 auto;
-    font-family: var(--font-body-family), "Times New Roman", serif;
-    font-size: {{ section.settings.title_size_desktop }}px;
-    line-height: {{ section.settings.title_line_height }};
-    font-weight: 400;
-    letter-spacing: 0;
-    color: var(--cj-services-muted);
+  .cj-sensory-image-wrapper {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    z-index: 1;
   }
 
-  #casa-juno-services-{{ section.id }} .cj-service-cta {
-    margin-top: {{ section.settings.cta_margin_top_desktop }}px;
-    display: inline-block;
-    font-family: var(--font-body-family), "Times New Roman", serif;
-    font-size: {{ section.settings.cta_size_desktop }}px;
-    line-height: 1.2;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    color: var(--cj-services-accent);
-    text-decoration: none;
+  .cj-sensory-image-wrapper.is-active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
+  }
+
+  .cj-sensory-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.05);
+    transition: transform 1.2s cubic-bezier(0.2, 1, 0.2, 1);
+    will-change: transform;
+  }
+
+  .cj-sensory-image-wrapper.is-active .cj-sensory-img {
+    transform: scale(1);
+  }
+
+  .cj-sensory-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.03); /* Filtro luxuoso mínimo */
+    pointer-events: none;
+  }
+
+  .cj-sensory-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(38, 33, 29, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Lado Direito: Textos */
+  .cj-sensory-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cj-sensory-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cj-sensory-item {
+    display: flex;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--line-color);
     cursor: pointer;
-    transition: opacity 260ms ease, color 260ms ease;
+    transition: padding-left 0.4s cubic-bezier(0.2, 1, 0.2, 1);
   }
 
-  #casa-juno-services-{{ section.id }} .cj-service-cta::before {
-    content: "– ";
-    opacity: 0.7;
+  .cj-sensory-item:first-child {
+    border-top: 1px solid var(--line-color);
   }
 
-  #casa-juno-services-{{ section.id }} .cj-service-cta::after {
-    content: " –";
-    opacity: 0.7;
+  .cj-sensory-item-number {
+    font-family: var(--font-heading-family), "Georgia", serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-right: 32px;
+    opacity: 0.6;
+    transition: opacity 0.4s ease;
   }
 
-  #casa-juno-services-{{ section.id }} .cj-service-cta:hover {
-    opacity: 0.72;
+  .cj-sensory-item-body {
+    flex: 1;
   }
 
+  .cj-sensory-item-title {
+    margin: 0 0 8px 0;
+    font-family: var(--font-heading-family), "Georgia", serif;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 400;
+    color: var(--text-muted);
+    transition: color 0.4s ease;
+  }
+
+  .cj-sensory-item-desc-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+  }
+
+  .cj-sensory-item-text {
+    margin: 0 0 20px 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 90%;
+  }
+
+  .cj-sensory-link {
+    display: inline-block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 4px;
+    transition: border-color 0.3s ease;
+  }
+
+  .cj-sensory-link:hover {
+    border-color: var(--accent);
+  }
+
+  /* Estados Ativos / Hover */
+  .cj-sensory-item.is-active .cj-sensory-item-number {
+    opacity: 1;
+    color: var(--text-main);
+  }
+  
+  .cj-sensory-item.is-active .cj-sensory-item-title {
+    color: var(--text-main);
+  }
+
+  .cj-sensory-item.is-active .cj-sensory-item-desc-wrapper {
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+    margin-top: 16px;
+  }
+
+  @media (hover: hover) {
+    .cj-sensory-item:hover .cj-sensory-item-title {
+      color: var(--text-main);
+    }
+    .cj-sensory-item:hover {
+      padding-left: 12px;
+    }
+  }
+
+  /* Responsivo para celular */
   @media screen and (max-width: 989px) {
-    #casa-juno-services-{{ section.id }} {
-      padding-top: 58px;
-      padding-bottom: 58px;
+    #cj-sensory-services-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
     }
 
-    #casa-juno-services-{{ section.id }} .cj-services-container {
-      padding-left: 32px;
-      padding-right: 32px;
+    .cj-sensory-container {
+      padding: 0 {{ section.settings.side_padding_mobile }}px;
     }
 
-    #casa-juno-services-{{ section.id }} .cj-services-heading {
-      margin-bottom: 44px;
-      font-size: 30px;
-      line-height: 1.18;
-      text-align: center;
+    .cj-sensory-header {
+      margin-bottom: 40px;
     }
 
-    #casa-juno-services-{{ section.id }} .cj-services-grid {
-      display: block;
+    .cj-sensory-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
     }
 
-    #casa-juno-services-{{ section.id }} .cj-service-card {
-      min-height: 150px;
-      width: 100%;
-      padding: 24px 28px 24px 0;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      text-align: left;
-      position: relative;
+    /* No celular, as imagens ficam em linha dentro de cada item do acordeão */
+    .cj-sensory-media {
+      display: none; /* Esconde a mídia da esquerda */
     }
 
-    #casa-juno-services-{{ section.id }} .cj-service-card::before {
-      content: "›";
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: Arial, sans-serif;
-      font-size: 34px;
-      line-height: 1;
-      font-weight: 300;
-      color: var(--cj-services-text);
-      opacity: 0.92;
+    .cj-sensory-item {
+      flex-direction: column;
+      padding: 32px 0;
+    }
+    
+    .cj-sensory-item:hover {
+      padding-left: 0; /* Remove efeito ao passar o mouse no celular */
     }
 
-    #casa-juno-services-{{ section.id }} .cj-service-card:not(:last-child)::after {
-      content: "";
-      display: block;
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: auto;
-      width: auto;
-      height: 1px;
-      background: var(--cj-services-divider);
-      opacity: 0.72;
+    .cj-sensory-item-number {
+      margin-bottom: 12px;
     }
 
-    #casa-juno-services-{{ section.id }} .cj-service-visual {
-      width: 118px;
-      height: 102px;
-      margin: 0 26px 0 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      flex: 0 0 118px;
+    .cj-sensory-item-title {
+      font-size: 24px;
     }
 
-    #casa-juno-services-{{ section.id }} .cj-service-icon {
-      max-width: 118px;
-      max-height: 98px;
-      width: auto;
-      height: auto;
-      object-fit: contain;
+    .cj-sensory-item-desc-wrapper {
+      max-height: none;
+      opacity: 1;
+      transform: none;
+      margin-top: 16px;
+      display: none; /* Esconde por padrão no celular */
     }
 
-    #casa-juno-services-{{ section.id }} .cj-service-icon--scooter {
-      width: 126px !important;
-      max-width: 126px !important;
-      max-height: 94px !important;
-      transform: scale(1.18);
-      transform-origin: left center;
+    .cj-sensory-item.is-active .cj-sensory-item-desc-wrapper {
+      display: block; /* Revela quando ativo */
     }
 
-    #casa-juno-services-{{ section.id }} .cj-service-icon--box {
-      width: 122px !important;
-      max-width: 122px !important;
-      max-height: 94px !important;
-      transform: scale(1.15);
-      transform-origin: left center;
-    }
-
-    #casa-juno-services-{{ section.id }} .cj-service-icon--appointment {
-      width: 128px !important;
-      max-width: 128px !important;
-      max-height: 102px !important;
-      transform: scale(1.12);
-      transform-origin: left center;
-    }
-
-    #casa-juno-services-{{ section.id }} .cj-service-placeholder {
-      width: 118px;
-      height: 98px;
-    }
-
-    #casa-juno-services-{{ section.id }} .cj-service-title {
-      flex: 1 1 auto;
-      max-width: none;
-      margin: 0;
-      font-size: 22px;
-      line-height: 1.28;
-      color: var(--cj-services-muted);
-    }
-
-    #casa-juno-services-{{ section.id }} .cj-service-cta {
-      display: none;
-    }
-  }
-
-  @media screen and (min-width: 990px) {
-    #casa-juno-services-{{ section.id }}.cj-services-section a {
-      text-decoration: none;
-    }
+    /* Injeta a imagem correspondente no celular dinamicamente via CSS e DOM */
   }
 
   @media (prefers-reduced-motion: reduce) {
-    #casa-juno-services-{{ section.id }} .cj-service-cta {
-      transition: none;
+    .cj-sensory-img,
+    .cj-sensory-item-desc-wrapper,
+    .cj-sensory-image-wrapper {
+      transition: none !important;
+      transform: none !important;
     }
   }
 </style>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = 'cj-sensory-services-{{ section.id }}';
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    const items = section.querySelectorAll('.cj-sensory-item');
+    const images = section.querySelectorAll('.cj-sensory-image-wrapper');
+
+    // Se estiver em tela grande, aciona o efeito visual ao passar o mouse
+    if (window.innerWidth > 989) {
+      items.forEach((item) => {
+        item.addEventListener('mouseenter', function() {
+          const targetIndex = this.getAttribute('data-item-index');
+
+          // Limpa todos
+          items.forEach(el => el.classList.remove('is-active'));
+          images.forEach(el => el.classList.remove('is-active'));
+
+          // Ativa o atual
+          this.classList.add('is-active');
+          const targetImage = section.querySelector(`.cj-sensory-image-wrapper[data-media-index="${targetIndex}"]`);
+          if (targetImage) {
+            targetImage.classList.add('is-active');
+          }
+        });
+      });
+    } else {
+      // Se estiver no celular, funciona como acordeão ao clicar
+      items.forEach((item) => {
+        item.addEventListener('click', function() {
+          if (this.classList.contains('is-active')) return; // Já está aberto
+
+          items.forEach(el => el.classList.remove('is-active'));
+          this.classList.add('is-active');
+        });
+      });
+    }
+  });
+</script>
+
 {% schema %}
 {
-  "name": "Casa Juno serviços",
+  "name": "Vitrine de Serviços",
   "tag": "section",
-  "class": "section-casa-juno-services",
   "settings": [
+    {
+      "type": "header",
+      "content": "Textos Iniciais"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Texto pequeno (Chamada)",
+      "default": "SERVIÇOS CASA JUNNO"
+    },
     {
       "type": "text",
       "id": "heading",
-      "label": "Título",
-      "default": "À sua disposição"
+      "label": "Título Principal",
+      "default": "Serviços pensados para acompanhar você em cada etapa"
+    },
+    {
+      "type": "header",
+      "content": "Cores"
     },
     {
       "type": "color",
@@ -419,398 +448,129 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Cor do título",
+      "label": "Cor texto ativo/destaque",
       "default": "#26211D"
     },
     {
       "type": "color",
       "id": "secondary_text_color",
-      "label": "Cor dos textos",
+      "label": "Cor textos inativos",
       "default": "#6F665F"
     },
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Cor do Descubra mais",
-      "default": "#A95245"
+      "label": "Cor do link",
+      "default": "#603022"
     },
     {
-      "type": "color",
-      "id": "divider_color",
-      "label": "Cor da divisória",
-      "default": "#C8B9AF"
+      "type": "header",
+      "content": "Espaçamentos em tela grande"
     },
     {
       "type": "range",
       "id": "max_width",
       "label": "Largura máxima",
-      "min": 900,
+      "min": 1000,
       "max": 1800,
       "step": 20,
       "unit": "px",
-      "default": 1640
-    },
-    {
-      "type": "header",
-      "content": "Espaçamentos desktop"
+      "default": 1360
     },
     {
       "type": "range",
       "id": "padding_top_desktop",
-      "label": "Espaço acima desktop",
-      "min": 20,
-      "max": 220,
+      "label": "Espaço acima",
+      "min": 40,
+      "max": 200,
       "step": 4,
       "unit": "px",
-      "default": 112
+      "default": 140
     },
     {
       "type": "range",
       "id": "padding_bottom_desktop",
-      "label": "Espaço abaixo desktop",
-      "min": 20,
-      "max": 220,
+      "label": "Espaço abaixo",
+      "min": 40,
+      "max": 200,
       "step": 4,
       "unit": "px",
-      "default": 120
+      "default": 140
     },
     {
       "type": "range",
       "id": "side_padding_desktop",
-      "label": "Padding lateral desktop",
-      "min": 0,
-      "max": 100,
-      "step": 2,
-      "unit": "px",
-      "default": 18
-    },
-    {
-      "type": "range",
-      "id": "heading_gap_desktop",
-      "label": "Distância título/cards desktop",
+      "label": "Espaçamento lateral",
       "min": 20,
-      "max": 160,
+      "max": 120,
       "step": 2,
       "unit": "px",
-      "default": 82
-    },
-    {
-      "type": "range",
-      "id": "card_min_height_desktop",
-      "label": "Altura mínima dos cards desktop",
-      "min": 180,
-      "max": 520,
-      "step": 10,
-      "unit": "px",
-      "default": 300
-    },
-    {
-      "type": "range",
-      "id": "card_side_padding_desktop",
-      "label": "Padding lateral dos cards",
-      "min": 0,
-      "max": 80,
-      "step": 2,
-      "unit": "px",
-      "default": 24
+      "default": 60
     },
     {
       "type": "header",
-      "content": "Imagens e textos desktop"
+      "content": "Espaçamentos no celular"
     },
     {
       "type": "range",
-      "id": "visual_height_desktop",
-      "label": "Altura da área da imagem desktop",
-      "min": 70,
-      "max": 220,
-      "step": 2,
-      "unit": "px",
-      "default": 128
-    },
-    {
-      "type": "range",
-      "id": "visual_gap_desktop",
-      "label": "Distância imagem/texto desktop",
-      "min": 10,
-      "max": 80,
-      "step": 2,
-      "unit": "px",
-      "default": 32
-    },
-    {
-      "type": "range",
-      "id": "icon_width",
-      "label": "Largura base do ícone desktop",
-      "min": 60,
-      "max": 240,
-      "step": 4,
-      "unit": "px",
-      "default": 132
-    },
-    {
-      "type": "range",
-      "id": "icon_height",
-      "label": "Altura base do ícone desktop",
-      "min": 50,
-      "max": 180,
-      "step": 2,
-      "unit": "px",
-      "default": 106
-    },
-    {
-      "type": "range",
-      "id": "title_max_width",
-      "label": "Largura máxima do texto desktop",
-      "min": 140,
-      "max": 420,
-      "step": 10,
-      "unit": "px",
-      "default": 300
-    },
-    {
-      "type": "range",
-      "id": "heading_size_desktop",
-      "label": "Tamanho título desktop",
-      "min": 18,
-      "max": 54,
-      "step": 1,
-      "unit": "px",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "title_size_desktop",
-      "label": "Tamanho texto desktop",
-      "min": 14,
-      "max": 32,
-      "step": 1,
-      "unit": "px",
-      "default": 22
-    },
-    {
-      "type": "range",
-      "id": "title_line_height",
-      "label": "Altura da linha do texto",
-      "min": 1,
-      "max": 2,
-      "step": 0.1,
-      "default": 1.3
-    },
-    {
-      "type": "range",
-      "id": "cta_margin_top_desktop",
-      "label": "Distância texto/CTA desktop",
+      "id": "padding_top_mobile",
+      "label": "Espaço acima",
       "min": 20,
-      "max": 110,
+      "max": 120,
       "step": 2,
-      "unit": "px",
-      "default": 72
-    },
-    {
-      "type": "range",
-      "id": "cta_size_desktop",
-      "label": "Tamanho CTA desktop",
-      "min": 14,
-      "max": 30,
-      "step": 1,
-      "unit": "px",
-      "default": 22
-    },
-    {
-      "type": "header",
-      "content": "Divisórias desktop"
-    },
-    {
-      "type": "range",
-      "id": "divider_top_desktop",
-      "label": "Posição vertical da divisória",
-      "min": 0,
-      "max": 220,
-      "step": 4,
       "unit": "px",
       "default": 80
     },
     {
       "type": "range",
-      "id": "divider_height_desktop",
-      "label": "Altura da divisória",
-      "min": 80,
-      "max": 360,
-      "step": 10,
-      "unit": "px",
-      "default": 290
-    },
-    {
-      "type": "range",
-      "id": "divider_opacity",
-      "label": "Opacidade da divisória",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 70
-    },
-    {
-      "type": "header",
-      "content": "Mobile"
-    },
-    {
-      "type": "range",
-      "id": "padding_top_mobile",
-      "label": "Espaço acima mobile",
-      "min": 20,
-      "max": 160,
-      "step": 4,
-      "unit": "px",
-      "default": 64
-    },
-    {
-      "type": "range",
       "id": "padding_bottom_mobile",
-      "label": "Espaço abaixo mobile",
+      "label": "Espaço abaixo",
       "min": 20,
-      "max": 180,
-      "step": 4,
+      "max": 120,
+      "step": 2,
       "unit": "px",
-      "default": 76
+      "default": 80
     },
     {
       "type": "range",
       "id": "side_padding_mobile",
-      "label": "Padding lateral mobile",
-      "min": 10,
+      "label": "Espaçamento lateral no celular",
+      "min": 16,
       "max": 40,
-      "step": 1,
-      "unit": "px",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "heading_gap_mobile",
-      "label": "Distância título/cards mobile",
-      "min": 20,
-      "max": 110,
       "step": 2,
       "unit": "px",
-      "default": 54
-    },
-    {
-      "type": "range",
-      "id": "heading_size_mobile",
-      "label": "Tamanho título mobile",
-      "min": 18,
-      "max": 38,
-      "step": 1,
-      "unit": "px",
-      "default": 27
-    },
-    {
-      "type": "range",
-      "id": "mobile_gap",
-      "label": "Espaço entre cards mobile",
-      "min": 32,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 72
-    },
-    {
-      "type": "range",
-      "id": "visual_height_mobile",
-      "label": "Altura da área da imagem mobile",
-      "min": 70,
-      "max": 190,
-      "step": 2,
-      "unit": "px",
-      "default": 122
-    },
-    {
-      "type": "range",
-      "id": "visual_gap_mobile",
-      "label": "Distância imagem/texto mobile",
-      "min": 10,
-      "max": 70,
-      "step": 2,
-      "unit": "px",
-      "default": 26
-    },
-    {
-      "type": "range",
-      "id": "icon_width_mobile",
-      "label": "Largura base do ícone mobile",
-      "min": 50,
-      "max": 220,
-      "step": 2,
-      "unit": "px",
-      "default": 118
-    },
-    {
-      "type": "range",
-      "id": "icon_height_mobile",
-      "label": "Altura base do ícone mobile",
-      "min": 50,
-      "max": 170,
-      "step": 2,
-      "unit": "px",
-      "default": 98
-    },
-    {
-      "type": "range",
-      "id": "title_size_mobile",
-      "label": "Tamanho texto mobile",
-      "min": 14,
-      "max": 28,
-      "step": 1,
-      "unit": "px",
-      "default": 21
-    },
-    {
-      "type": "range",
-      "id": "title_max_width_mobile",
-      "label": "Largura máxima do texto mobile",
-      "min": 180,
-      "max": 360,
-      "step": 10,
-      "unit": "px",
-      "default": 300
-    },
-    {
-      "type": "range",
-      "id": "cta_margin_top_mobile",
-      "label": "Distância texto/CTA mobile",
-      "min": 20,
-      "max": 90,
-      "step": 2,
-      "unit": "px",
-      "default": 46
-    },
-    {
-      "type": "range",
-      "id": "cta_size_mobile",
-      "label": "Tamanho CTA mobile",
-      "min": 14,
-      "max": 28,
-      "step": 1,
-      "unit": "px",
-      "default": 21
+      "default": 24
     }
   ],
   "blocks": [
     {
       "type": "service",
-      "name": "Serviço",
+      "name": "Serviço Editorial",
+      "limit": 4,
       "settings": [
         {
           "type": "image_picker",
-          "id": "icon_image",
-          "label": "Imagem / SVG"
+          "id": "image",
+          "label": "Fotografia de estilo de vida/textura",
+          "info": "Use fotos reais e poéticas (ex: trama de tecido, mãos trabalhando, uma sacola elegante) no formato retrato."
+        },
+        {
+          "type": "text",
+          "id": "asset_image",
+          "label": "Nome do arquivo em assets (opcional)",
+          "info": "Ex.: troca-devolucao.png"
         },
         {
           "type": "text",
           "id": "title",
-          "label": "Texto",
-          "default": "Entrega grátis"
+          "label": "Título",
+          "default": "Entrega com cuidado e rastreio"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Descrição",
+          "default": "Descreva brevemente este serviço."
         },
         {
           "type": "text",
@@ -821,34 +581,34 @@
         {
           "type": "url",
           "id": "link_url",
-          "label": "Link"
+          "label": "Link do serviço"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Casa Juno serviços",
+      "name": "Vitrine de Serviços",
       "blocks": [
         {
           "type": "service",
           "settings": {
-            "title": "Entrega grátis",
-            "link_label": "Descubra mais"
+            "title": "Entrega com cuidado e rastreio",
+            "text": "Envio cortesia para todo o Brasil, com acompanhamento do pedido e embalagem cuidadosa para preservar cada detalhe da peça."
           }
         },
         {
           "type": "service",
           "settings": {
-            "title": "Trocas e devoluções grátis",
-            "link_label": "Descubra mais"
+            "title": "Troca simples e assistida",
+            "text": "Se precisar ajustar o caimento, nossa equipe orienta cada etapa para que a troca ou devolução aconteça com clareza e tranquilidade."
           }
         },
         {
           "type": "service",
           "settings": {
-            "title": "Atendimento personalizado",
-            "link_label": "Descubra mais"
+            "title": "Atendimento de estilo dedicado",
+            "text": "Conte com orientação personalizada para combinações, medidas e escolhas de peças que se encaixam no seu ritmo e estilo de vida."
           }
         }
       ]

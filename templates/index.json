@@ -326,8 +326,10 @@
           "type": "service",
           "settings": {
             "icon_image": "shopify://shop_images/02-trocas-devolucoes-caixinha.png",
-            "title": "Free Shipping",
-            "link_label": "Discover More",
+            "image": "shopify://shop_images/02-trocas-devolucoes-caixinha.png",
+            "title": "Troca e devolução assistidas",
+            "text": "Se precisar trocar, nossa equipe acompanha o processo de forma simples, clara e sem burocracia.",
+            "link_label": "Saiba mais",
             "link_url": ""
           }
         },
@@ -335,8 +337,10 @@
           "type": "service",
           "settings": {
             "icon_image": "shopify://shop_images/01-entrega-gratis-motinha.png",
-            "title": "Free Returns and Exchange",
-            "link_label": "Discover More",
+            "image": "shopify://shop_images/01-entrega-gratis-motinha.png",
+            "title": "Entrega com rastreio",
+            "text": "Seu pedido é preparado com cuidado, enviado com segurança e acompanhado até a chegada ao destino.",
+            "link_label": "Saiba mais",
             "link_url": ""
           }
         },
@@ -344,8 +348,10 @@
           "type": "service",
           "settings": {
             "icon_image": "shopify://shop_images/03-atendimento-personalizado-agendamento.png",
-            "title": "Book a Private Appointment in Store",
-            "link_label": "Discover More",
+            "image": "shopify://shop_images/03-atendimento-personalizado-agendamento.png",
+            "title": "Atendimento privado",
+            "text": "Agende um atendimento personalizado para tirar dúvidas e escolher peças com orientação dedicada.",
+            "link_label": "Saiba mais",
             "link_url": ""
           }
         }
@@ -366,7 +372,7 @@
         "max_width": 1280,
         "padding_top_desktop": 80,
         "padding_bottom_desktop": 112,
-        "side_padding_desktop": 18,
+        "side_padding_desktop": 20,
         "heading_gap_desktop": 20,
         "card_min_height_desktop": 300,
         "card_side_padding_desktop": 24,

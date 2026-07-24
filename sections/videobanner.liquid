@@ -89,6 +89,30 @@
 </section>
 
 <style>
+/* --- INÍCIO ANIMAÇÕES LUXO (LORO PIANA INSPIRED) --- */
+@keyframes luxuryFadeInBlur {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes luxuryTextFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* --- FIM ANIMAÇÕES LUXO --- */
+
 #cj-video-player-{{ section.id }} {
   position: relative;
   width: 100%;
@@ -118,14 +142,7 @@
   transition: none;
 }
 
-/*
-  Moldura editorial (estilo MR PORTER / Loro Piana).
-  Uma linha fina de 1px em volta do vídeo. Antes isso estava quebrado:
-  os pseudo-elementos ::before/::after estavam declarados duas vezes,
-  então as linhas horizontais nunca apareciam. Agora a moldura completa
-  é feita com um único box-shadow inset, que não conflita e acompanha
-  o vídeo mesmo durante o zoom no scroll.
-*/
+/* Moldura editorial */
 #cj-video-player-{{ section.id }} .cj-video-player__frame {
   position: absolute;
   inset: 6px;
@@ -136,224 +153,249 @@
   transition: opacity 0.18s linear;
 }
 
-  #cj-video-player-{{ section.id }} .cj-video-player__video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: {{ section.settings.video_position }};
-    display: block;
-    transform: scale(var(--cj-video-zoom, 1));
-    transform-origin: center center;
-    transition: transform 0.18s ease-out;
-    will-change: transform;
-  }
+/* --- INÍCIO: ESTRUTURA LORO PIANA APLICADA AO VÍDEO --- */
+#cj-video-player-{{ section.id }} .cj-video-player__video,
+#cj-video-player-{{ section.id }} .cj-video-player__overlay:after {
+  bottom: auto;
+  height: 100%;
+  left: 50%;
+  position: absolute;
+  right: auto;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(var(--cj-video-zoom, 1));
+  width: 100%;
+}
 
-  #cj-video-player-{{ section.id }} .cj-video-player__placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #e8ded2;
-    color: #3b241d;
-    font-size: 14px;
-    text-align: center;
-    padding: 24px;
-  }
+#cj-video-player-{{ section.id }} .cj-video-player__video {
+  object-fit: cover;
+  object-position: {{ section.settings.video_position }};
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.18s ease-out;
+  will-change: transform;
+}
+/* --- FIM: ESTRUTURA LORO PIANA APLICADA AO VÍDEO --- */
 
-  #cj-video-player-{{ section.id }} .cj-video-player__overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, {{ section.settings.overlay_top_opacity | divided_by: 100.0 }}),
-      rgba(0, 0, 0, {{ section.settings.overlay_middle_opacity | divided_by: 100.0 }}) 42%,
-      rgba(0, 0, 0, {{ section.settings.overlay_bottom_opacity | divided_by: 100.0 }})
-    );
+#cj-video-player-{{ section.id }} .cj-video-player__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8ded2;
+  color: #3b241d;
+  font-size: 14px;
+  text-align: center;
+  padding: 24px;
+}
+
+/* --- INÍCIO: OVERLAY COM VARIÁVEL LORO PIANA --- */
+#cj-video-player-{{ section.id }} .cj-video-player__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  --background-color-gradient: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, {{ section.settings.overlay_top_opacity | divided_by: 100.0 }}),
+    rgba(0, 0, 0, {{ section.settings.overlay_middle_opacity | divided_by: 100.0 }}) 42%,
+    rgba(0, 0, 0, {{ section.settings.overlay_bottom_opacity | divided_by: 100.0 }})
+  );
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__overlay:after {
+  background: var(--background-color-gradient, #0000);
+  content: "";
+  z-index: 1;
+  transform: translate(-50%, -50%); /* O overlay não precisa do scale do zoom */
+}
+/* --- FIM: OVERLAY COM VARIÁVEL LORO PIANA --- */
+
+#cj-video-player-{{ section.id }} .cj-video-player__card {
+  position: absolute;
+  left: 50%;
+  bottom: {{ section.settings.card_bottom_desktop }}px;
+  z-index: 5;
+  width: min({{ section.settings.card_width_desktop }}px, calc(100% - 40px));
+  background: {{ section.settings.card_background }};
+  color: {{ section.settings.card_text_color }};
+  text-align: center;
+  padding: {{ section.settings.card_padding_y_desktop }}px {{ section.settings.card_padding_x_desktop }}px;
+  box-shadow: 0 18px 45px rgba(42, 24, 16, {{ section.settings.card_shadow_opacity | divided_by: 100.0 }});
+  transform:
+    translateX(-50%)
+    translate3d(0, var(--cj-card-y, 0px), 0)
+    scale(var(--cj-card-scale, 1));
+  transition: none;
+  will-change: transform;
+  backface-visibility: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  animation: luxuryFadeInBlur 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; /* Adicionado Fade Loro Piana */
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__card-kicker {
+  font-size: {{ section.settings.card_kicker_size }}px;
+  letter-spacing: {{ section.settings.card_kicker_spacing | divided_by: 100.0 }}em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: {{ section.settings.card_accent_color }};
+  margin-bottom: {{ section.settings.card_kicker_margin }}px;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__card-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: {{ section.settings.card_title_size_desktop }}px;
+  line-height: 1.14;
+  letter-spacing: 0.01em;
+  color: {{ section.settings.card_text_color }};
+  margin-bottom: {{ section.settings.card_title_margin }}px;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__card-text {
+  font-size: {{ section.settings.card_body_size_desktop }}px;
+  line-height: 1.7;
+  color: {{ section.settings.card_body_color }};
+  margin-bottom: {{ section.settings.card_text_margin }}px;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__card-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: {{ section.settings.card_links_gap }}px;
+  flex-wrap: wrap;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__card-links a {
+  font-size: {{ section.settings.card_link_size }}px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: {{ section.settings.card_text_color }};
+  text-decoration: none;
+  border-bottom: 1px solid {{ section.settings.card_accent_color }};
+  padding-bottom: 6px;
+  transition: border-color 0.4s ease, color 0.4s ease;
+}
+
+#cj-video-player-{{ section.id }} .cj-video-player__card-links a:hover {
+  color: {{ section.settings.card_accent_color }};
+  border-color: transparent;
+}
+
+.cj-video-player-editorial-{{ section.id }} {
+  position: relative;
+  z-index: 2;
+  background: {{ section.settings.background_color }};
+  padding-top: {{ section.settings.editorial_padding_top_desktop }}px;
+  padding-bottom: {{ section.settings.editorial_padding_bottom_desktop }}px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__inner {
+  max-width: {{ section.settings.editorial_max_width }}px;
+  margin: 0 auto;
+  text-align: center;
+  color: {{ section.settings.editorial_text_color }};
+  opacity: 0;
+  animation: luxuryTextFadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; /* Adicionado Fade Up Loro Piana */
+  animation-delay: 0.2s;
+}
+
+.cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__kicker {
+  font-size: {{ section.settings.editorial_kicker_size }}px;
+  letter-spacing: {{ section.settings.editorial_kicker_spacing | divided_by: 100.0 }}em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: {{ section.settings.editorial_accent_color }};
+  margin-bottom: {{ section.settings.editorial_kicker_margin }}px;
+}
+
+.cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__title {
+  margin: 0 0 {{ section.settings.editorial_title_margin }}px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: {{ section.settings.editorial_title_size_desktop }}px;
+  line-height: 1.1;
+  letter-spacing: 0.005em;
+  font-weight: 400;
+  color: {{ section.settings.editorial_title_color }};
+}
+
+.cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__text {
+  max-width: 620px;
+  margin: 0 auto;
+  font-size: {{ section.settings.editorial_text_size_desktop }}px;
+  line-height: 1.85;
+  color: {{ section.settings.editorial_text_color }};
+}
+
+@media screen and (max-width: 989px) {
+  #cj-video-player-{{ section.id }} {
+    height: {{ section.settings.video_height_tablet }}svh;
+    min-height: {{ section.settings.video_min_height_tablet }}px;
+    max-height: {{ section.settings.video_max_height_tablet }}px;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  #cj-video-player-{{ section.id }} {
+    height: {{ section.settings.video_height_mobile }}svh;
+    min-height: {{ section.settings.video_min_height_mobile }}px;
+    max-height: {{ section.settings.video_max_height_mobile }}px;
   }
 
   #cj-video-player-{{ section.id }} .cj-video-player__card {
-    position: absolute;
-    left: 50%;
-    bottom: {{ section.settings.card_bottom_desktop }}px;
-    z-index: 5;
-    width: min({{ section.settings.card_width_desktop }}px, calc(100% - 40px));
-    background: {{ section.settings.card_background }};
-    color: {{ section.settings.card_text_color }};
-    text-align: center;
-    padding: {{ section.settings.card_padding_y_desktop }}px {{ section.settings.card_padding_x_desktop }}px;
-    box-shadow: 0 18px 45px rgba(42, 24, 16, {{ section.settings.card_shadow_opacity | divided_by: 100.0 }});
-    transform:
-      translateX(-50%)
-      translate3d(0, var(--cj-card-y, 0px), 0)
-      scale(var(--cj-card-scale, 1));
-    transition: none;
-    will-change: transform;
-    backface-visibility: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.35);
-  }
-
-  #cj-video-player-{{ section.id }} .cj-video-player__card-kicker {
-    font-size: {{ section.settings.card_kicker_size }}px;
-    letter-spacing: {{ section.settings.card_kicker_spacing | divided_by: 100.0 }}em;
-    text-transform: uppercase;
-    font-weight: 400;
-    color: {{ section.settings.card_accent_color }};
-    margin-bottom: {{ section.settings.card_kicker_margin }}px;
+    bottom: {{ section.settings.card_bottom_mobile }}px;
+    width: min({{ section.settings.card_width_mobile }}px, calc(100% - 32px));
+    padding: {{ section.settings.card_padding_y_mobile }}px {{ section.settings.card_padding_x_mobile }}px;
   }
 
   #cj-video-player-{{ section.id }} .cj-video-player__card-title {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-weight: 400;
-    font-size: {{ section.settings.card_title_size_desktop }}px;
-    line-height: 1.14;
-    letter-spacing: 0.01em;
-    color: {{ section.settings.card_text_color }};
-    margin-bottom: {{ section.settings.card_title_margin }}px;
+    font-size: {{ section.settings.card_title_size_mobile }}px;
   }
 
   #cj-video-player-{{ section.id }} .cj-video-player__card-text {
-    font-size: {{ section.settings.card_body_size_desktop }}px;
-    line-height: 1.7;
-    color: {{ section.settings.card_body_color }};
-    margin-bottom: {{ section.settings.card_text_margin }}px;
+    font-size: {{ section.settings.card_body_size_mobile }}px;
   }
 
   #cj-video-player-{{ section.id }} .cj-video-player__card-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: {{ section.settings.card_links_gap }}px;
-    flex-wrap: wrap;
-  }
-
-  #cj-video-player-{{ section.id }} .cj-video-player__card-links a {
-    font-size: {{ section.settings.card_link_size }}px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: {{ section.settings.card_text_color }};
-    text-decoration: none;
-    border-bottom: 1px solid {{ section.settings.card_accent_color }};
-    padding-bottom: 6px;
-    transition: border-color 0.4s ease, color 0.4s ease;
-  }
-
-  #cj-video-player-{{ section.id }} .cj-video-player__card-links a:hover {
-    color: {{ section.settings.card_accent_color }};
-    border-color: transparent;
+    gap: {{ section.settings.card_links_gap_mobile }}px;
   }
 
   .cj-video-player-editorial-{{ section.id }} {
-    position: relative;
-    z-index: 2;
-    background: {{ section.settings.background_color }};
-   padding-top: {{ section.settings.editorial_padding_top_desktop }}px;
-    padding-bottom: {{ section.settings.editorial_padding_bottom_desktop }}px;
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-
-  .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__inner {
-    max-width: {{ section.settings.editorial_max_width }}px;
-    margin: 0 auto;
-    text-align: center;
-    color: {{ section.settings.editorial_text_color }};
-  }
-
-  .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__kicker {
-    font-size: {{ section.settings.editorial_kicker_size }}px;
-    letter-spacing: {{ section.settings.editorial_kicker_spacing | divided_by: 100.0 }}em;
-    text-transform: uppercase;
-    font-weight: 400;
-    color: {{ section.settings.editorial_accent_color }};
-    margin-bottom: {{ section.settings.editorial_kicker_margin }}px;
+   padding-top: {{ section.settings.editorial_padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.editorial_padding_bottom_mobile }}px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 
   .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__title {
-    margin: 0 0 {{ section.settings.editorial_title_margin }}px;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: {{ section.settings.editorial_title_size_desktop }}px;
-    line-height: 1.1;
-    letter-spacing: 0.005em;
-    font-weight: 400;
-    color: {{ section.settings.editorial_title_color }};
+    font-size: {{ section.settings.editorial_title_size_mobile }}px;
   }
 
   .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__text {
-    max-width: 620px;
-    margin: 0 auto;
-    font-size: {{ section.settings.editorial_text_size_desktop }}px;
-    line-height: 1.85;
-    color: {{ section.settings.editorial_text_color }};
+    font-size: {{ section.settings.editorial_text_size_mobile }}px;
   }
+}
 
-  @media screen and (max-width: 989px) {
-    #cj-video-player-{{ section.id }} {
-      height: {{ section.settings.video_height_tablet }}svh;
-      min-height: {{ section.settings.video_min_height_tablet }}px;
-      max-height: {{ section.settings.video_max_height_tablet }}px;
-    }
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  #cj-video-player-{{ section.id }} .cj-video-player__video {
+    transform: translate(-50%, -50%) !important; /* Mantém a estrutura Loro Piana mas corta o zoom */
+    transition: none !important;
   }
-
-  @media screen and (max-width: 749px) {
-    #cj-video-player-{{ section.id }} {
-      height: {{ section.settings.video_height_mobile }}svh;
-      min-height: {{ section.settings.video_min_height_mobile }}px;
-      max-height: {{ section.settings.video_max_height_mobile }}px;
-    }
-
-    #cj-video-player-{{ section.id }} .cj-video-player__card {
-      bottom: {{ section.settings.card_bottom_mobile }}px;
-      width: min({{ section.settings.card_width_mobile }}px, calc(100% - 32px));
-      padding: {{ section.settings.card_padding_y_mobile }}px {{ section.settings.card_padding_x_mobile }}px;
-    }
-
-    #cj-video-player-{{ section.id }} .cj-video-player__card-title {
-      font-size: {{ section.settings.card_title_size_mobile }}px;
-    }
-
-    #cj-video-player-{{ section.id }} .cj-video-player__card-text {
-      font-size: {{ section.settings.card_body_size_mobile }}px;
-    }
-
-    #cj-video-player-{{ section.id }} .cj-video-player__card-links {
-      gap: {{ section.settings.card_links_gap_mobile }}px;
-    }
-
-    .cj-video-player-editorial-{{ section.id }} {
-     padding-top: {{ section.settings.editorial_padding_top_mobile }}px;
-      padding-bottom: {{ section.settings.editorial_padding_bottom_mobile }}px;
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-    .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__title {
-      font-size: {{ section.settings.editorial_title_size_mobile }}px;
-    }
-
-    .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__text {
-      font-size: {{ section.settings.editorial_text_size_mobile }}px;
-    }
+  #cj-video-player-{{ section.id }} .cj-video-player__card {
+    transform: translateX(-50%) !important;
+    animation: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
-
-  /*
-    Acessibilidade: se a pessoa ativou "reduzir movimento" no sistema,
-    desligamos o zoom e as transições. Uma marca premium respeita isso.
-    O vídeo continua rodando de fundo normalmente.
-  */
-  @media (prefers-reduced-motion: reduce) {
-    #cj-video-player-{{ section.id }} .cj-video-player__video {
-      transform: none !important;
-      transition: none !important;
-    }
-    #cj-video-player-{{ section.id }} .cj-video-player__card {
-      transform: translateX(-50%) !important;
-    }
+  .cj-video-player-editorial-{{ section.id }} .cj-video-player-editorial__inner {
+    animation: none !important;
+    opacity: 1 !important;
   }
+}
 </style>
 
 <script>
@@ -412,19 +454,9 @@
               ? speedTablet
               : speedDesktop;
 
-        /*
-          Correção importante:
-          antes o valor maior deixava a animação mais lenta, porque entrava como
-          distância. Agora o campo realmente funciona como velocidade: quanto
-          maior o número no editor, mais cedo o card encaixa no bloco abaixo.
-        */
         const safeSpeed = Math.max(speedMultiplier, 0.35);
         const distance = window.innerHeight * clamp(1 / safeSpeed, 0.45, 1.85);
 
-        /*
-          Loro Piana effect:
-          quanto mais você desce, mais o vídeo aproxima.
-        */
         const rawProgress = clamp(-rect.top / distance, 0, 1);
         const progress = easeOut(rawProgress);
 
@@ -435,12 +467,9 @@
         section.style.setProperty('--cj-video-zoom', zoom.toFixed(4));
         section.style.setProperty('--cj-frame-progress', frameProgress.toFixed(4));
 
-        /*
-          Força o zoom direto no vídeo também.
-          Isso evita bug do Shopify editor não aplicar a variável.
-        */
         videos.forEach(function (video) {
-          video.style.transform = 'scale(' + zoom.toFixed(4) + ')';
+          /* Adaptado para manter o translate(-50%, -50%) da Loro Piana junto com o zoom JS */
+          video.style.transform = 'translate(-50%, -50%) scale(' + zoom.toFixed(4) + ')';
           video.style.transformOrigin = 'center center';
           video.style.willChange = 'transform';
         });
@@ -458,11 +487,6 @@
 
         const cardScaleStrength = {{ section.settings.card_scale_strength }} / 100;
 
-        /*
-          O card precisa chegar um pouco antes do zoom do vídeo para ficar
-          encaixado acima do texto "Elegância não se explica" no momento em
-          que o bloco editorial aparece por completo.
-        */
         const cardCatchup = mode === 'mobile' ? 1.16 : mode === 'tablet' ? 1.20 : 1.26;
         const cardProgress = easeOut(clamp(rawProgress * cardCatchup, 0, 1));
         const cardY = cardProgress * cardMove;
