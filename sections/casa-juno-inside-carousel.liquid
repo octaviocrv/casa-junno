@@ -388,6 +388,9 @@
     }
 
     #CasaJunoInside-{{ section.id }} .cj-inside-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
       margin-bottom: 24px;
     }
 
@@ -412,6 +415,10 @@
       scroll-snap-type: x mandatory;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      transition: none;
+      will-change: auto;
+      touch-action: pan-y;
       padding-bottom: 4px;
     }
 
@@ -420,7 +427,7 @@
     }
 
     #CasaJunoInside-{{ section.id }} .cj-inside-card {
-      flex: 0 0 80%;
+      flex: 0 0 min(84%, 320px);
       scroll-snap-align: start;
     }
 
@@ -447,6 +454,25 @@
       font-size: 10px;
     }
   }
+
+  @media screen and (max-width: 520px) {
+    #CasaJunoInside-{{ section.id }} .cj-inside-wrap {
+      padding: 0 14px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-header h2 {
+      font-size: 21px;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-card {
+      flex: 0 0 88%;
+    }
+
+    #CasaJunoInside-{{ section.id }} .cj-inside-content p {
+      font-size: 13px;
+      line-height: 1.45;
+    }
+  }
 </style>
 
 <script>
@@ -464,9 +490,10 @@
 
     let index = 0;
     const formatSlideNumber = (value) => String(value).padStart(2, '0');
+    const isMobileViewport = () => window.innerWidth <= 749;
 
     function getCardsPerView() {
-      if (window.innerWidth <= 749) return 1;
+      if (isMobileViewport()) return 1;
       if (window.innerWidth <= 989) return 2;
       return 4;
     }
@@ -480,15 +507,23 @@
       return parseFloat(styles.columnGap || styles.gap || 0) || 0;
     }
 
+    function syncControls() {
+      const max = maxIndex();
+
+      if (current) current.textContent = formatSlideNumber(index + 1);
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index >= max;
+    }
+
     function update() {
       const max = maxIndex();
 
       if (index > max) index = max;
       if (index < 0) index = 0;
 
-      if (window.innerWidth <= 749) {
-        const cardWidth = cards[0].getBoundingClientRect().width;
-        const move = index * (cardWidth + getGap());
+      if (isMobileViewport()) {
+        track.style.transform = '';
+        const move = cards[index] ? cards[index].offsetLeft : 0;
 
         track.scrollTo({
           left: move,
@@ -500,10 +535,7 @@
         track.style.transform = `translate3d(${-move}px, 0, 0)`;
       }
 
-      if (current) current.textContent = formatSlideNumber(index + 1);
-
-      if (prev) prev.disabled = index === 0;
-      if (next) next.disabled = index >= max;
+      syncControls();
     }
 
     if (prev) {
@@ -529,18 +561,39 @@
       }, 150);
     });
 
-    track.addEventListener('scroll', () => {
-      if (window.innerWidth > 749) return;
+    function syncIndexFromScroll() {
+      if (!isMobileViewport()) return;
 
-      const cardWidth = cards[0].getBoundingClientRect().width + getGap();
-      const newIndex = Math.round(track.scrollLeft / cardWidth);
+      const scrollLeft = track.scrollLeft;
+      let closestIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
 
-      if (newIndex !== index) {
-        index = Math.max(0, Math.min(newIndex, maxIndex()));
-        if (current) current.textContent = formatSlideNumber(index + 1);
-        if (prev) prev.disabled = index === 0;
-        if (next) next.disabled = index >= maxIndex();
+      cards.forEach((card, cardIndex) => {
+        const distance = Math.abs(card.offsetLeft - scrollLeft);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = cardIndex;
+        }
+      });
+
+      if (closestIndex !== index) {
+        index = Math.max(0, Math.min(closestIndex, maxIndex()));
+        syncControls();
       }
+    }
+
+    let scrollTicking = false;
+
+    track.addEventListener('scroll', () => {
+      if (!isMobileViewport()) return;
+      if (scrollTicking) return;
+
+      scrollTicking = true;
+      window.requestAnimationFrame(() => {
+        scrollTicking = false;
+        syncIndexFromScroll();
+      });
     }, { passive: true });
 
     update();

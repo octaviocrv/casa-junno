@@ -81,6 +81,27 @@
     display: block;
   }
 
+  .m-logo--mobile .m-logo__image {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: min(100%, 180px);
+    margin: 0 auto;
+  }
+
+  .m-logo--mobile .cj-header-logo__img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .m-logo--mobile .cj-header-logo__text {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cj-header-text);
+  }
+
   .cj-header-desktop-shell__left,
   .cj-header-desktop-shell__right {
     display: flex;
@@ -434,6 +455,37 @@
   @media (max-width: 1023px) {
     .cj-header-desktop-shell { display: none; }
 
+    .m-header__mobile {
+      flex-wrap: wrap;
+      row-gap: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .cj-mobile-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 2px 0 0;
+    }
+
+    .cj-mobile-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cj-mobile-nav .cj-header-nav-link {
+      flex: 0 0 auto;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      padding-bottom: 3px;
+    }
+
     .cj-men-panel {
       top: calc(var(--cj-panel-top) - 10px);
     }
@@ -475,7 +527,11 @@
 
         <div class="m-logo m-logo--mobile m:w-6/12 m:justify-center">
           <a href="{{ routes.root_url }}" class="m-logo__image">
-            <span class="cj-header-logo__text">{{ section.settings.logo_text | default: shop.name }}</span>
+            {% if section.settings.logo != blank %}
+              {{ section.settings.logo | image_url: width: 320 | image_tag: class: 'cj-header-logo__img', loading: 'eager', alt: shop.name }}
+            {% else %}
+              <span class="cj-header-logo__text">{{ shop.name }}</span>
+            {% endif %}
           </a>
         </div>
 

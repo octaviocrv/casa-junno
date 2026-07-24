@@ -84,13 +84,13 @@
 <style>
   #cj-sensory-services-{{ section.id }} {
     --bg-color: {{ section.settings.background_color }};
-    --text-main: {{ section.settings.text_color }};
-    --text-muted: {{ section.settings.secondary_text_color }};
     --accent: {{ section.settings.accent_color }};
+    --cj-look-title-color: #2A1810;
+    --cj-look-subtitle-color: #6F6258;
     --line-color: rgba(38, 33, 29, 0.12); /* Linha muito sutil */
     
     background-color: var(--bg-color);
-    color: var(--text-main);
+    color: var(--cj-look-title-color);
     padding-top: {{ section.settings.padding_top_desktop }}px;
     padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
     font-family: var(--font-body-family), "Helvetica Neue", sans-serif;
@@ -117,17 +117,18 @@
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.24em;
-    color: var(--text-muted);
+    color: var(--cj-look-subtitle-color);
     margin-bottom: 16px;
   }
 
   .cj-sensory-heading {
     margin: 0;
-    font-family: var(--font-heading-family), "Georgia", "Times New Roman", serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(28px, 4vw, 42px);
     font-weight: 400;
+    letter-spacing: -0.02em;
     line-height: 1.15;
-    color: var(--text-main);
+    color: var(--cj-look-title-color);
   }
 
   /* Grid Principal */
@@ -197,7 +198,7 @@
     align-items: center;
     justify-content: center;
     font-size: 13px;
-    color: var(--text-muted);
+    color: var(--cj-look-subtitle-color);
     letter-spacing: 0.05em;
   }
 
@@ -226,10 +227,10 @@
   }
 
   .cj-sensory-item-number {
-    font-family: var(--font-heading-family), "Georgia", serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-size: 18px;
     font-style: italic;
-    color: var(--text-muted);
+    color: var(--cj-look-subtitle-color);
     margin-right: 32px;
     opacity: 0.6;
     transition: opacity 0.4s ease;
@@ -241,10 +242,11 @@
 
   .cj-sensory-item-title {
     margin: 0 0 8px 0;
-    font-family: var(--font-heading-family), "Georgia", serif;
+    font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(24px, 3vw, 32px);
     font-weight: 400;
-    color: var(--text-muted);
+    letter-spacing: -0.02em;
+    color: var(--cj-look-title-color);
     transition: color 0.4s ease;
   }
 
@@ -258,9 +260,9 @@
 
   .cj-sensory-item-text {
     margin: 0 0 20px 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--text-muted);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--cj-look-subtitle-color);
     max-width: 90%;
   }
 
@@ -283,11 +285,11 @@
   /* Estados Ativos / Hover */
   .cj-sensory-item.is-active .cj-sensory-item-number {
     opacity: 1;
-    color: var(--text-main);
+    color: var(--cj-look-title-color);
   }
   
   .cj-sensory-item.is-active .cj-sensory-item-title {
-    color: var(--text-main);
+    color: var(--cj-look-title-color);
   }
 
   .cj-sensory-item.is-active .cj-sensory-item-desc-wrapper {
@@ -299,7 +301,7 @@
 
   @media (hover: hover) {
     .cj-sensory-item:hover .cj-sensory-item-title {
-      color: var(--text-main);
+      color: var(--cj-look-title-color);
     }
     .cj-sensory-item:hover {
       padding-left: 12px;
