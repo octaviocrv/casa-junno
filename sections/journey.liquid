@@ -23,9 +23,20 @@
 
 {%- liquid
   assign blog = blogs[section.settings.blog]
+  assign blog_count = blog.articles_count | default: 0 | plus: 0
   assign hi_count = section.settings.highlights_count
   assign gr_count = section.settings.grid_count
   assign total = hi_count | plus: gr_count
+
+  assign fallback_highlight_titles = 'A alfaiataria que alonga a silhueta em segundos|Linho nobre no calor: caimento impecavel sem rigidez|Milao, Lisboa e Toquio: o que as ruas estao ensinando|Como identificar um tecido premium pelo toque e trama|A volta da cintura alta com proporcoes modernas|Do molde ao ponto final: dentro de um atelie contemporaneo|Capsule inteligente: 14 combinacoes para 7 dias|Couro bem cuidado: guia rapido para sapatos e bolsas' | split: '|'
+  assign fallback_highlight_categories = 'Oficio|Tecidos|Cidades|Guia|Silhueta|Atelie|Curadoria|Acessorios' | split: '|'
+  assign fallback_highlight_metas = '7 min de leitura|6 min de leitura|8 min de leitura|5 min de leitura|6 min de leitura|9 min de leitura|7 min de leitura|5 min de leitura' | split: '|'
+  assign fallback_highlight_images = 'https://source.unsplash.com/1400x875/?fashion,tailoring,atelier&sig=201|https://source.unsplash.com/1400x875/?linen,fashion,fabric&sig=202|https://source.unsplash.com/1400x875/?streetstyle,fashion,city&sig=203|https://source.unsplash.com/1400x875/?textile,loom,fabric&sig=204|https://source.unsplash.com/1400x875/?trousers,tailoring,fashion&sig=205|https://source.unsplash.com/1400x875/?sewing,atelier,craftsmanship&sig=206|https://source.unsplash.com/1400x875/?wardrobe,minimal,fashion&sig=207|https://source.unsplash.com/1400x875/?leather,shoes,fashion&sig=208' | split: '|'
+
+  assign fallback_grid_titles = 'Tres camisas brancas alem do obvio|Tons areia, tabaco e grafite: paleta sem erro|Guia de sobreposicao leve para meia-estacao|Vestir bem para viajar com mala compacta|Joias discretas que transformam o look|Modelagens amplas: como equilibrar volume|Trench coat atualizado: comprimentos e ajustes|Denim escuro com acabamento refinado|O retorno do marrom chocolate no guarda-roupa|Pecas com textura para looks monocromaticos|Como escolher blazer pelo ombro e lapela|Perfumes de assinatura para cada horario' | split: '|'
+  assign fallback_grid_categories = 'Estilo|Paleta|Camadas|Viagem|Acessorios|Modelagem|Outerwear|Denim|Tendencias|Texturas|Alfaiataria|Lifestyle' | split: '|'
+  assign fallback_grid_metas = '4 min de leitura|5 min de leitura|6 min de leitura|5 min de leitura|4 min de leitura|6 min de leitura|5 min de leitura|4 min de leitura|5 min de leitura|4 min de leitura|6 min de leitura|4 min de leitura' | split: '|'
+  assign fallback_grid_images = 'https://source.unsplash.com/900x600/?white,shirt,fashion&sig=301|https://source.unsplash.com/900x600/?neutral,palette,fashion&sig=302|https://source.unsplash.com/900x600/?layering,coat,fashion&sig=303|https://source.unsplash.com/900x600/?travel,style,luggage&sig=304|https://source.unsplash.com/900x600/?jewelry,fashion,detail&sig=305|https://source.unsplash.com/900x600/?oversized,tailoring,fashion&sig=306|https://source.unsplash.com/900x600/?trenchcoat,streetstyle,fashion&sig=307|https://source.unsplash.com/900x600/?denim,dark,fashion&sig=308|https://source.unsplash.com/900x600/?brown,fashion,outfit&sig=309|https://source.unsplash.com/900x600/?texture,fabric,fashion&sig=310|https://source.unsplash.com/900x600/?blazer,tailoring,style&sig=311|https://source.unsplash.com/900x600/?perfume,bottle,fashion&sig=312' | split: '|'
 -%}
 
 {% style %}
@@ -339,7 +350,7 @@
       </div>
 
       <div class="cj-rail" data-rail tabindex="0" role="group" aria-label="{{ section.settings.highlights_title }}">
-        {%- if blog.articles_count > 0 -%}
+        {%- if blog_count > 0 -%}
           {%- for article in blog.articles limit: hi_count -%}
             {%- liquid
               assign words = article.content | strip_html | split: ' ' | size
@@ -353,7 +364,9 @@
                        alt="{{ article.image.alt | escape }}"
                        width="1400" height="875" loading="lazy">
                 {%- else -%}
-                  {{ 'image' | placeholder_svg_tag }}
+                  <img src="https://source.unsplash.com/1400x875/?fashion,editorial,atelier&sig={{ forloop.index | plus: 500 }}"
+                       alt="{{ article.title | escape }}"
+                       width="1400" height="875" loading="lazy">
                 {%- endif -%}
 
                 {%- if forloop.first -%}
@@ -386,24 +399,36 @@
         {%- else -%}
           {%- comment -%} Estado vazio: mantém a composição legível no editor {%- endcomment -%}
           {%- for i in (1..hi_count) -%}
+            {%- liquid
+              assign h_idx = forloop.index0
+              assign h_title = fallback_highlight_titles[h_idx] | default: fallback_highlight_titles.last
+              assign h_category = fallback_highlight_categories[h_idx] | default: section.settings.default_category
+              assign h_meta = fallback_highlight_metas[h_idx] | default: '5 min de leitura'
+              assign h_image = fallback_highlight_images[h_idx] | default: fallback_highlight_images.last
+            -%}
             <div class="cj-card {% if forloop.first %}cj-card--plate{% endif %}">
               <div class="cj-frame">
-                {{ 'image' | placeholder_svg_tag }}
+                <img src="{{ h_image }}" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
                 {%- if forloop.first -%}
                   <div class="cj-plate">
                     <div class="cj-body">
-                      <span class="cj-cat">{{ section.settings.default_category }}</span>
-                      <h4 class="cj-headline">Título da matéria em destaque</h4>
-                      <p class="cj-meta">5 min de leitura</p>
+                      <span class="cj-cat">{{ h_category }}</span>
+                      <h4 class="cj-headline">{{ h_title }}</h4>
+                      {%- if section.settings.show_readtime -%}
+                        <p class="cj-meta">{{ h_meta }}</p>
+                      {%- endif -%}
+                      <p class="cj-byline">Palavras de Redacao Casa Junno</p>
                     </div>
                   </div>
                 {%- endif -%}
               </div>
               {%- unless forloop.first -%}
                 <div class="cj-body">
-                  <span class="cj-cat">{{ section.settings.default_category }}</span>
-                  <h4 class="cj-headline">Título da matéria</h4>
-                  <p class="cj-meta">5 min de leitura</p>
+                  <span class="cj-cat">{{ h_category }}</span>
+                  <h4 class="cj-headline">{{ h_title }}</h4>
+                  {%- if section.settings.show_readtime -%}
+                    <p class="cj-meta">{{ h_meta }}</p>
+                  {%- endif -%}
                 </div>
               {%- endunless -%}
             </div>
@@ -415,13 +440,13 @@
     {%- comment -%} ── 3. DESCUBRA MAIS ── {%- endcomment -%}
     <div class="cj-blockhead cj-blockhead--grid cj-reveal">
       <h3 class="cj-blocktitle">{{ section.settings.grid_title }}</h3>
-      {%- if blog.articles_count > 0 -%}
-        <span class="cj-count">{{ blog.articles_count }} matérias</span>
+      {%- if blog_count > 0 -%}
+        <span class="cj-count">{{ blog_count }} matérias</span>
       {%- endif -%}
     </div>
 
     <div class="cj-grid cj-reveal">
-      {%- if blog.articles_count > 0 -%}
+      {%- if blog_count > 0 -%}
         {%- for article in blog.articles offset: hi_count limit: gr_count -%}
           {%- liquid
             assign words = article.content | strip_html | split: ' ' | size
@@ -435,7 +460,9 @@
                      alt="{{ article.image.alt | escape }}"
                      width="900" height="600" loading="lazy">
               {%- else -%}
-                {{ 'image' | placeholder_svg_tag }}
+                <img src="https://source.unsplash.com/900x600/?fashion,style,lookbook&sig={{ forloop.index | plus: 700 }}"
+                     alt="{{ article.title | escape }}"
+                     width="900" height="600" loading="lazy">
               {%- endif -%}
             </div>
             <div class="cj-body">
@@ -449,12 +476,23 @@
         {%- endfor -%}
       {%- else -%}
         {%- for i in (1..gr_count) -%}
+          {%- liquid
+            assign g_idx = forloop.index0
+            assign g_title = fallback_grid_titles[g_idx] | default: fallback_grid_titles.last
+            assign g_category = fallback_grid_categories[g_idx] | default: section.settings.default_category
+            assign g_meta = fallback_grid_metas[g_idx] | default: '4 min de leitura'
+            assign g_image = fallback_grid_images[g_idx] | default: fallback_grid_images.last
+          -%}
           <div class="cj-card">
-            <div class="cj-frame">{{ 'image' | placeholder_svg_tag }}</div>
+            <div class="cj-frame">
+              <img src="{{ g_image }}" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+            </div>
             <div class="cj-body">
-              <span class="cj-cat">{{ section.settings.default_category }}</span>
-              <h4 class="cj-headline">Título da matéria editorial</h4>
-              <p class="cj-meta">4 min de leitura</p>
+              <span class="cj-cat">{{ g_category }}</span>
+              <h4 class="cj-headline">{{ g_title }}</h4>
+              {%- if section.settings.show_readtime -%}
+                <p class="cj-meta">{{ g_meta }}</p>
+              {%- endif -%}
             </div>
           </div>
         {%- endfor -%}
