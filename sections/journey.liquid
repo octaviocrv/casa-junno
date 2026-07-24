@@ -27,6 +27,8 @@
   assign hi_count = section.settings.highlights_count
   assign gr_count = section.settings.grid_count
   assign total = hi_count | plus: gr_count
+  assign fallback_product_handles = 'sueter-gola-ziper|casa-juno-polo-ziper-premium|casa-juno-camiseta-signature|casa-juno-sueter-tricot-premium|casa-juno-calca-alfaiataria-casual' | split: '|'
+  assign fallback_product_pool_size = fallback_product_handles.size | plus: 0
 
   assign fallback_highlight_titles = 'A alfaiataria que alonga a silhueta em segundos|Linho nobre no calor: caimento impecavel sem rigidez|Milao, Lisboa e Toquio: o que as ruas estao ensinando|Como identificar um tecido premium pelo toque e trama|A volta da cintura alta com proporcoes modernas|Do molde ao ponto final: dentro de um atelie contemporaneo|Capsule inteligente: 14 combinacoes para 7 dias|Couro bem cuidado: guia rapido para sapatos e bolsas' | split: '|'
   assign fallback_highlight_categories = 'Oficio|Tecidos|Cidades|Guia|Silhueta|Atelie|Curadoria|Acessorios' | split: '|'
@@ -368,9 +370,20 @@
                        alt="{{ article.title | escape }}"
                        width="1400" height="875" loading="lazy">
                 {%- else -%}
-                  <img src="#sua-imagem-aqui#"
-                       alt="{{ article.title | escape }}"
-                       width="1400" height="875" loading="lazy">
+                  {%- liquid
+                    assign h_pool_index = forloop.index0 | modulo: fallback_product_pool_size
+                    assign h_pool_handle = fallback_product_handles[h_pool_index]
+                    assign h_pool_product = all_products[h_pool_handle]
+                  -%}
+                  {%- if h_pool_product != blank and h_pool_product.featured_image != blank -%}
+                    <img src="{{ h_pool_product.featured_image | image_url: width: 1400 }}"
+                         alt="{{ h_pool_product.title | default: article.title | escape }}"
+                         width="1400" height="875" loading="lazy">
+                  {%- else -%}
+                    <img src="#sua-imagem-aqui#"
+                         alt="{{ article.title | escape }}"
+                         width="1400" height="875" loading="lazy">
+                  {%- endif -%}
                 {%- endif -%}
 
                 {%- if forloop.first -%}
@@ -416,7 +429,16 @@
                 {%- if h_image != blank -%}
                   <img src="{{ h_image | image_url: width: 1400 }}" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
                 {%- else -%}
-                  <img src="#sua-imagem-aqui#" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
+                  {%- liquid
+                    assign h_pool_index = h_idx | modulo: fallback_product_pool_size
+                    assign h_pool_handle = fallback_product_handles[h_pool_index]
+                    assign h_pool_product = all_products[h_pool_handle]
+                  -%}
+                  {%- if h_pool_product != blank and h_pool_product.featured_image != blank -%}
+                    <img src="{{ h_pool_product.featured_image | image_url: width: 1400 }}" alt="{{ h_pool_product.title | default: h_title | escape }}" width="1400" height="875" loading="lazy">
+                  {%- else -%}
+                    <img src="#sua-imagem-aqui#" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
+                  {%- endif -%}
                 {%- endif -%}
                 {%- if forloop.first -%}
                   <div class="cj-plate">
@@ -475,9 +497,20 @@
                      alt="{{ article.title | escape }}"
                      width="900" height="600" loading="lazy">
               {%- else -%}
-                <img src="#sua-imagem-aqui#"
-                     alt="{{ article.title | escape }}"
-                     width="900" height="600" loading="lazy">
+                {%- liquid
+                  assign g_pool_index = forloop.index0 | plus: hi_count | modulo: fallback_product_pool_size
+                  assign g_pool_handle = fallback_product_handles[g_pool_index]
+                  assign g_pool_product = all_products[g_pool_handle]
+                -%}
+                {%- if g_pool_product != blank and g_pool_product.featured_image != blank -%}
+                  <img src="{{ g_pool_product.featured_image | image_url: width: 900 }}"
+                       alt="{{ g_pool_product.title | default: article.title | escape }}"
+                       width="900" height="600" loading="lazy">
+                {%- else -%}
+                  <img src="#sua-imagem-aqui#"
+                       alt="{{ article.title | escape }}"
+                       width="900" height="600" loading="lazy">
+                {%- endif -%}
               {%- endif -%}
             </div>
             <div class="cj-body">
@@ -504,7 +537,16 @@
               {%- if g_image != blank -%}
                 <img src="{{ g_image | image_url: width: 900 }}" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
               {%- else -%}
-                <img src="#sua-imagem-aqui#" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+                {%- liquid
+                  assign g_pool_index = g_idx | plus: hi_count | modulo: fallback_product_pool_size
+                  assign g_pool_handle = fallback_product_handles[g_pool_index]
+                  assign g_pool_product = all_products[g_pool_handle]
+                -%}
+                {%- if g_pool_product != blank and g_pool_product.featured_image != blank -%}
+                  <img src="{{ g_pool_product.featured_image | image_url: width: 900 }}" alt="{{ g_pool_product.title | default: g_title | escape }}" width="900" height="600" loading="lazy">
+                {%- else -%}
+                  <img src="#sua-imagem-aqui#" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+                {%- endif -%}
               {%- endif -%}
             </div>
             <div class="cj-body">
