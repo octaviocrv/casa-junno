@@ -91,6 +91,32 @@
         "editorial_text_size_mobile": 14
       }
     },
+    "journey_editorial": {
+      "type": "journey",
+      "name": "Journey",
+      "settings": {
+        "blog": "news",
+        "kicker": "Casa Junno",
+        "heading": "Journey",
+        "standfirst": "Um percurso pelo que sustenta uma peça bem-feita: tecidos, ofício, cidades e o tempo que tudo isso pede.",
+        "default_category": "Elegância",
+        "highlights_title": "Em destaque",
+        "highlights_count": 4,
+        "grid_title": "Descubra mais",
+        "grid_count": 6,
+        "show_readtime": true,
+        "cta_label": "Ver todas as matérias",
+        "cta_url": "",
+        "bg_color": "#f4eee8",
+        "panel_color": "#f8f5ef",
+        "ink_color": "#2a1810",
+        "muted_color": "#6f6258",
+        "accent_color": "#5c4635",
+        "max_width": 1320,
+        "padding_top": 96,
+        "padding_bottom": 112
+      }
+    },
     "casa_juno_produtos_wQtjLT": {
       "type": "casa-juno-produtos",
       "blocks": {
@@ -465,42 +491,16 @@
         "padding_top": 96,
         "padding_bottom": 112
       }
-    },
-    "journey_editorial": {
-      "type": "journey",
-      "name": "Journey",
-      "settings": {
-        "blog": "news",
-        "kicker": "Casa Junno",
-        "heading": "Journey",
-        "standfirst": "Um percurso pelo que sustenta uma peça bem-feita: tecidos, ofício, cidades e o tempo que tudo isso pede.",
-        "default_category": "Elegância",
-        "highlights_title": "Em destaque",
-        "highlights_count": 4,
-        "grid_title": "Descubra mais",
-        "grid_count": 6,
-        "show_readtime": true,
-        "cta_label": "Ver todas as matérias",
-        "cta_url": "",
-        "bg_color": "#f4eee8",
-        "panel_color": "#f8f5ef",
-        "ink_color": "#2a1810",
-        "muted_color": "#6f6258",
-        "accent_color": "#5c4635",
-        "max_width": 1320,
-        "padding_top": 96,
-        "padding_bottom": 112
-      }
     }
   },
   "order": [
     "videobanner_nqFzpT",
+    "journey_editorial",
     "casa_juno_produtos_wQtjLT",
     "casa_juno_three_editorials_QHeTTb",
     "casa_juno_look_carousel_QqwKDC",
     "casa_juno_look_editorial_FyKg3f",
     "casa_juno_service_icons_V8QNwx",
-    "casa_juno_inside_carousel_FC46yP",
-    "journey_editorial"
+    "casa_juno_inside_carousel_FC46yP"
   ]
 }
