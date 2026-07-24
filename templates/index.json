@@ -107,6 +107,7 @@
         "show_readtime": true,
         "cta_label": "Ver todas as matérias",
         "cta_url": "",
+        "fallback_highlight_image_1": "shopify://shop_images/95263b15b8a633c31eb9c80a2bfb38cd.jpg",
         "bg_color": "#f4eee8",
         "panel_color": "#f8f5ef",
         "ink_color": "#2a1810",
