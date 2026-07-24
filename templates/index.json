@@ -1,4 +1,12 @@
-
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "videobanner_nqFzpT": {
@@ -75,6 +83,7 @@
         "editorial_max_width": 650,
         "editorial_kicker_size": 11,
         "editorial_kicker_spacing": 22,
+        "editorial_kicker_margin": 14,
         "editorial_title_size_desktop": 46,
         "editorial_title_size_mobile": 34,
         "editorial_title_margin": 18,
@@ -153,6 +162,7 @@
         "enable_scroll_effect": true,
         "scroll_card_move": 70,
         "scroll_image_zoom": 8,
+        "image_fit": "cover",
         "max_width": 1560,
         "padding_top_desktop": 55,
         "padding_bottom_desktop": 100,
@@ -325,8 +335,8 @@
         "service_Pj3QPV": {
           "type": "service",
           "settings": {
-            "icon_image": "shopify://shop_images/02-trocas-devolucoes-caixinha.png",
-            "image": "shopify://shop_images/02-trocas-devolucoes-caixinha.png",
+            "image": "shopify://shop_images/Gemini_Generated_Image_ndwbvendwbvendwb.png",
+            "asset_image": "",
             "title": "Troca e devolução assistidas",
             "text": "Se precisar trocar, nossa equipe acompanha o processo de forma simples, clara e sem burocracia.",
             "link_label": "Saiba mais",
@@ -336,8 +346,8 @@
         "service_qUQVeM": {
           "type": "service",
           "settings": {
-            "icon_image": "shopify://shop_images/01-entrega-gratis-motinha.png",
-            "image": "shopify://shop_images/01-entrega-gratis-motinha.png",
+            "image": "shopify://shop_images/Gemini_Generated_Image_nmmrv8nmmrv8nmmr.png",
+            "asset_image": "",
             "title": "Entrega com rastreio",
             "text": "Seu pedido é preparado com cuidado, enviado com segurança e acompanhado até a chegada ao destino.",
             "link_label": "Saiba mais",
@@ -347,8 +357,8 @@
         "service_MMDjNT": {
           "type": "service",
           "settings": {
-            "icon_image": "shopify://shop_images/03-atendimento-personalizado-agendamento.png",
             "image": "shopify://shop_images/03-atendimento-personalizado-agendamento.png",
+            "asset_image": "",
             "title": "Atendimento privado",
             "text": "Agende um atendimento personalizado para tirar dúvidas e escolher peças com orientação dedicada.",
             "link_label": "Saiba mais",
@@ -363,46 +373,19 @@
       ],
       "name": "Casa Juno serviços",
       "settings": {
+        "kicker": "SERVIÇOS CASA JUNNO",
         "heading": "À sua disposição",
         "background_color": "#f8f5ef",
         "text_color": "#8a684b",
         "secondary_text_color": "#6f6258",
         "accent_color": "#8a684b",
-        "divider_color": "#b88b7c",
         "max_width": 1280,
         "padding_top_desktop": 80,
         "padding_bottom_desktop": 112,
         "side_padding_desktop": 20,
-        "heading_gap_desktop": 20,
-        "card_min_height_desktop": 300,
-        "card_side_padding_desktop": 24,
-        "visual_height_desktop": 106,
-        "visual_gap_desktop": 10,
-        "icon_width": 240,
-        "icon_height": 162,
-        "title_max_width": 300,
-        "heading_size_desktop": 30,
-        "title_size_desktop": 22,
-        "title_line_height": 1,
-        "cta_margin_top_desktop": 38,
-        "cta_size_desktop": 22,
-        "divider_top_desktop": 40,
-        "divider_height_desktop": 280,
-        "divider_opacity": 35,
         "padding_top_mobile": 68,
         "padding_bottom_mobile": 72,
-        "side_padding_mobile": 20,
-        "heading_gap_mobile": 54,
-        "heading_size_mobile": 23,
-        "mobile_gap": 72,
-        "visual_height_mobile": 122,
-        "visual_gap_mobile": 26,
-        "icon_width_mobile": 90,
-        "icon_height_mobile": 82,
-        "title_size_mobile": 16,
-        "title_max_width_mobile": 300,
-        "cta_margin_top_mobile": 46,
-        "cta_size_mobile": 16
+        "side_padding_mobile": 20
       }
     },
     "casa_juno_inside_carousel_FC46yP": {
