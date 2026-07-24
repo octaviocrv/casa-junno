@@ -31,12 +31,10 @@
   assign fallback_highlight_titles = 'A alfaiataria que alonga a silhueta em segundos|Linho nobre no calor: caimento impecavel sem rigidez|Milao, Lisboa e Toquio: o que as ruas estao ensinando|Como identificar um tecido premium pelo toque e trama|A volta da cintura alta com proporcoes modernas|Do molde ao ponto final: dentro de um atelie contemporaneo|Capsule inteligente: 14 combinacoes para 7 dias|Couro bem cuidado: guia rapido para sapatos e bolsas' | split: '|'
   assign fallback_highlight_categories = 'Oficio|Tecidos|Cidades|Guia|Silhueta|Atelie|Curadoria|Acessorios' | split: '|'
   assign fallback_highlight_metas = '7 min de leitura|6 min de leitura|8 min de leitura|5 min de leitura|6 min de leitura|9 min de leitura|7 min de leitura|5 min de leitura' | split: '|'
-  assign fallback_highlight_images = 'https://source.unsplash.com/1400x875/?fashion,tailoring,atelier&sig=201|https://source.unsplash.com/1400x875/?linen,fashion,fabric&sig=202|https://source.unsplash.com/1400x875/?streetstyle,fashion,city&sig=203|https://source.unsplash.com/1400x875/?textile,loom,fabric&sig=204|https://source.unsplash.com/1400x875/?trousers,tailoring,fashion&sig=205|https://source.unsplash.com/1400x875/?sewing,atelier,craftsmanship&sig=206|https://source.unsplash.com/1400x875/?wardrobe,minimal,fashion&sig=207|https://source.unsplash.com/1400x875/?leather,shoes,fashion&sig=208' | split: '|'
 
   assign fallback_grid_titles = 'Tres camisas brancas alem do obvio|Tons areia, tabaco e grafite: paleta sem erro|Guia de sobreposicao leve para meia-estacao|Vestir bem para viajar com mala compacta|Joias discretas que transformam o look|Modelagens amplas: como equilibrar volume|Trench coat atualizado: comprimentos e ajustes|Denim escuro com acabamento refinado|O retorno do marrom chocolate no guarda-roupa|Pecas com textura para looks monocromaticos|Como escolher blazer pelo ombro e lapela|Perfumes de assinatura para cada horario' | split: '|'
   assign fallback_grid_categories = 'Estilo|Paleta|Camadas|Viagem|Acessorios|Modelagem|Outerwear|Denim|Tendencias|Texturas|Alfaiataria|Lifestyle' | split: '|'
   assign fallback_grid_metas = '4 min de leitura|5 min de leitura|6 min de leitura|5 min de leitura|4 min de leitura|6 min de leitura|5 min de leitura|4 min de leitura|5 min de leitura|4 min de leitura|6 min de leitura|4 min de leitura' | split: '|'
-  assign fallback_grid_images = 'https://source.unsplash.com/900x600/?white,shirt,fashion&sig=301|https://source.unsplash.com/900x600/?neutral,palette,fashion&sig=302|https://source.unsplash.com/900x600/?layering,coat,fashion&sig=303|https://source.unsplash.com/900x600/?travel,style,luggage&sig=304|https://source.unsplash.com/900x600/?jewelry,fashion,detail&sig=305|https://source.unsplash.com/900x600/?oversized,tailoring,fashion&sig=306|https://source.unsplash.com/900x600/?trenchcoat,streetstyle,fashion&sig=307|https://source.unsplash.com/900x600/?denim,dark,fashion&sig=308|https://source.unsplash.com/900x600/?brown,fashion,outfit&sig=309|https://source.unsplash.com/900x600/?texture,fabric,fashion&sig=310|https://source.unsplash.com/900x600/?blazer,tailoring,style&sig=311|https://source.unsplash.com/900x600/?perfume,bottle,fashion&sig=312' | split: '|'
 -%}
 
 {% style %}
@@ -356,6 +354,8 @@
               assign words = article.content | strip_html | split: ' ' | size
               assign minutes = words | divided_by: 210 | plus: 1
               assign category = article.tags.first | default: section.settings.default_category
+              assign h_image_key = 'fallback_highlight_image_' | append: forloop.index
+              assign h_image = section.settings[h_image_key]
             -%}
             <a class="cj-card {% if forloop.first %}cj-card--plate{% endif %}" href="{{ article.url }}">
               <div class="cj-frame">
@@ -363,8 +363,12 @@
                   <img src="{{ article.image | image_url: width: 1400 }}"
                        alt="{{ article.image.alt | escape }}"
                        width="1400" height="875" loading="lazy">
+                {%- elsif h_image != blank -%}
+                  <img src="{{ h_image | image_url: width: 1400 }}"
+                       alt="{{ article.title | escape }}"
+                       width="1400" height="875" loading="lazy">
                 {%- else -%}
-                  <img src="https://source.unsplash.com/1400x875/?fashion,editorial,atelier&sig={{ forloop.index | plus: 500 }}"
+                  <img src="#sua-imagem-aqui#"
                        alt="{{ article.title | escape }}"
                        width="1400" height="875" loading="lazy">
                 {%- endif -%}
@@ -404,11 +408,16 @@
               assign h_title = fallback_highlight_titles[h_idx] | default: fallback_highlight_titles.last
               assign h_category = fallback_highlight_categories[h_idx] | default: section.settings.default_category
               assign h_meta = fallback_highlight_metas[h_idx] | default: '5 min de leitura'
-              assign h_image = fallback_highlight_images[h_idx] | default: fallback_highlight_images.last
+              assign h_image_key = 'fallback_highlight_image_' | append: forloop.index
+              assign h_image = section.settings[h_image_key]
             -%}
             <div class="cj-card {% if forloop.first %}cj-card--plate{% endif %}">
               <div class="cj-frame">
-                <img src="{{ h_image }}" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
+                {%- if h_image != blank -%}
+                  <img src="{{ h_image | image_url: width: 1400 }}" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
+                {%- else -%}
+                  <img src="#sua-imagem-aqui#" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
+                {%- endif -%}
                 {%- if forloop.first -%}
                   <div class="cj-plate">
                     <div class="cj-body">
@@ -452,6 +461,8 @@
             assign words = article.content | strip_html | split: ' ' | size
             assign minutes = words | divided_by: 210 | plus: 1
             assign category = article.tags.first | default: section.settings.default_category
+            assign g_image_key = 'fallback_grid_image_' | append: forloop.index
+            assign g_image = section.settings[g_image_key]
           -%}
           <a class="cj-card" href="{{ article.url }}">
             <div class="cj-frame">
@@ -459,8 +470,12 @@
                 <img src="{{ article.image | image_url: width: 900 }}"
                      alt="{{ article.image.alt | escape }}"
                      width="900" height="600" loading="lazy">
+              {%- elsif g_image != blank -%}
+                <img src="{{ g_image | image_url: width: 900 }}"
+                     alt="{{ article.title | escape }}"
+                     width="900" height="600" loading="lazy">
               {%- else -%}
-                <img src="https://source.unsplash.com/900x600/?fashion,style,lookbook&sig={{ forloop.index | plus: 700 }}"
+                <img src="#sua-imagem-aqui#"
                      alt="{{ article.title | escape }}"
                      width="900" height="600" loading="lazy">
               {%- endif -%}
@@ -481,11 +496,16 @@
             assign g_title = fallback_grid_titles[g_idx] | default: fallback_grid_titles.last
             assign g_category = fallback_grid_categories[g_idx] | default: section.settings.default_category
             assign g_meta = fallback_grid_metas[g_idx] | default: '4 min de leitura'
-            assign g_image = fallback_grid_images[g_idx] | default: fallback_grid_images.last
+            assign g_image_key = 'fallback_grid_image_' | append: forloop.index
+            assign g_image = section.settings[g_image_key]
           -%}
           <div class="cj-card">
             <div class="cj-frame">
-              <img src="{{ g_image }}" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+              {%- if g_image != blank -%}
+                <img src="{{ g_image | image_url: width: 900 }}" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+              {%- else -%}
+                <img src="#sua-imagem-aqui#" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+              {%- endif -%}
             </div>
             <div class="cj-body">
               <span class="cj-cat">{{ g_category }}</span>
@@ -638,6 +658,114 @@
       "type": "url",
       "id": "cta_url",
       "label": "Link do fecho"
+    },
+    {
+      "type": "header",
+      "content": "Imagens fallback - Em destaque"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_1",
+      "label": "Em destaque 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_2",
+      "label": "Em destaque 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_3",
+      "label": "Em destaque 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_4",
+      "label": "Em destaque 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_5",
+      "label": "Em destaque 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_6",
+      "label": "Em destaque 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_7",
+      "label": "Em destaque 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_8",
+      "label": "Em destaque 8"
+    },
+    {
+      "type": "header",
+      "content": "Imagens fallback - Descubra mais"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_1",
+      "label": "Descubra mais 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_2",
+      "label": "Descubra mais 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_3",
+      "label": "Descubra mais 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_4",
+      "label": "Descubra mais 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_5",
+      "label": "Descubra mais 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_6",
+      "label": "Descubra mais 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_7",
+      "label": "Descubra mais 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_8",
+      "label": "Descubra mais 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_9",
+      "label": "Descubra mais 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_10",
+      "label": "Descubra mais 10"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_11",
+      "label": "Descubra mais 11"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_12",
+      "label": "Descubra mais 12"
     },
     {
       "type": "header",
