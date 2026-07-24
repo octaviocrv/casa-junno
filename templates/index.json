@@ -93,6 +93,7 @@
     },
     "journey_editorial": {
       "type": "journey",
+      "disabled": true,
       "name": "Journey",
       "settings": {
         "blog": "news",
@@ -115,6 +116,12 @@
         "fallback_highlight_image_6": "shopify://shop_images/2d976ab8c087d2d3b5a3e7ddb0239bac.jpg",
         "fallback_highlight_image_7": "shopify://shop_images/b765316467b70d136f378a44977a2b62.jpg",
         "fallback_highlight_image_8": "shopify://shop_images/478c17647a7e336ed17356e7b938af2c.jpg",
+        "fallback_grid_image_1": "shopify://shop_images/be5041492f6a4a21c2f0968c0e1de78f.jpg",
+        "fallback_grid_image_2": "shopify://shop_images/463ea13ea3a9eccb39d8f5f93cabd1c9.jpg",
+        "fallback_grid_image_3": "shopify://shop_images/1e96522b040190cbd5c9dde74b98f73d.jpg",
+        "fallback_grid_image_4": "shopify://shop_images/d8a16bf5769b5864ce0d2ea0052a23cb.jpg",
+        "fallback_grid_image_5": "shopify://shop_images/3d3204429fce490d02d4d5b3c9428341.jpg",
+        "fallback_grid_image_6": "shopify://shop_images/d2e44173e973e78baf1b72ead3e99abb.jpg",
         "bg_color": "#f4eee8",
         "panel_color": "#f8f5ef",
         "ink_color": "#2a1810",
