@@ -12,49 +12,70 @@
     "main": {
       "type": "collection-list-template",
       "blocks": {
-        "06786fde-900d-4048-b2a7-2f1af4b4963e": {
+        "camisas-001": {
           "type": "collection_item",
           "settings": {
-            "collection": "sweaters"
+            "collection": "camisas"
           }
         },
-        "c3c7dd10-c393-458e-a903-3de238b2e424": {
+        "polos-001": {
           "type": "collection_item",
           "settings": {
-            "collection": "leather-boots"
+            "collection": "polos"
           }
         },
-        "b43bcd47-6305-4507-86b2-397dcbb3cdfc": {
+        "tricos-001": {
           "type": "collection_item",
           "settings": {
-            "collection": "denim-pants"
+            "collection": "tricos"
           }
         },
-        "17b453d1-b173-4aed-8571-7dc75d2ec6ca": {
+        "cashmere-001": {
           "type": "collection_item",
           "settings": {
-            "collection": "sunglasses"
+            "collection": "cashmere"
           }
         },
-        "3aedbb94-935a-4d80-865f-7c7fbbbddb39": {
+        "jaquetas-001": {
           "type": "collection_item",
           "settings": {
-            "collection": "leather-bag"
+            "collection": "jaquetas"
+          }
+        },
+        "calcas-001": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "calcas"
+          }
+        },
+        "sapatos-001": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "sapatos"
+          }
+        },
+        "acessorios-001": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "acessorios"
           }
         }
       },
       "block_order": [
-        "06786fde-900d-4048-b2a7-2f1af4b4963e",
-        "c3c7dd10-c393-458e-a903-3de238b2e424",
-        "b43bcd47-6305-4507-86b2-397dcbb3cdfc",
-        "17b453d1-b173-4aed-8571-7dc75d2ec6ca",
-        "3aedbb94-935a-4d80-865f-7c7fbbbddb39"
+        "camisas-001",
+        "polos-001",
+        "tricos-001",
+        "cashmere-001",
+        "jaquetas-001",
+        "calcas-001",
+        "sapatos-001",
+        "acessorios-001"
       ],
       "settings": {
         "container": "container-fluid",
         "display_type": "all",
-        "title": "All collection",
-        "description": "<p></p><p></p><p></p>"
+        "title": "Nossas Coleções",
+        "description": "<p>Explore nossas coleções cuidadosamente selecionadas de roupas premium e acessórios.</p>"
       }
     }
   },
