@@ -2375,6 +2375,29 @@
     ]
   },
   {
+    "name": "Floating WhatsApp Button",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "whatsapp_enable",
+        "label": "Enable floating WhatsApp button",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_link",
+        "label": "WhatsApp link",
+        "default": "https://wa.me/558296164369"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_button_text",
+        "label": "Button text",
+        "default": "Fale com o nosso Concierge"
+      }
+    ]
+  },
+  {
     "name": "Cart settings",
     "settings": [
       {
