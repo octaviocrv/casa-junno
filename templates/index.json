@@ -93,7 +93,6 @@
     },
     "journey_editorial": {
       "type": "journey",
-      "disabled": true,
       "name": "Journal",
       "settings": {
         "blog": "news",
