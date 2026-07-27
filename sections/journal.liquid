@@ -55,6 +55,17 @@
     --cj-max:  {{ section.settings.max_width }}px;
     --cj-gap:  clamp(20px, 2.4vw, 34px);
 
+    --cj-header-offset-desktop: max(
+      118px,
+      var(--main-content-padding-top, 0px),
+      calc(var(--m-header-height, 0px) + var(--m-topbar-height, 0px) + var(--m-announcement-height, 0px))
+    );
+    --cj-header-offset-mobile: max(
+      104px,
+      var(--main-content-padding-top, 0px),
+      calc(var(--m-header-height, 0px) + var(--m-topbar-height, 0px) + var(--m-announcement-height, 0px))
+    );
+
     background: var(--cj-bg);
     color: var(--cj-ink);
     padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;
@@ -64,6 +75,18 @@
   #cj-journal-{{ section.id }} *,
   #cj-journal-{{ section.id }} *::before,
   #cj-journal-{{ section.id }} *::after { box-sizing: border-box; }
+
+  @media (min-width: 1024px) {
+    #cj-journal-{{ section.id }} {
+      padding-top: calc({{ section.settings.padding_top }}px + var(--cj-header-offset-desktop));
+    }
+  }
+
+  @media (max-width: 1023px) {
+    #cj-journal-{{ section.id }} {
+      padding-top: calc({{ section.settings.padding_top }}px + var(--cj-header-offset-mobile));
+    }
+  }
 
   #cj-journal-{{ section.id }} .cj-wrap {
     max-width: var(--cj-max);
