@@ -1,0 +1,875 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────
+  CASA JUNNO · JOURNEY
+  Referência de estrutura: MR PORTER (Highlights + Discover More)
+  Referência estética: Loro Piana · Kinfolk · The Journal
+
+  Composição:
+    1. Masthead editorial (kicker + título + linha fina)
+    2. EM DESTAQUE — trilho horizontal com scroll-snap
+       · primeiro card com etiqueta editorial sobreposta (assinatura)
+    3. DESCUBRA MAIS — grade editorial de 3 colunas com desalinho sutil
+    4. Fecho discreto (link para o índice completo)
+
+  Paleta: creme · areia · grafite-marrom · terracota (acento raro)
+  Tipografia: Cormorant Garamond (serifada) + Jost (utilitária)
+  Mobile: trilho vira swipe nativo, grade vira coluna única
+  ─────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
+
+{%- liquid
+  assign blog = blogs[section.settings.blog]
+  assign blog_count = blog.articles_count | default: 0 | plus: 0
+  assign hi_count = section.settings.highlights_count
+  assign gr_count = section.settings.grid_count
+  assign total = hi_count | plus: gr_count
+  assign fallback_product_handles = 'sueter-gola-ziper|casa-juno-polo-ziper-premium|casa-juno-camiseta-signature|casa-juno-sueter-tricot-premium|casa-juno-calca-alfaiataria-casual' | split: '|'
+  assign fallback_product_pool_size = fallback_product_handles.size | plus: 0
+
+  assign fallback_highlight_titles = 'A alfaiataria que alonga a silhueta em segundos|Linho nobre no calor: caimento impecavel sem rigidez|Milao, Lisboa e Toquio: o que as ruas estao ensinando|Como identificar um tecido premium pelo toque e trama|A volta da cintura alta com proporcoes modernas|Do molde ao ponto final: dentro de um atelie contemporaneo|Capsule inteligente: 14 combinacoes para 7 dias|Couro bem cuidado: guia rapido para sapatos e bolsas' | split: '|'
+  assign fallback_highlight_categories = 'Oficio|Tecidos|Cidades|Guia|Silhueta|Atelie|Curadoria|Acessorios' | split: '|'
+  assign fallback_highlight_metas = '7 min de leitura|6 min de leitura|8 min de leitura|5 min de leitura|6 min de leitura|9 min de leitura|7 min de leitura|5 min de leitura' | split: '|'
+
+  assign fallback_grid_titles = 'Tres camisas brancas alem do obvio|Tons areia, tabaco e grafite: paleta sem erro|Guia de sobreposicao leve para meia-estacao|Vestir bem para viajar com mala compacta|Joias discretas que transformam o look|Modelagens amplas: como equilibrar volume|Trench coat atualizado: comprimentos e ajustes|Denim escuro com acabamento refinado|O retorno do marrom chocolate no guarda-roupa|Pecas com textura para looks monocromaticos|Como escolher blazer pelo ombro e lapela|Perfumes de assinatura para cada horario' | split: '|'
+  assign fallback_grid_categories = 'Estilo|Paleta|Camadas|Viagem|Acessorios|Modelagem|Outerwear|Denim|Tendencias|Texturas|Alfaiataria|Lifestyle' | split: '|'
+  assign fallback_grid_metas = '4 min de leitura|5 min de leitura|6 min de leitura|5 min de leitura|4 min de leitura|6 min de leitura|5 min de leitura|4 min de leitura|5 min de leitura|4 min de leitura|6 min de leitura|4 min de leitura' | split: '|'
+-%}
+
+{% style %}
+  #cj-journey-{{ section.id }} {
+    --cj-bg:      {{ section.settings.bg_color }};
+    --cj-panel:   {{ section.settings.panel_color }};
+    --cj-ink:     {{ section.settings.ink_color }};
+    --cj-muted:   {{ section.settings.muted_color }};
+    --cj-accent:  {{ section.settings.accent_color }};
+    --cj-rule:    {{ section.settings.ink_color | color_modify: 'alpha', 0.14 }};
+    --cj-rule-soft:{{ section.settings.ink_color | color_modify: 'alpha', 0.07 }};
+
+    --cj-serif: "Cormorant Garamond", "Times New Roman", Georgia, serif;
+    --cj-sans:  "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+    --cj-max:  {{ section.settings.max_width }}px;
+    --cj-gap:  clamp(20px, 2.4vw, 34px);
+
+    background: var(--cj-bg);
+    color: var(--cj-ink);
+    padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  #cj-journey-{{ section.id }} *,
+  #cj-journey-{{ section.id }} *::before,
+  #cj-journey-{{ section.id }} *::after { box-sizing: border-box; }
+
+  #cj-journey-{{ section.id }} .cj-wrap {
+    max-width: var(--cj-max);
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 64px);
+  }
+
+  /* ── 1. MASTHEAD ─────────────────────────────────────────── */
+  #cj-journey-{{ section.id }} .cj-masthead {
+    text-align: center;
+    max-width: 46ch;
+    margin: 0 auto clamp(48px, 6vw, 84px);
+  }
+  #cj-journey-{{ section.id }} .cj-kicker {
+    display: block;
+    font-family: var(--cj-sans);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: .38em;
+    text-transform: uppercase;
+    color: var(--cj-muted);
+    margin-bottom: 22px;
+  }
+  #cj-journey-{{ section.id }} .cj-display {
+    font-family: var(--cj-serif);
+    font-weight: 300;
+    font-size: clamp(40px, 6.2vw, 82px);
+    line-height: .96;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  #cj-journey-{{ section.id }} .cj-standfirst {
+    font-family: var(--cj-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.65;
+    color: var(--cj-muted);
+    margin: 26px auto 0;
+    max-width: 40ch;
+  }
+  #cj-journey-{{ section.id }} .cj-mark {
+    width: 1px; height: 46px;
+    background: var(--cj-rule);
+    margin: 34px auto 0;
+  }
+
+  /* ── Cabeçalhos de bloco ─────────────────────────────────── */
+  #cj-journey-{{ section.id }} .cj-blockhead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--cj-rule);
+    margin-bottom: clamp(28px, 3.4vw, 46px);
+  }
+  #cj-journey-{{ section.id }} .cj-blocktitle {
+    font-family: var(--cj-sans);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--cj-ink);
+    margin: 0;
+  }
+  #cj-journey-{{ section.id }} .cj-count {
+    font-family: var(--cj-sans);
+    font-size: 10px;
+    letter-spacing: .18em;
+    color: var(--cj-muted);
+  }
+
+  /* ── 2. TRILHO / EM DESTAQUE ─────────────────────────────── */
+  #cj-journey-{{ section.id }} .cj-railwrap { position: relative; }
+  #cj-journey-{{ section.id }} .cj-rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--cj-gap);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  #cj-journey-{{ section.id }} .cj-rail::-webkit-scrollbar { display: none; }
+  #cj-journey-{{ section.id }} .cj-rail > * { scroll-snap-align: start; }
+
+  @media (min-width: 900px) {
+    #cj-journey-{{ section.id }} .cj-rail { grid-auto-columns: calc((100% - var(--cj-gap)) / 2); }
+  }
+  @media (max-width: 899px) {
+    #cj-journey-{{ section.id }} .cj-rail { grid-auto-columns: 82%; }
+  }
+
+  #cj-journey-{{ section.id }} .cj-nav { display: flex; gap: 6px; }
+  #cj-journey-{{ section.id }} .cj-arrow {
+    appearance: none;
+    background: transparent;
+    border: 1px solid var(--cj-rule);
+    width: 42px; height: 42px;
+    border-radius: 0;
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--cj-ink);
+    transition: background .5s ease, border-color .5s ease, opacity .35s ease;
+  }
+  #cj-journey-{{ section.id }} .cj-arrow:hover { background: var(--cj-panel); border-color: var(--cj-ink); }
+  #cj-journey-{{ section.id }} .cj-arrow:focus-visible { outline: 1px solid var(--cj-accent); outline-offset: 3px; }
+  #cj-journey-{{ section.id }} .cj-arrow[disabled] { opacity: .25; pointer-events: none; }
+  #cj-journey-{{ section.id }} .cj-arrow svg { width: 8px; height: 14px; }
+
+  /* ── Card base ───────────────────────────────────────────── */
+  #cj-journey-{{ section.id }} .cj-card { display: block; text-decoration: none; color: inherit; }
+  #cj-journey-{{ section.id }} .cj-frame {
+    position: relative;
+    overflow: hidden;
+    background: var(--cj-panel);
+    aspect-ratio: 16 / 10;
+  }
+  #cj-journey-{{ section.id }} .cj-frame img,
+  #cj-journey-{{ section.id }} .cj-frame svg {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1.001);
+    transition: transform 1.4s cubic-bezier(.2,.7,.2,1);
+  }
+  #cj-journey-{{ section.id }} .cj-card:hover .cj-frame img { transform: scale(1.045); }
+
+  #cj-journey-{{ section.id }} .cj-body { padding-top: 20px; }
+  #cj-journey-{{ section.id }} .cj-cat {
+    font-family: var(--cj-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: .01em;
+    color: var(--cj-accent);
+    display: inline-block;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--cj-rule);
+    margin-bottom: 14px;
+  }
+  #cj-journey-{{ section.id }} .cj-headline {
+    font-family: var(--cj-serif);
+    font-weight: 400;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.22;
+    letter-spacing: .005em;
+    margin: 0;
+    background-image: linear-gradient(var(--cj-ink), var(--cj-ink));
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size .6s cubic-bezier(.2,.7,.2,1);
+    display: inline;
+    padding-bottom: 2px;
+  }
+  #cj-journey-{{ section.id }} .cj-card:hover .cj-headline { background-size: 100% 1px; }
+  #cj-journey-{{ section.id }} .cj-meta {
+    font-family: var(--cj-sans);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--cj-muted);
+    margin: 16px 0 0;
+  }
+
+  /* ── Card-assinatura: etiqueta sobreposta ────────────────── */
+  #cj-journey-{{ section.id }} .cj-card--plate .cj-frame { aspect-ratio: 4 / 5; }
+  @media (min-width: 900px) {
+    #cj-journey-{{ section.id }} .cj-card--plate .cj-frame { aspect-ratio: 16 / 11; }
+  }
+  #cj-journey-{{ section.id }} .cj-plate {
+    position: absolute;
+    left: clamp(16px, 4%, 40px);
+    bottom: clamp(16px, 4%, 40px);
+    width: min(74%, 320px);
+    background: var(--cj-panel);
+    padding: clamp(20px, 2.2vw, 30px);
+    transition: transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  #cj-journey-{{ section.id }} .cj-card--plate:hover .cj-plate { transform: translateY(-6px); }
+  #cj-journey-{{ section.id }} .cj-plate .cj-body { padding-top: 0; }
+  #cj-journey-{{ section.id }} .cj-plate .cj-headline { font-size: clamp(19px, 1.7vw, 24px); }
+  #cj-journey-{{ section.id }} .cj-plate .cj-byline {
+    font-family: var(--cj-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cj-muted);
+    margin: 18px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--cj-rule);
+  }
+
+  /* ── 3. GRADE / DESCUBRA MAIS ────────────────────────────── */
+  #cj-journey-{{ section.id }} .cj-blockhead--grid { margin-top: clamp(72px, 8vw, 120px); }
+  #cj-journey-{{ section.id }} .cj-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(44px, 4vw, 64px) var(--cj-gap);
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    #cj-journey-{{ section.id }} .cj-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    #cj-journey-{{ section.id }} .cj-grid { grid-template-columns: repeat(3, 1fr); }
+    /* desalinho editorial: colunas respiram em alturas diferentes */
+    #cj-journey-{{ section.id }} .cj-grid > *:nth-child(3n+2) { margin-top: 42px; }
+    #cj-journey-{{ section.id }} .cj-grid > *:nth-child(3n+3) { margin-top: 84px; }
+    #cj-journey-{{ section.id }} .cj-grid > *:nth-child(3n+2) .cj-frame { aspect-ratio: 4 / 5; }
+    #cj-journey-{{ section.id }} .cj-grid > *:nth-child(3n+3) .cj-frame { aspect-ratio: 3 / 2; }
+  }
+
+  /* ── 4. FECHO ────────────────────────────────────────────── */
+  #cj-journey-{{ section.id }} .cj-close {
+    margin-top: clamp(64px, 7vw, 104px);
+    padding-top: 30px;
+    border-top: 1px solid var(--cj-rule);
+    text-align: center;
+  }
+  #cj-journey-{{ section.id }} .cj-cta {
+    font-family: var(--cj-sans);
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--cj-ink);
+    text-decoration: none;
+    display: inline-block;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--cj-rule);
+    transition: border-color .5s ease, color .5s ease;
+  }
+  #cj-journey-{{ section.id }} .cj-cta:hover { border-color: var(--cj-accent); color: var(--cj-accent); }
+
+  /* ── Entrada suave ───────────────────────────────────────── */
+  #cj-journey-{{ section.id }} .cj-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 1.1s ease, transform 1.1s cubic-bezier(.2,.7,.2,1);
+  }
+  #cj-journey-{{ section.id }} .cj-reveal.is-in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #cj-journey-{{ section.id }} .cj-reveal { opacity: 1; transform: none; transition: none; }
+    #cj-journey-{{ section.id }} .cj-rail { scroll-behavior: auto; }
+    #cj-journey-{{ section.id }} .cj-frame img,
+    #cj-journey-{{ section.id }} .cj-plate,
+    #cj-journey-{{ section.id }} .cj-headline { transition: none; }
+  }
+{% endstyle %}
+
+<section id="cj-journey-{{ section.id }}" aria-labelledby="cj-journey-title-{{ section.id }}">
+  <div class="cj-wrap">
+
+    {%- comment -%} ── 1. MASTHEAD ── {%- endcomment -%}
+    <header class="cj-masthead cj-reveal">
+      {%- if section.settings.kicker != blank -%}
+        <span class="cj-kicker">{{ section.settings.kicker }}</span>
+      {%- endif -%}
+      <h2 class="cj-display" id="cj-journey-title-{{ section.id }}">{{ section.settings.heading }}</h2>
+      {%- if section.settings.standfirst != blank -%}
+        <p class="cj-standfirst">{{ section.settings.standfirst }}</p>
+      {%- endif -%}
+      <div class="cj-mark" aria-hidden="true"></div>
+    </header>
+
+    {%- comment -%} ── 2. EM DESTAQUE ── {%- endcomment -%}
+    <div class="cj-railwrap cj-reveal">
+      <div class="cj-blockhead">
+        <h3 class="cj-blocktitle">{{ section.settings.highlights_title }}</h3>
+        <div class="cj-nav">
+          <button class="cj-arrow" type="button" data-rail-prev aria-label="Matérias anteriores" disabled>
+            <svg viewBox="0 0 8 14" fill="none" aria-hidden="true"><path d="M7 1 1 7l6 6" stroke="currentColor" stroke-width="1"/></svg>
+          </button>
+          <button class="cj-arrow" type="button" data-rail-next aria-label="Próximas matérias">
+            <svg viewBox="0 0 8 14" fill="none" aria-hidden="true"><path d="m1 1 6 6-6 6" stroke="currentColor" stroke-width="1"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="cj-rail" data-rail tabindex="0" role="group" aria-label="{{ section.settings.highlights_title }}">
+        {%- if blog_count > 0 -%}
+          {%- for article in blog.articles limit: hi_count -%}
+            {%- liquid
+              assign words = article.content | strip_html | split: ' ' | size
+              assign minutes = words | divided_by: 210 | plus: 1
+              assign category = article.tags.first | default: section.settings.default_category
+              assign h_image_key = 'fallback_highlight_image_' | append: forloop.index
+              assign h_image = section.settings[h_image_key]
+            -%}
+            <a class="cj-card {% if forloop.first %}cj-card--plate{% endif %}" href="{{ article.url }}">
+              <div class="cj-frame">
+                {%- if article.image -%}
+                  <img src="{{ article.image | image_url: width: 1400 }}"
+                       alt="{{ article.image.alt | escape }}"
+                       width="1400" height="875" loading="lazy">
+                {%- elsif h_image != blank -%}
+                  <img src="{{ h_image | image_url: width: 1400 }}"
+                       alt="{{ article.title | escape }}"
+                       width="1400" height="875" loading="lazy">
+                {%- else -%}
+                  {%- liquid
+                    assign h_pool_index = forloop.index0 | modulo: fallback_product_pool_size
+                    assign h_pool_handle = fallback_product_handles[h_pool_index]
+                    assign h_pool_product = all_products[h_pool_handle]
+                  -%}
+                  {%- if h_pool_product != blank and h_pool_product.featured_image != blank -%}
+                    <img src="{{ h_pool_product.featured_image | image_url: width: 1400 }}"
+                         alt="{{ h_pool_product.title | default: article.title | escape }}"
+                         width="1400" height="875" loading="lazy">
+                  {%- else -%}
+                    <img src="#sua-imagem-aqui#"
+                         alt="{{ article.title | escape }}"
+                         width="1400" height="875" loading="lazy">
+                  {%- endif -%}
+                {%- endif -%}
+
+                {%- if forloop.first -%}
+                  <div class="cj-plate">
+                    <div class="cj-body">
+                      <span class="cj-cat">{{ category }}</span>
+                      <h4 class="cj-headline">{{ article.title }}</h4>
+                      {%- if section.settings.show_readtime -%}
+                        <p class="cj-meta">{{ minutes }} min de leitura</p>
+                      {%- endif -%}
+                      {%- if article.author != blank -%}
+                        <p class="cj-byline">Palavras de {{ article.author }}</p>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
+
+              {%- unless forloop.first -%}
+                <div class="cj-body">
+                  <span class="cj-cat">{{ category }}</span>
+                  <h4 class="cj-headline">{{ article.title }}</h4>
+                  {%- if section.settings.show_readtime -%}
+                    <p class="cj-meta">{{ minutes }} min de leitura</p>
+                  {%- endif -%}
+                </div>
+              {%- endunless -%}
+            </a>
+          {%- endfor -%}
+        {%- else -%}
+          {%- comment -%} Estado vazio: mantém a composição legível no editor {%- endcomment -%}
+          {%- for i in (1..hi_count) -%}
+            {%- liquid
+              assign h_idx = forloop.index0
+              assign h_title = fallback_highlight_titles[h_idx] | default: fallback_highlight_titles.last
+              assign h_category = fallback_highlight_categories[h_idx] | default: section.settings.default_category
+              assign h_meta = fallback_highlight_metas[h_idx] | default: '5 min de leitura'
+              assign h_image_key = 'fallback_highlight_image_' | append: forloop.index
+              assign h_image = section.settings[h_image_key]
+            -%}
+            <div class="cj-card {% if forloop.first %}cj-card--plate{% endif %}">
+              <div class="cj-frame">
+                {%- if h_image != blank -%}
+                  <img src="{{ h_image | image_url: width: 1400 }}" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
+                {%- else -%}
+                  {%- liquid
+                    assign h_pool_index = h_idx | modulo: fallback_product_pool_size
+                    assign h_pool_handle = fallback_product_handles[h_pool_index]
+                    assign h_pool_product = all_products[h_pool_handle]
+                  -%}
+                  {%- if h_pool_product != blank and h_pool_product.featured_image != blank -%}
+                    <img src="{{ h_pool_product.featured_image | image_url: width: 1400 }}" alt="{{ h_pool_product.title | default: h_title | escape }}" width="1400" height="875" loading="lazy">
+                  {%- else -%}
+                    <img src="#sua-imagem-aqui#" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if forloop.first -%}
+                  <div class="cj-plate">
+                    <div class="cj-body">
+                      <span class="cj-cat">{{ h_category }}</span>
+                      <h4 class="cj-headline">{{ h_title }}</h4>
+                      {%- if section.settings.show_readtime -%}
+                        <p class="cj-meta">{{ h_meta }}</p>
+                      {%- endif -%}
+                      <p class="cj-byline">Palavras de Redacao Casa Junno</p>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
+              {%- unless forloop.first -%}
+                <div class="cj-body">
+                  <span class="cj-cat">{{ h_category }}</span>
+                  <h4 class="cj-headline">{{ h_title }}</h4>
+                  {%- if section.settings.show_readtime -%}
+                    <p class="cj-meta">{{ h_meta }}</p>
+                  {%- endif -%}
+                </div>
+              {%- endunless -%}
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} ── 3. DESCUBRA MAIS ── {%- endcomment -%}
+    <div class="cj-blockhead cj-blockhead--grid cj-reveal">
+      <h3 class="cj-blocktitle">{{ section.settings.grid_title }}</h3>
+      {%- if blog_count > 0 -%}
+        <span class="cj-count">{{ blog_count }} matérias</span>
+      {%- endif -%}
+    </div>
+
+    <div class="cj-grid cj-reveal">
+      {%- if blog_count > 0 -%}
+        {%- for article in blog.articles offset: hi_count limit: gr_count -%}
+          {%- liquid
+            assign words = article.content | strip_html | split: ' ' | size
+            assign minutes = words | divided_by: 210 | plus: 1
+            assign category = article.tags.first | default: section.settings.default_category
+            assign g_image_key = 'fallback_grid_image_' | append: forloop.index
+            assign g_image = section.settings[g_image_key]
+          -%}
+          <a class="cj-card" href="{{ article.url }}">
+            <div class="cj-frame">
+              {%- if article.image -%}
+                <img src="{{ article.image | image_url: width: 900 }}"
+                     alt="{{ article.image.alt | escape }}"
+                     width="900" height="600" loading="lazy">
+              {%- elsif g_image != blank -%}
+                <img src="{{ g_image | image_url: width: 900 }}"
+                     alt="{{ article.title | escape }}"
+                     width="900" height="600" loading="lazy">
+              {%- else -%}
+                {%- liquid
+                  assign g_pool_index = forloop.index0 | plus: hi_count | modulo: fallback_product_pool_size
+                  assign g_pool_handle = fallback_product_handles[g_pool_index]
+                  assign g_pool_product = all_products[g_pool_handle]
+                -%}
+                {%- if g_pool_product != blank and g_pool_product.featured_image != blank -%}
+                  <img src="{{ g_pool_product.featured_image | image_url: width: 900 }}"
+                       alt="{{ g_pool_product.title | default: article.title | escape }}"
+                       width="900" height="600" loading="lazy">
+                {%- else -%}
+                  <img src="#sua-imagem-aqui#"
+                       alt="{{ article.title | escape }}"
+                       width="900" height="600" loading="lazy">
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+            <div class="cj-body">
+              <span class="cj-cat">{{ category }}</span>
+              <h4 class="cj-headline">{{ article.title }}</h4>
+              {%- if section.settings.show_readtime -%}
+                <p class="cj-meta">{{ minutes }} min de leitura</p>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..gr_count) -%}
+          {%- liquid
+            assign g_idx = forloop.index0
+            assign g_title = fallback_grid_titles[g_idx] | default: fallback_grid_titles.last
+            assign g_category = fallback_grid_categories[g_idx] | default: section.settings.default_category
+            assign g_meta = fallback_grid_metas[g_idx] | default: '4 min de leitura'
+            assign g_image_key = 'fallback_grid_image_' | append: forloop.index
+            assign g_image = section.settings[g_image_key]
+          -%}
+          <div class="cj-card">
+            <div class="cj-frame">
+              {%- if g_image != blank -%}
+                <img src="{{ g_image | image_url: width: 900 }}" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+              {%- else -%}
+                {%- liquid
+                  assign g_pool_index = g_idx | plus: hi_count | modulo: fallback_product_pool_size
+                  assign g_pool_handle = fallback_product_handles[g_pool_index]
+                  assign g_pool_product = all_products[g_pool_handle]
+                -%}
+                {%- if g_pool_product != blank and g_pool_product.featured_image != blank -%}
+                  <img src="{{ g_pool_product.featured_image | image_url: width: 900 }}" alt="{{ g_pool_product.title | default: g_title | escape }}" width="900" height="600" loading="lazy">
+                {%- else -%}
+                  <img src="#sua-imagem-aqui#" alt="{{ g_title | escape }}" width="900" height="600" loading="lazy">
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+            <div class="cj-body">
+              <span class="cj-cat">{{ g_category }}</span>
+              <h4 class="cj-headline">{{ g_title }}</h4>
+              {%- if section.settings.show_readtime -%}
+                <p class="cj-meta">{{ g_meta }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ── 4. FECHO ── {%- endcomment -%}
+    {%- if section.settings.cta_label != blank -%}
+      <div class="cj-close cj-reveal">
+        <a class="cj-cta" href="{{ section.settings.cta_url | default: blog.url }}">{{ section.settings.cta_label }}</a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('cj-journey-{{ section.id }}');
+    if (!root) return;
+
+    /* Trilho: navegação por página visível */
+    var rail = root.querySelector('[data-rail]');
+    var prev = root.querySelector('[data-rail-prev]');
+    var next = root.querySelector('[data-rail-next]');
+
+    if (rail && prev && next) {
+      var step = function () {
+        var first = rail.firstElementChild;
+        if (!first) return rail.clientWidth;
+        var gap = parseFloat(getComputedStyle(rail).columnGap || '0') || 0;
+        return first.getBoundingClientRect().width + gap;
+      };
+      var sync = function () {
+        var max = rail.scrollWidth - rail.clientWidth - 2;
+        prev.disabled = rail.scrollLeft <= 2;
+        next.disabled = rail.scrollLeft >= max;
+      };
+      prev.addEventListener('click', function () { rail.scrollBy({ left: -step(), behavior: 'smooth' }); });
+      next.addEventListener('click', function () { rail.scrollBy({ left:  step(), behavior: 'smooth' }); });
+      rail.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+    }
+
+    /* Entrada suave, uma vez por elemento */
+    var items = root.querySelectorAll('.cj-reveal');
+    if (!('IntersectionObserver' in window) ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      items.forEach(function (el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    items.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Journey",
+  "tag": "section",
+  "class": "cj-journey-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Conteúdo"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog de origem"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "Casa Junno"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Journey"
+    },
+    {
+      "type": "textarea",
+      "id": "standfirst",
+      "label": "Linha fina",
+      "default": "Um percurso pelo que sustenta uma peça bem-feita: tecidos, ofício, cidades e o tempo que tudo isso pede."
+    },
+    {
+      "type": "text",
+      "id": "default_category",
+      "label": "Categoria padrão",
+      "info": "Usada quando a matéria não tem tag. A primeira tag do artigo vira a categoria.",
+      "default": "Elegância"
+    },
+    {
+      "type": "header",
+      "content": "Blocos"
+    },
+    {
+      "type": "text",
+      "id": "highlights_title",
+      "label": "Título do trilho",
+      "default": "Em destaque"
+    },
+    {
+      "type": "range",
+      "id": "highlights_count",
+      "label": "Matérias no trilho",
+      "min": 2, "max": 8, "step": 1, "default": 4
+    },
+    {
+      "type": "text",
+      "id": "grid_title",
+      "label": "Título da grade",
+      "default": "Descubra mais"
+    },
+    {
+      "type": "range",
+      "id": "grid_count",
+      "label": "Matérias na grade",
+      "min": 3, "max": 12, "step": 3, "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "show_readtime",
+      "label": "Mostrar tempo de leitura",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texto do fecho",
+      "default": "Ver todas as matérias"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Link do fecho"
+    },
+    {
+      "type": "header",
+      "content": "Imagens fallback - Em destaque"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_1",
+      "label": "Em destaque 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_2",
+      "label": "Em destaque 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_3",
+      "label": "Em destaque 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_4",
+      "label": "Em destaque 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_5",
+      "label": "Em destaque 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_6",
+      "label": "Em destaque 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_7",
+      "label": "Em destaque 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_highlight_image_8",
+      "label": "Em destaque 8"
+    },
+    {
+      "type": "header",
+      "content": "Imagens fallback - Descubra mais"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_1",
+      "label": "Descubra mais 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_2",
+      "label": "Descubra mais 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_3",
+      "label": "Descubra mais 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_4",
+      "label": "Descubra mais 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_5",
+      "label": "Descubra mais 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_6",
+      "label": "Descubra mais 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_7",
+      "label": "Descubra mais 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_8",
+      "label": "Descubra mais 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_9",
+      "label": "Descubra mais 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_10",
+      "label": "Descubra mais 10"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_11",
+      "label": "Descubra mais 11"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_grid_image_12",
+      "label": "Descubra mais 12"
+    },
+    {
+      "type": "header",
+      "content": "Paleta"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fundo",
+      "default": "#F5F2EC"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Etiqueta / areia",
+      "default": "#EDE7DD"
+    },
+    {
+      "type": "color",
+      "id": "ink_color",
+      "label": "Texto",
+      "default": "#2B2520"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Texto secundário",
+      "default": "#8C8175"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Acento (categoria)",
+      "default": "#9A6A4C"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Largura máxima",
+      "min": 1080, "max": 1600, "step": 20, "default": 1320, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espaço acima",
+      "min": 40, "max": 200, "step": 4, "default": 120, "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espaço abaixo",
+      "min": 40, "max": 200, "step": 4, "default": 128, "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Journey"
+    }
+  ]
+}
+{% endschema %}
