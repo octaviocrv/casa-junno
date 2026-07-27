@@ -309,6 +309,7 @@
         "product_9MRUnr",
         "product_mGnjpc"
       ],
+      "disabled": true,
       "name": "Casa Juno look carousel",
       "settings": {
         "main_image": "shopify://shop_images/DF02075F-EDB9-4D8E-8C5D-796752CDD640_FAP8329_W000_ZOOM.jpg",
@@ -335,6 +336,7 @@
     },
     "casa_juno_look_editorial_FyKg3f": {
       "type": "casa-juno-look-editorial",
+      "disabled": true,
       "name": "Casa Juno Look Editorial",
       "settings": {
         "show_top_block": true,
