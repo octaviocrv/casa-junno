@@ -200,7 +200,7 @@
     display: none;
   }
 
-  .cj-men-panel__link.is-disabled {
+  .cj-mega-panel__link.is-disabled {
     opacity: 0.42;
     pointer-events: none;
   }
@@ -225,7 +225,8 @@
     visibility: visible;
   }
 
-  .cj-men-panel {
+  .cj-men-panel,
+  .cj-journal-panel {
     position: fixed;
     top: var(--cj-panel-top);
     left: 0;
@@ -241,7 +242,8 @@
     box-shadow: 0 20px 45px rgba(25, 14, 9, 0.12);
   }
 
-  .cj-men-panel[data-panel-open="true"] {
+  .cj-men-panel[data-panel-open="true"],
+  .cj-journal-panel[data-panel-open="true"] {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -265,14 +267,14 @@
     opacity: 0.55;
   }
 
-  .cj-men-panel__inner {
+  .cj-mega-panel__inner {
     width: min(100%, 1120px);
     margin: 0 auto;
     padding: 56px 32px 34px;
   }
 
-  .cj-men-panel__nav a,
-  .cj-men-panel__nav .cj-men-panel__link {
+  .cj-mega-panel__nav a,
+  .cj-mega-panel__nav .cj-mega-panel__link {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -283,8 +285,18 @@
     border-bottom: 1px solid rgba(47, 33, 28, 0.08);
   }
 
-  .cj-men-panel__nav a:hover {
+  .cj-mega-panel__nav a:hover {
     color: var(--cj-panel-accent);
+  }
+
+  .cj-mega-panel__heading {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cj-panel-muted);
+    margin-bottom: 4px;
   }
 
   .search-container {
@@ -486,11 +498,12 @@
       padding-bottom: 3px;
     }
 
-    .cj-men-panel {
+    .cj-men-panel,
+    .cj-journal-panel {
       top: calc(var(--cj-panel-top) - 10px);
     }
 
-    .cj-men-panel__inner {
+    .cj-mega-panel__inner {
       padding: 52px 18px 24px;
     }
   }
@@ -606,16 +619,12 @@
             <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
 
             {% if has_shop_panel %}
-              <button class="cj-header-nav-link" type="button" data-action="toggle-men">Shop</button>
+              <button class="cj-header-nav-link" type="button" data-action="toggle-men" aria-expanded="false" aria-controls="cj-men-panel">Shop</button>
             {% else %}
               <a class="cj-header-nav-link" href="{{ shop_all_url }}">Shop</a>
             {% endif %}
 
-            {% if journal_blog != blank %}
-              <a class="cj-header-nav-link" href="{{ journal_blog.url }}">Journal</a>
-            {% else %}
-              <span class="cj-header-nav-link is-disabled" aria-disabled="true">Journal</span>
-            {% endif %}
+            <button class="cj-header-nav-link" type="button" data-action="toggle-journal" aria-expanded="false" aria-controls="cj-journal-panel">Journal</button>
 
             {% if society_page != blank %}
               <a class="cj-header-nav-link" href="{{ society_page.url }}">Society</a>
@@ -635,26 +644,59 @@
 
     <div class="cj-header-backdrop" data-element="backdrop" hidden></div>
 
-    <section class="cj-men-panel" data-element="men-panel" role="dialog" aria-modal="true" aria-label="Categorias Masculinas">
+    <section class="cj-men-panel" id="cj-men-panel" data-element="men-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Categorias Masculinas">
       <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
-      <div class="cj-men-panel__inner p-12 grid grid-cols-2 gap-8">
-        <nav class="cj-men-panel__nav flex flex-col gap-4">
+      <div class="cj-mega-panel__inner p-12 grid grid-cols-2 gap-8">
+        <nav class="cj-mega-panel__nav flex flex-col gap-4">
           {% if camisas_collection != blank %}
             <a href="{{ camisas_collection.url }}" class="text-xl font-serif">Camisas de Linho <span>›</span></a>
           {% else %}
-            <span class="cj-men-panel__link is-disabled text-xl font-serif" aria-disabled="true">Camisas de Linho <span>›</span></span>
+            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Camisas de Linho <span>›</span></span>
           {% endif %}
 
           {% if tricot_collection != blank %}
             <a href="{{ tricot_collection.url }}" class="text-xl font-serif">Tricot & Cashmere <span>›</span></a>
           {% else %}
-            <span class="cj-men-panel__link is-disabled text-xl font-serif" aria-disabled="true">Tricot & Cashmere <span>›</span></span>
+            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Tricot & Cashmere <span>›</span></span>
           {% endif %}
 
           {% if alfaiataria_collection != blank %}
             <a href="{{ alfaiataria_collection.url }}" class="text-xl font-serif">Alfaiataria <span>›</span></a>
           {% else %}
-            <span class="cj-men-panel__link is-disabled text-xl font-serif" aria-disabled="true">Alfaiataria <span>›</span></span>
+            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Alfaiataria <span>›</span></span>
+          {% endif %}
+        </nav>
+      </div>
+    </section>
+
+    <section class="cj-journal-panel" id="cj-journal-panel" data-element="journal-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Journal">
+      <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
+      <div class="cj-mega-panel__inner p-12 grid grid-cols-2 gap-8">
+        <nav class="cj-mega-panel__nav flex flex-col gap-4" aria-label="Publicações recentes">
+          <span class="cj-mega-panel__heading">Editorial</span>
+          {% if journal_blog != blank %}
+            {% for article in journal_blog.articles limit: 4 %}
+              <a href="{{ article.url }}" class="text-xl font-serif">{{ article.title }} <span>›</span></a>
+            {% else %}
+              <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Em breve <span>›</span></span>
+            {% endfor %}
+          {% else %}
+            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Em breve <span>›</span></span>
+          {% endif %}
+        </nav>
+
+        <nav class="cj-mega-panel__nav flex flex-col gap-4" aria-label="Explorar">
+          <span class="cj-mega-panel__heading">Descubra</span>
+          {% if journal_blog != blank %}
+            <a href="{{ journal_blog.url }}" class="text-xl font-serif">Todas as Publicações <span>›</span></a>
+          {% else %}
+            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Todas as Publicações <span>›</span></span>
+          {% endif %}
+          {% if society_page != blank %}
+            <a href="{{ society_page.url }}" class="text-xl font-serif">Society <span>›</span></a>
+          {% endif %}
+          {% if concierge_page != blank %}
+            <a href="{{ concierge_page.url }}" class="text-xl font-serif">Concierge <span>›</span></a>
           {% endif %}
         </nav>
       </div>
@@ -674,6 +716,9 @@
         this.searchSubmitBtn = this.querySelector('.js-search-input-submit');
         this.emptyBtn = this.querySelector('.js-empty-search');
         this.menPanel = this.querySelector('[data-element="men-panel"]');
+        this.menTrigger = this.querySelector('[data-action="toggle-men"]');
+        this.journalPanel = this.querySelector('[data-element="journal-panel"]');
+        this.journalTrigger = this.querySelector('[data-action="toggle-journal"]');
 
         this.addEventListener('click', (e) => {
           const searchTrigger = e.target.closest('.js-search-trigger');
@@ -685,7 +730,8 @@
           const target = e.target.closest('[data-action]');
           if (target) {
             const action = target.dataset.action;
-            if (action === 'toggle-men') this.togglePanel(this.menPanel);
+            if (action === 'toggle-men') this.togglePanel(this.menPanel, this.menTrigger);
+            if (action === 'toggle-journal') this.togglePanel(this.journalPanel, this.journalTrigger, 'is-journal-open');
             if (action === 'close-panels') this.closeAll();
           }
         });
@@ -758,12 +804,15 @@
         if (this.emptyBtn) this.emptyBtn.style.display = 'none';
       }
 
-      togglePanel(panelToOpen) {
+      togglePanel(panelToOpen, trigger, stateClass) {
         if (!panelToOpen) return;
         const isOpen = panelToOpen.getAttribute('data-panel-open') === 'true';
         this.closeAll();
         if (!isOpen) {
           panelToOpen.setAttribute('data-panel-open', 'true');
+          panelToOpen.setAttribute('aria-hidden', 'false');
+          trigger?.setAttribute('aria-expanded', 'true');
+          if (stateClass) this.classList.add(stateClass);
           this.backdrop.removeAttribute('hidden');
           document.body.style.overflow = 'hidden';
         }
@@ -771,7 +820,16 @@
 
       closeAll() {
         this.closeSearch();
+
         this.menPanel?.removeAttribute('data-panel-open');
+        this.menPanel?.setAttribute('aria-hidden', 'true');
+        this.menTrigger?.setAttribute('aria-expanded', 'false');
+
+        this.journalPanel?.removeAttribute('data-panel-open');
+        this.journalPanel?.setAttribute('aria-hidden', 'true');
+        this.journalTrigger?.setAttribute('aria-expanded', 'false');
+        this.classList.remove('is-journal-open');
+
         if (this.backdrop) this.backdrop.setAttribute('hidden', 'true');
         document.body.style.overflow = '';
       }
