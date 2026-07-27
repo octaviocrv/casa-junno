@@ -11,7 +11,29 @@
   "sections": {
     "main": {
       "type": "page-journey",
-      "settings": {}
+      "name": "JOURNAL",
+      "settings": {
+        "blog": "",
+        "kicker": "Casa Junno",
+        "heading": "Journey",
+        "standfirst": "Um percurso pelo que sustenta uma peça bem-feita: tecidos, ofício, cidades e o tempo que tudo isso pede.",
+        "default_category": "Elegância",
+        "highlights_title": "Em destaque",
+        "highlights_count": 4,
+        "grid_title": "Descubra mais",
+        "grid_count": 6,
+        "show_readtime": true,
+        "cta_label": "Ver todas as matérias",
+        "cta_url": "",
+        "bg_color": "#f5f2ec",
+        "panel_color": "#ede7dd",
+        "ink_color": "#2b2520",
+        "muted_color": "#8c8175",
+        "accent_color": "#9a6a4c",
+        "max_width": 1320,
+        "padding_top": 120,
+        "padding_bottom": 128
+      }
     }
   },
   "order": [
