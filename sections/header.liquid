@@ -205,74 +205,79 @@
     pointer-events: none;
   }
 
-  .cj-header-backdrop {
-    position: fixed;
-    top: var(--cj-panel-top);
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(20, 10, 5, var(--cj-backdrop-opacity));
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    z-index: 87;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+  .cj-shop-dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
   }
 
-  .cj-header-backdrop:not([hidden]) {
+  .cj-shop-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-list-link-icon {
+    width: 10px;
+    height: 10px;
+    opacity: 0.7;
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  }
+
+  .cj-shop-trigger[aria-expanded="true"] .nav-list-link-icon {
     opacity: 1;
-    visibility: visible;
+    transform: rotate(180deg);
   }
 
-  .cj-men-panel {
-    position: fixed;
-    top: var(--cj-panel-top);
-    left: 0;
-    right: 0;
-    z-index: 88;
+  .desktop-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    width: min(1120px, calc(100vw - 64px));
+    max-height: 739px;
+    overflow: auto;
+    transform: translate(-50%, -10px);
     background: var(--cj-panel-bg);
-    color: var(--cj-panel-text);
+    border: 1px solid rgba(47, 33, 28, 0.08);
+    box-shadow: 0 20px 45px rgba(25, 14, 9, 0.12);
+    z-index: 88;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translate3d(0, -14px, 0);
-    transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
-    box-shadow: 0 20px 45px rgba(25, 14, 9, 0.12);
+    transition: opacity 0.28s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
   }
 
-  .cj-men-panel[data-panel-open="true"] {
+  .desktop-dropdown[data-panel-open="true"] {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translate3d(0, 0, 0);
+    transform: translate(-50%, 0);
   }
 
-  .cj-panel-close {
-    position: absolute;
-    top: 14px;
-    right: 20px;
-    background: transparent;
-    border: none;
-    color: var(--cj-panel-muted);
-    font-size: 30px;
-    line-height: 1;
-    cursor: pointer;
-    transition: opacity 0.25s ease;
-  }
-
-  .cj-panel-close:hover {
-    opacity: 0.55;
+  .desktop-dropdown-container {
+    padding-left: 40px;
+    padding-right: 40px;
   }
 
   .cj-mega-panel__inner {
-    width: min(100%, 1120px);
-    margin: 0 auto;
-    padding: 56px 32px 34px;
+    padding: 34px 0 30px;
   }
 
-  .cj-mega-panel__nav a,
-  .cj-mega-panel__nav .cj-mega-panel__link {
+  .desktop-list-subitems {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: 56px;
+  }
+
+  .desktop-list-subitems > .nav-item {
+    break-inside: avoid;
+    margin-bottom: 6px;
+  }
+
+  .desktop-list-subitems .nav-list-link {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -281,20 +286,19 @@
     color: var(--cj-panel-text);
     text-decoration: none;
     border-bottom: 1px solid rgba(47, 33, 28, 0.08);
+    transition: color 0.25s ease, border-color 0.25s ease;
   }
 
-  .cj-mega-panel__nav a:hover {
+  .desktop-list-subitems .nav-list-link:hover {
     color: var(--cj-panel-accent);
+    border-color: rgba(154, 79, 66, 0.28);
   }
 
-  .cj-mega-panel__heading {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--cj-panel-muted);
-    margin-bottom: 4px;
+  .desktop-list-subitems .nav-list-link-heading {
+    font-family: var(--cj-serif);
+    font-size: 27px;
+    line-height: 1.06;
+    letter-spacing: 0.01em;
   }
 
   .search-container {
@@ -496,12 +500,8 @@
       padding-bottom: 3px;
     }
 
-    .cj-men-panel {
-      top: calc(var(--cj-panel-top) - 10px);
-    }
-
-    .cj-mega-panel__inner {
-      padding: 52px 18px 24px;
+    .desktop-dropdown {
+      display: none !important;
     }
   }
 {% endstyle %}
@@ -512,9 +512,21 @@
     assign shop_all_url = '/collections/all'
   endif
 
-  assign camisas_collection = collections['camisas']
-  assign tricot_collection = collections['tricot']
-  assign alfaiataria_collection = collections['alfaiataria']
+  assign shop_polos = collections['polos']
+  assign shop_jaquetas = collections['jaquetas']
+  assign shop_pagina_inicial = collections['pagina-inicial']
+  if shop_pagina_inicial == blank
+    assign shop_pagina_inicial = collections['frontpage']
+  endif
+  assign shop_sueters = collections['sueters']
+  assign shop_camisas = collections['camisas']
+  assign shop_tricot = collections['tricot']
+  assign shop_camisetas = collections['camisetas']
+  assign shop_essenciais = collections['essenciais']
+  assign shop_shorts = collections['shorts']
+  assign shop_camisas_linho = collections['camisas-de-linho']
+  assign shop_calcas = collections['calcas']
+
   assign journal_page = pages['journal']
   assign journal_url = journal_page.url
   if journal_url == blank
@@ -523,10 +535,7 @@
   assign society_page = pages['society']
   assign concierge_page = pages['concierge']
 
-  assign has_shop_panel = false
-  if camisas_collection != blank or tricot_collection != blank or alfaiataria_collection != blank
-    assign has_shop_panel = true
-  endif
+  assign has_shop_panel = true
 %}
 
 <cj-header data-section-id="{{ section.id }}">
@@ -616,7 +625,34 @@
             <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
 
             {% if has_shop_panel %}
-              <button class="cj-header-nav-link" type="button" data-action="toggle-men" aria-expanded="false" aria-controls="cj-men-panel">Shop</button>
+              <div class="nav-item nav-main-item nav-dropdown cj-shop-dropdown">
+                <button class="cj-header-nav-link nav-list-link cj-shop-trigger" type="button" data-action="toggle-men" aria-expanded="false" aria-controls="cj-men-panel">
+                  Shop
+                  <svg class="nav-list-link-icon icon-inline" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                    <path d="M1.5 3.25 5 6.75l3.5-3.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+
+                <div class="js-desktop-dropdown nav-dropdown-content desktop-dropdown" id="cj-men-panel" data-element="men-panel" aria-hidden="true">
+                  <div class="desktop-dropdown-container">
+                    <div class="cj-mega-panel__inner">
+                      <ul class="desktop-list-subitems list-unstyled">
+                        <li class="nav-item"><a href="{{ shop_polos.url | default: '/collections/polos' }}" class="nav-list-link nav-list-link-heading">Polos</a></li>
+                        <li class="nav-item"><a href="{{ shop_jaquetas.url | default: '/collections/jaquetas' }}" class="nav-list-link nav-list-link-heading">Jaquetas</a></li>
+                        <li class="nav-item"><a href="{{ shop_pagina_inicial.url | default: '/collections/frontpage' }}" class="nav-list-link nav-list-link-heading">Página inicial</a></li>
+                        <li class="nav-item"><a href="{{ shop_sueters.url | default: '/collections/sueters' }}" class="nav-list-link nav-list-link-heading">Sueters</a></li>
+                        <li class="nav-item"><a href="{{ shop_camisas.url | default: '/collections/camisas' }}" class="nav-list-link nav-list-link-heading">Camisas</a></li>
+                        <li class="nav-item"><a href="{{ shop_tricot.url | default: '/collections/tricot' }}" class="nav-list-link nav-list-link-heading">Tricot</a></li>
+                        <li class="nav-item"><a href="{{ shop_camisetas.url | default: '/collections/camisetas' }}" class="nav-list-link nav-list-link-heading">Camisetas</a></li>
+                        <li class="nav-item"><a href="{{ shop_essenciais.url | default: '/collections/essenciais' }}" class="nav-list-link nav-list-link-heading">Essenciais</a></li>
+                        <li class="nav-item"><a href="{{ shop_shorts.url | default: '/collections/shorts' }}" class="nav-list-link nav-list-link-heading">Shorts</a></li>
+                        <li class="nav-item"><a href="{{ shop_camisas_linho.url | default: '/collections/camisas-de-linho' }}" class="nav-list-link nav-list-link-heading">Camisas de Linho</a></li>
+                        <li class="nav-item"><a href="{{ shop_calcas.url | default: '/collections/calcas' }}" class="nav-list-link nav-list-link-heading">Calças</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             {% else %}
               <a class="cj-header-nav-link" href="{{ shop_all_url }}">Shop</a>
             {% endif %}
@@ -638,33 +674,6 @@
         </div>
       </header>
     </div>
-
-    <div class="cj-header-backdrop" data-element="backdrop" hidden></div>
-
-    <section class="cj-men-panel" id="cj-men-panel" data-element="men-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Categorias Masculinas">
-      <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
-      <div class="cj-mega-panel__inner p-12 grid grid-cols-2 gap-8">
-        <nav class="cj-mega-panel__nav flex flex-col gap-4">
-          {% if camisas_collection != blank %}
-            <a href="{{ camisas_collection.url }}" class="text-xl font-serif">Camisas de Linho <span>›</span></a>
-          {% else %}
-            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Camisas de Linho <span>›</span></span>
-          {% endif %}
-
-          {% if tricot_collection != blank %}
-            <a href="{{ tricot_collection.url }}" class="text-xl font-serif">Tricot & Cashmere <span>›</span></a>
-          {% else %}
-            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Tricot & Cashmere <span>›</span></span>
-          {% endif %}
-
-          {% if alfaiataria_collection != blank %}
-            <a href="{{ alfaiataria_collection.url }}" class="text-xl font-serif">Alfaiataria <span>›</span></a>
-          {% else %}
-            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Alfaiataria <span>›</span></span>
-          {% endif %}
-        </nav>
-      </div>
-    </section>
   </m-header>
 </cj-header>
 
@@ -672,13 +681,13 @@
   if (!customElements.get('cj-header')) {
     customElements.define('cj-header', class CJHeader extends HTMLElement {
       connectedCallback() {
-        this.backdrop = this.querySelector('[data-element="backdrop"]');
         this.searchContainer = this.querySelector('.js-search-container');
         this.searchTrigger = this.querySelector('.js-search-trigger');
         this.searchFormWrap = this.querySelector('.search-form-wrap');
         this.searchInput = this.querySelector('.js-search-input');
         this.searchSubmitBtn = this.querySelector('.js-search-input-submit');
         this.emptyBtn = this.querySelector('.js-empty-search');
+        this.shopDropdown = this.querySelector('.cj-shop-dropdown');
         this.menPanel = this.querySelector('[data-element="men-panel"]');
         this.menTrigger = this.querySelector('[data-action="toggle-men"]');
 
@@ -707,11 +716,11 @@
           if (this.searchContainer && !this.searchContainer.contains(e.target)) {
             this.closeSearch();
           }
-        });
 
-        if (this.backdrop) {
-          this.backdrop.addEventListener('click', () => this.closeAll());
-        }
+          if (this.shopDropdown && !this.shopDropdown.contains(e.target)) {
+            this.closeShopPanel();
+          }
+        });
 
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape') this.closeAll();
@@ -774,20 +783,18 @@
           panelToOpen.setAttribute('aria-hidden', 'false');
           trigger?.setAttribute('aria-expanded', 'true');
           if (stateClass) this.classList.add(stateClass);
-          this.backdrop.removeAttribute('hidden');
-          document.body.style.overflow = 'hidden';
         }
+      }
+
+      closeShopPanel() {
+        this.menPanel?.removeAttribute('data-panel-open');
+        this.menPanel?.setAttribute('aria-hidden', 'true');
+        this.menTrigger?.setAttribute('aria-expanded', 'false');
       }
 
       closeAll() {
         this.closeSearch();
-
-        this.menPanel?.removeAttribute('data-panel-open');
-        this.menPanel?.setAttribute('aria-hidden', 'true');
-        this.menTrigger?.setAttribute('aria-expanded', 'false');
-
-        if (this.backdrop) this.backdrop.setAttribute('hidden', 'true');
-        document.body.style.overflow = '';
+        this.closeShopPanel();
       }
     });
   }
