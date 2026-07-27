@@ -225,8 +225,7 @@
     visibility: visible;
   }
 
-  .cj-men-panel,
-  .cj-journal-panel {
+  .cj-men-panel {
     position: fixed;
     top: var(--cj-panel-top);
     left: 0;
@@ -242,8 +241,7 @@
     box-shadow: 0 20px 45px rgba(25, 14, 9, 0.12);
   }
 
-  .cj-men-panel[data-panel-open="true"],
-  .cj-journal-panel[data-panel-open="true"] {
+  .cj-men-panel[data-panel-open="true"] {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -498,8 +496,7 @@
       padding-bottom: 3px;
     }
 
-    .cj-men-panel,
-    .cj-journal-panel {
+    .cj-men-panel {
       top: calc(var(--cj-panel-top) - 10px);
     }
 
@@ -518,7 +515,11 @@
   assign camisas_collection = collections['camisas']
   assign tricot_collection = collections['tricot']
   assign alfaiataria_collection = collections['alfaiataria']
-  assign journal_blog = blogs['journal']
+  assign journal_page = pages['journal']
+  assign journal_url = journal_page.url
+  if journal_url == blank
+    assign journal_url = '/pages/journal'
+  endif
   assign society_page = pages['society']
   assign concierge_page = pages['concierge']
 
@@ -556,11 +557,7 @@
           <a class="cj-header-nav-link" href="{{ routes.root_url }}">Home</a>
           <a class="cj-header-nav-link" href="{{ shop_all_url }}">Shop</a>
 
-          {% if journal_blog != blank %}
-            <a class="cj-header-nav-link" href="{{ journal_blog.url }}">Journal</a>
-          {% else %}
-            <span class="cj-header-nav-link is-disabled" aria-disabled="true">Journal</span>
-          {% endif %}
+          <a class="cj-header-nav-link" href="{{ journal_url }}">Journal</a>
         </nav>
       </header>
 
@@ -624,7 +621,7 @@
               <a class="cj-header-nav-link" href="{{ shop_all_url }}">Shop</a>
             {% endif %}
 
-            <button class="cj-header-nav-link" type="button" data-action="toggle-journal" aria-expanded="false" aria-controls="cj-journal-panel">Journal</button>
+            <a class="cj-header-nav-link" href="{{ journal_url }}">Journal</a>
 
             {% if society_page != blank %}
               <a class="cj-header-nav-link" href="{{ society_page.url }}">Society</a>
@@ -668,39 +665,6 @@
         </nav>
       </div>
     </section>
-
-    <section class="cj-journal-panel" id="cj-journal-panel" data-element="journal-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Journal">
-      <button class="cj-panel-close" type="button" data-action="close-panels" aria-label="Fechar">×</button>
-      <div class="cj-mega-panel__inner p-12 grid grid-cols-2 gap-8">
-        <nav class="cj-mega-panel__nav flex flex-col gap-4" aria-label="Publicações recentes">
-          <span class="cj-mega-panel__heading">Editorial</span>
-          {% if journal_blog != blank %}
-            {% for article in journal_blog.articles limit: 4 %}
-              <a href="{{ article.url }}" class="text-xl font-serif">{{ article.title }} <span>›</span></a>
-            {% else %}
-              <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Em breve <span>›</span></span>
-            {% endfor %}
-          {% else %}
-            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Em breve <span>›</span></span>
-          {% endif %}
-        </nav>
-
-        <nav class="cj-mega-panel__nav flex flex-col gap-4" aria-label="Explorar">
-          <span class="cj-mega-panel__heading">Descubra</span>
-          {% if journal_blog != blank %}
-            <a href="{{ journal_blog.url }}" class="text-xl font-serif">Todas as Publicações <span>›</span></a>
-          {% else %}
-            <span class="cj-mega-panel__link is-disabled text-xl font-serif" aria-disabled="true">Todas as Publicações <span>›</span></span>
-          {% endif %}
-          {% if society_page != blank %}
-            <a href="{{ society_page.url }}" class="text-xl font-serif">Society <span>›</span></a>
-          {% endif %}
-          {% if concierge_page != blank %}
-            <a href="{{ concierge_page.url }}" class="text-xl font-serif">Concierge <span>›</span></a>
-          {% endif %}
-        </nav>
-      </div>
-    </section>
   </m-header>
 </cj-header>
 
@@ -717,8 +681,6 @@
         this.emptyBtn = this.querySelector('.js-empty-search');
         this.menPanel = this.querySelector('[data-element="men-panel"]');
         this.menTrigger = this.querySelector('[data-action="toggle-men"]');
-        this.journalPanel = this.querySelector('[data-element="journal-panel"]');
-        this.journalTrigger = this.querySelector('[data-action="toggle-journal"]');
 
         this.addEventListener('click', (e) => {
           const searchTrigger = e.target.closest('.js-search-trigger');
@@ -731,7 +693,6 @@
           if (target) {
             const action = target.dataset.action;
             if (action === 'toggle-men') this.togglePanel(this.menPanel, this.menTrigger);
-            if (action === 'toggle-journal') this.togglePanel(this.journalPanel, this.journalTrigger, 'is-journal-open');
             if (action === 'close-panels') this.closeAll();
           }
         });
@@ -824,11 +785,6 @@
         this.menPanel?.removeAttribute('data-panel-open');
         this.menPanel?.setAttribute('aria-hidden', 'true');
         this.menTrigger?.setAttribute('aria-expanded', 'false');
-
-        this.journalPanel?.removeAttribute('data-panel-open');
-        this.journalPanel?.setAttribute('aria-hidden', 'true');
-        this.journalTrigger?.setAttribute('aria-expanded', 'false');
-        this.classList.remove('is-journal-open');
 
         if (this.backdrop) this.backdrop.setAttribute('hidden', 'true');
         document.body.style.overflow = '';
