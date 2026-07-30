@@ -5,11 +5,11 @@
   Referência estética: Loro Piana · Kinfolk · The Journal
 
   Composição:
-    1. Masthead editorial (kicker + título + linha fina)
-    2. EM DESTAQUE — trilho horizontal com scroll-snap
-       · primeiro card com etiqueta editorial sobreposta (assinatura)
-    3. DESCUBRA MAIS — grade editorial de 3 colunas com desalinho sutil
-    4. Fecho discreto (link para o índice completo)
+    1. Masthead editorial (kicker decorativo opcional + título + linha fina)
+    2. HERO — matéria de abertura em tela cheia (nunca entra no trilho)
+    3. EM DESTAQUE — trilho horizontal com scroll-snap, a partir da 2ª matéria
+    4. DESCUBRA MAIS — grade editorial de 3 colunas com desalinho sutil
+    5. Fecho discreto (link para o índice completo)
 
   Paleta: creme · areia · grafite-marrom · terracota (acento raro)
   Tipografia: Cormorant Garamond (serifada) + Jost (utilitária)
@@ -19,7 +19,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
 
 {%- liquid
   assign blog = blogs[section.settings.blog]
@@ -53,7 +53,7 @@
     --cj-sans:  "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
     --cj-max:  {{ section.settings.max_width }}px;
-    --cj-gap:  clamp(20px, 2.4vw, 34px);
+    --cj-gap:  clamp(32px, 4vw, 56px);
 
     --cj-header-offset-desktop: max(
       118px,
@@ -98,7 +98,7 @@
   #cj-journal-{{ section.id }} .cj-masthead {
     text-align: center;
     max-width: 46ch;
-    margin: 0 auto clamp(48px, 6vw, 84px);
+    margin: 0 auto clamp(64px, 7vw, 112px);
   }
   #cj-journal-{{ section.id }} .cj-kicker {
     display: block;
@@ -112,7 +112,7 @@
   }
   #cj-journal-{{ section.id }} .cj-display {
     font-family: var(--cj-serif);
-    font-weight: 300;
+    font-weight: 450;
     font-size: clamp(40px, 6.2vw, 82px);
     line-height: .96;
     letter-spacing: .06em;
@@ -143,7 +143,7 @@
     gap: 24px;
     padding-bottom: 16px;
     border-bottom: 1px solid var(--cj-rule);
-    margin-bottom: clamp(28px, 3.4vw, 46px);
+    margin-bottom: clamp(36px, 4vw, 60px);
   }
   #cj-journal-{{ section.id }} .cj-blocktitle {
     font-family: var(--cj-sans);
@@ -161,7 +161,7 @@
     color: var(--cj-muted);
   }
 
-  /* ── 2. TRILHO / EM DESTAQUE ─────────────────────────────── */
+  /* ── 3. TRILHO / EM DESTAQUE ─────────────────────────────── */
   #cj-journal-{{ section.id }} .cj-railwrap { position: relative; }
   #cj-journal-{{ section.id }} .cj-rail {
     display: grid;
@@ -234,9 +234,9 @@
   }
   #cj-journal-{{ section.id }} .cj-headline {
     font-family: var(--cj-serif);
-    font-weight: 400;
-    font-size: clamp(20px, 2vw, 27px);
-    line-height: 1.22;
+    font-weight: 500;
+    font-size: clamp(22px, 2.3vw, 31px);
+    line-height: 1.2;
     letter-spacing: .005em;
     margin: 0;
     background-image: linear-gradient(var(--cj-ink), var(--cj-ink));
@@ -258,39 +258,87 @@
     margin: 16px 0 0;
   }
 
-  /* ── Card-assinatura: etiqueta sobreposta ────────────────── */
-  #cj-journal-{{ section.id }} .cj-card--plate .cj-frame { aspect-ratio: 4 / 5; }
-  @media (min-width: 900px) {
-    #cj-journal-{{ section.id }} .cj-card--plate .cj-frame { aspect-ratio: 16 / 11; }
+  /* ── 2. HERO EDITORIAL ───────────────────────────────────── */
+  #cj-journal-{{ section.id }} .cj-hero {
+    position: relative;
+    height: min(92vh, 860px);
+    min-height: 480px;
+    overflow: hidden;
+    margin-bottom: clamp(64px, 7vw, 112px);
   }
-  #cj-journal-{{ section.id }} .cj-plate {
+  #cj-journal-{{ section.id }} .cj-hero-link,
+  #cj-journal-{{ section.id }} .cj-hero-empty {
+    position: relative;
+    display: block;
+    width: 100%; height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  #cj-journal-{{ section.id }} .cj-hero-frame {
     position: absolute;
-    left: clamp(16px, 4%, 40px);
-    bottom: clamp(16px, 4%, 40px);
-    width: min(74%, 320px);
-    background: var(--cj-panel);
-    padding: clamp(20px, 2.2vw, 30px);
-    transition: transform .8s cubic-bezier(.2,.7,.2,1);
+    inset: 0;
   }
-  #cj-journal-{{ section.id }} .cj-card--plate:hover .cj-plate { transform: translateY(-6px); }
-  #cj-journal-{{ section.id }} .cj-plate .cj-body { padding-top: 0; }
-  #cj-journal-{{ section.id }} .cj-plate .cj-headline { font-size: clamp(19px, 1.7vw, 24px); }
-  #cj-journal-{{ section.id }} .cj-plate .cj-byline {
+  #cj-journal-{{ section.id }} .cj-hero-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 38%, rgba(0,0,0,.64) 100%);
+  }
+  #cj-journal-{{ section.id }} .cj-hero-frame img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1.001);
+    transition: transform 1.6s cubic-bezier(.2,.7,.2,1);
+  }
+  #cj-journal-{{ section.id }} .cj-hero-link:hover .cj-hero-frame img { transform: scale(1.035); }
+  #cj-journal-{{ section.id }} .cj-hero-content {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: clamp(28px, 4vw, 64px);
+    max-width: 62ch;
+    color: #F5F2EC;
+  }
+  #cj-journal-{{ section.id }} .cj-hero-cat {
     font-family: var(--cj-serif);
     font-style: italic;
-    font-size: 14px;
-    color: var(--cj-muted);
-    margin: 18px 0 0;
-    padding-top: 14px;
-    border-top: 1px solid var(--cj-rule);
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: .01em;
+    color: #F5F2EC;
+    display: inline-block;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(245,242,236,.5);
+    margin-bottom: 20px;
   }
+  #cj-journal-{{ section.id }} .cj-hero-title {
+    font-family: var(--cj-serif);
+    font-weight: 500;
+    font-size: clamp(36px, 6vw, 88px);
+    line-height: 1.02;
+    letter-spacing: .01em;
+    color: #FFFFFF;
+    margin: 0 0 26px;
+  }
+  #cj-journal-{{ section.id }} .cj-hero-cta {
+    font-family: var(--cj-sans);
+    font-size: 11px;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: #F5F2EC;
+    display: inline-block;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(245,242,236,.6);
+    transition: border-color .5s ease, opacity .5s ease;
+  }
+  #cj-journal-{{ section.id }} .cj-hero-link:hover .cj-hero-cta { border-color: var(--cj-accent); }
 
-  /* ── 3. GRADE / DESCUBRA MAIS ────────────────────────────── */
-  #cj-journal-{{ section.id }} .cj-blockhead--grid { margin-top: clamp(72px, 8vw, 120px); }
+  /* ── 4. GRADE / DESCUBRA MAIS ────────────────────────────── */
+  #cj-journal-{{ section.id }} .cj-blockhead--grid { margin-top: clamp(96px, 9vw, 148px); }
   #cj-journal-{{ section.id }} .cj-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: clamp(44px, 4vw, 64px) var(--cj-gap);
+    gap: clamp(56px, 5vw, 84px) var(--cj-gap);
     align-items: start;
   }
   @media (min-width: 640px) {
@@ -299,15 +347,15 @@
   @media (min-width: 1000px) {
     #cj-journal-{{ section.id }} .cj-grid { grid-template-columns: repeat(3, 1fr); }
     /* desalinho editorial: colunas respiram em alturas diferentes */
-    #cj-journal-{{ section.id }} .cj-grid > *:nth-child(3n+2) { margin-top: 42px; }
-    #cj-journal-{{ section.id }} .cj-grid > *:nth-child(3n+3) { margin-top: 84px; }
+    #cj-journal-{{ section.id }} .cj-grid > *:nth-child(3n+2) { margin-top: 64px; }
+    #cj-journal-{{ section.id }} .cj-grid > *:nth-child(3n+3) { margin-top: 128px; }
     #cj-journal-{{ section.id }} .cj-grid > *:nth-child(3n+2) .cj-frame { aspect-ratio: 4 / 5; }
     #cj-journal-{{ section.id }} .cj-grid > *:nth-child(3n+3) .cj-frame { aspect-ratio: 3 / 2; }
   }
 
-  /* ── 4. FECHO ────────────────────────────────────────────── */
+  /* ── 5. FECHO ────────────────────────────────────────────── */
   #cj-journal-{{ section.id }} .cj-close {
-    margin-top: clamp(64px, 7vw, 104px);
+    margin-top: clamp(88px, 8vw, 136px);
     padding-top: 30px;
     border-top: 1px solid var(--cj-rule);
     text-align: center;
@@ -338,7 +386,7 @@
     #cj-journal-{{ section.id }} .cj-reveal { opacity: 1; transform: none; transition: none; }
     #cj-journal-{{ section.id }} .cj-rail { scroll-behavior: auto; }
     #cj-journal-{{ section.id }} .cj-frame img,
-    #cj-journal-{{ section.id }} .cj-plate,
+    #cj-journal-{{ section.id }} .cj-hero-frame img,
     #cj-journal-{{ section.id }} .cj-headline { transition: none; }
   }
 {% endstyle %}
@@ -358,7 +406,80 @@
       <div class="cj-mark" aria-hidden="true"></div>
     </header>
 
-    {%- comment -%} ── 2. EM DESTAQUE ── {%- endcomment -%}
+    {%- comment -%} ── 2. HERO EDITORIAL ── {%- endcomment -%}
+    <div class="cj-hero cj-reveal">
+      {%- if blog_count > 0 -%}
+        {%- liquid
+          assign hero_article = blog.articles.first
+          assign hero_category = hero_article.tags.first | default: section.settings.default_category
+        -%}
+        <a class="cj-hero-link" href="{{ hero_article.url }}">
+          <div class="cj-hero-frame">
+            {%- if hero_article.image -%}
+              <img src="{{ hero_article.image | image_url: width: 2200 }}"
+                   alt="{{ hero_article.image.alt | escape }}"
+                   width="2200" height="1375" loading="eager">
+            {%- elsif section.settings.fallback_highlight_image_1 != blank -%}
+              <img src="{{ section.settings.fallback_highlight_image_1 | image_url: width: 2200 }}"
+                   alt="{{ hero_article.title | escape }}"
+                   width="2200" height="1375" loading="eager">
+            {%- else -%}
+              {%- liquid
+                assign hero_pool_handle = fallback_product_handles[0]
+                assign hero_pool_product = all_products[hero_pool_handle]
+              -%}
+              {%- if hero_pool_product != blank and hero_pool_product.featured_image != blank -%}
+                <img src="{{ hero_pool_product.featured_image | image_url: width: 2200 }}"
+                     alt="{{ hero_pool_product.title | default: hero_article.title | escape }}"
+                     width="2200" height="1375" loading="eager">
+              {%- else -%}
+                <img src="#sua-imagem-aqui#"
+                     alt="{{ hero_article.title | escape }}"
+                     width="2200" height="1375" loading="eager">
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+          <div class="cj-hero-content">
+            <span class="cj-hero-cat">{{ hero_category }}</span>
+            <h3 class="cj-hero-title">{{ hero_article.title }}</h3>
+            <span class="cj-hero-cta">{{ section.settings.hero_cta_label }}</span>
+          </div>
+        </a>
+      {%- else -%}
+        {%- liquid
+          assign hero_title = fallback_highlight_titles[0]
+          assign hero_category = fallback_highlight_categories[0] | default: section.settings.default_category
+          assign hero_image = section.settings.fallback_highlight_image_1
+        -%}
+        <div class="cj-hero-empty">
+          <div class="cj-hero-frame">
+            {%- if hero_image != blank -%}
+              <img src="{{ hero_image | image_url: width: 2200 }}" alt="{{ hero_title | escape }}" width="2200" height="1375" loading="eager">
+            {%- else -%}
+              {%- liquid
+                assign hero_pool_handle = fallback_product_handles[0]
+                assign hero_pool_product = all_products[hero_pool_handle]
+              -%}
+              {%- if hero_pool_product != blank and hero_pool_product.featured_image != blank -%}
+                <img src="{{ hero_pool_product.featured_image | image_url: width: 2200 }}" alt="{{ hero_pool_product.title | default: hero_title | escape }}" width="2200" height="1375" loading="eager">
+              {%- else -%}
+                <img src="#sua-imagem-aqui#" alt="{{ hero_title | escape }}" width="2200" height="1375" loading="eager">
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+          <div class="cj-hero-content">
+            <span class="cj-hero-cat">{{ hero_category }}</span>
+            <h3 class="cj-hero-title">{{ hero_title }}</h3>
+            <span class="cj-hero-cta">{{ section.settings.hero_cta_label }}</span>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ── 3. EM DESTAQUE (a partir da 2ª matéria) ── {%- endcomment -%}
+    {%- liquid
+      assign rail_count = hi_count | minus: 1
+    -%}
     <div class="cj-railwrap cj-reveal">
       <div class="cj-blockhead">
         <h3 class="cj-blocktitle">{{ section.settings.highlights_title }}</h3>
@@ -374,15 +495,16 @@
 
       <div class="cj-rail" data-rail tabindex="0" role="group" aria-label="{{ section.settings.highlights_title }}">
         {%- if blog_count > 0 -%}
-          {%- for article in blog.articles limit: hi_count -%}
+          {%- for article in blog.articles offset: 1 limit: rail_count -%}
             {%- liquid
               assign words = article.content | strip_html | split: ' ' | size
               assign minutes = words | divided_by: 210 | plus: 1
               assign category = article.tags.first | default: section.settings.default_category
-              assign h_image_key = 'fallback_highlight_image_' | append: forloop.index
+              assign h_image_num = forloop.index | plus: 1
+              assign h_image_key = 'fallback_highlight_image_' | append: h_image_num
               assign h_image = section.settings[h_image_key]
             -%}
-            <a class="cj-card {% if forloop.first %}cj-card--plate{% endif %}" href="{{ article.url }}">
+            <a class="cj-card" href="{{ article.url }}">
               <div class="cj-frame">
                 {%- if article.image -%}
                   <img src="{{ article.image | image_url: width: 1400 }}"
@@ -394,7 +516,7 @@
                        width="1400" height="875" loading="lazy">
                 {%- else -%}
                   {%- liquid
-                    assign h_pool_index = forloop.index0 | modulo: fallback_product_pool_size
+                    assign h_pool_index = forloop.index0 | plus: 1 | modulo: fallback_product_pool_size
                     assign h_pool_handle = fallback_product_handles[h_pool_index]
                     assign h_pool_product = all_products[h_pool_handle]
                   -%}
@@ -408,46 +530,29 @@
                          width="1400" height="875" loading="lazy">
                   {%- endif -%}
                 {%- endif -%}
-
-                {%- if forloop.first -%}
-                  <div class="cj-plate">
-                    <div class="cj-body">
-                      <span class="cj-cat">{{ category }}</span>
-                      <h4 class="cj-headline">{{ article.title }}</h4>
-                      {%- if section.settings.show_readtime -%}
-                        <p class="cj-meta">{{ minutes }} min de leitura</p>
-                      {%- endif -%}
-                      {%- if article.author != blank -%}
-                        <p class="cj-byline">Palavras de {{ article.author }}</p>
-                      {%- endif -%}
-                    </div>
-                  </div>
+              </div>
+              <div class="cj-body">
+                <span class="cj-cat">{{ category }}</span>
+                <h4 class="cj-headline">{{ article.title }}</h4>
+                {%- if section.settings.show_readtime -%}
+                  <p class="cj-meta">{{ minutes }} min de leitura</p>
                 {%- endif -%}
               </div>
-
-              {%- unless forloop.first -%}
-                <div class="cj-body">
-                  <span class="cj-cat">{{ category }}</span>
-                  <h4 class="cj-headline">{{ article.title }}</h4>
-                  {%- if section.settings.show_readtime -%}
-                    <p class="cj-meta">{{ minutes }} min de leitura</p>
-                  {%- endif -%}
-                </div>
-              {%- endunless -%}
             </a>
           {%- endfor -%}
         {%- else -%}
           {%- comment -%} Estado vazio: mantém a composição legível no editor {%- endcomment -%}
-          {%- for i in (1..hi_count) -%}
+          {%- for i in (1..rail_count) -%}
             {%- liquid
-              assign h_idx = forloop.index0
+              assign h_idx = i
               assign h_title = fallback_highlight_titles[h_idx] | default: fallback_highlight_titles.last
               assign h_category = fallback_highlight_categories[h_idx] | default: section.settings.default_category
               assign h_meta = fallback_highlight_metas[h_idx] | default: '5 min de leitura'
-              assign h_image_key = 'fallback_highlight_image_' | append: forloop.index
+              assign h_image_num = h_idx | plus: 1
+              assign h_image_key = 'fallback_highlight_image_' | append: h_image_num
               assign h_image = section.settings[h_image_key]
             -%}
-            <div class="cj-card {% if forloop.first %}cj-card--plate{% endif %}">
+            <div class="cj-card">
               <div class="cj-frame">
                 {%- if h_image != blank -%}
                   <img src="{{ h_image | image_url: width: 1400 }}" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
@@ -463,35 +568,21 @@
                     <img src="#sua-imagem-aqui#" alt="{{ h_title | escape }}" width="1400" height="875" loading="lazy">
                   {%- endif -%}
                 {%- endif -%}
-                {%- if forloop.first -%}
-                  <div class="cj-plate">
-                    <div class="cj-body">
-                      <span class="cj-cat">{{ h_category }}</span>
-                      <h4 class="cj-headline">{{ h_title }}</h4>
-                      {%- if section.settings.show_readtime -%}
-                        <p class="cj-meta">{{ h_meta }}</p>
-                      {%- endif -%}
-                      <p class="cj-byline">Palavras de Redacao Casa Junno</p>
-                    </div>
-                  </div>
+              </div>
+              <div class="cj-body">
+                <span class="cj-cat">{{ h_category }}</span>
+                <h4 class="cj-headline">{{ h_title }}</h4>
+                {%- if section.settings.show_readtime -%}
+                  <p class="cj-meta">{{ h_meta }}</p>
                 {%- endif -%}
               </div>
-              {%- unless forloop.first -%}
-                <div class="cj-body">
-                  <span class="cj-cat">{{ h_category }}</span>
-                  <h4 class="cj-headline">{{ h_title }}</h4>
-                  {%- if section.settings.show_readtime -%}
-                    <p class="cj-meta">{{ h_meta }}</p>
-                  {%- endif -%}
-                </div>
-              {%- endunless -%}
             </div>
           {%- endfor -%}
         {%- endif -%}
       </div>
     </div>
 
-    {%- comment -%} ── 3. DESCUBRA MAIS ── {%- endcomment -%}
+    {%- comment -%} ── 4. DESCUBRA MAIS ── {%- endcomment -%}
     <div class="cj-blockhead cj-blockhead--grid cj-reveal">
       <h3 class="cj-blocktitle">{{ section.settings.grid_title }}</h3>
       {%- if blog_count > 0 -%}
@@ -584,7 +675,7 @@
       {%- endif -%}
     </div>
 
-    {%- comment -%} ── 4. FECHO ── {%- endcomment -%}
+    {%- comment -%} ── 5. FECHO ── {%- endcomment -%}
     {%- if section.settings.cta_label != blank -%}
       <div class="cj-close cj-reveal">
         <a class="cj-cta" href="{{ section.settings.cta_url | default: blog.url }}">{{ section.settings.cta_label }}</a>
@@ -657,20 +748,20 @@
     {
       "type": "text",
       "id": "kicker",
-      "label": "Kicker",
-      "default": "Casa Junno"
+      "label": "Kicker (decorativo)",
+      "info": "Opcional — a marca já aparece no título. Use para um elemento decorativo curto (ex: um ano) ou deixe em branco."
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Título",
-      "default": "Journal"
+      "default": "Casa Junno Journal"
     },
     {
       "type": "textarea",
       "id": "standfirst",
       "label": "Linha fina",
-      "default": "Um percurso pelo que sustenta uma peça bem-feita: tecidos, ofício, cidades e o tempo que tudo isso pede."
+      "default": "Uma curadoria exclusiva de estilo, cultura e requinte, projetada para inspirar a jornada do homem contemporâneo."
     },
     {
       "type": "text",
@@ -678,6 +769,16 @@
       "label": "Categoria padrão",
       "info": "Usada quando a matéria não tem tag. A primeira tag do artigo vira a categoria.",
       "default": "Elegância"
+    },
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_cta_label",
+      "label": "Texto do botão do hero",
+      "default": "Ler matéria"
     },
     {
       "type": "header",
@@ -692,7 +793,8 @@
     {
       "type": "range",
       "id": "highlights_count",
-      "label": "Matérias no trilho",
+      "label": "Matérias em destaque",
+      "info": "Inclui a matéria do hero (a 1ª) + as matérias do trilho.",
       "min": 2, "max": 8, "step": 1, "default": 4
     },
     {
