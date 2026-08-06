@@ -97,19 +97,18 @@
         "product_card_8ycixq": {
           "type": "product_card",
           "settings": {
-            "product": "sueter-gola-ziper",
+            "product": "casa-juno-polo-toque-de-cashmere",
             "custom_title": "",
-            "subtitle": "Premium cotton",
+            "subtitle": "",
             "custom_link": ""
           }
         },
         "product_card_e6c3Vj": {
           "type": "product_card",
           "settings": {
-            "product": "casa-juno-polo-ziper-premium",
-            "custom_image": "shopify://shop_images/12-polo-algodao-creme.jpg",
+            "product": "jaqueta-bomber-efeito-suede",
             "custom_title": "Polo Masculina Premium",
-            "subtitle": "Algodão premium",
+            "subtitle": "",
             "custom_link": ""
           }
         },
